@@ -1,18 +1,20 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from utilities import zero_stuffing
+
 
 def half_band_upsample(signal, up_factor=2, N=31, plot=False):
+    # Dizajn half-band filtera
     n = np.arange(N)
     Arg = n/2 - (N-1)/4
     Hann = np.hanning(N+2)[1:-1]
     h = np.sinc(Arg) * np.sqrt(Hann)
     
-    # Zero-stuffing
-    upsampled = np.zeros(len(signal) * up_factor)
-    upsampled[::up_factor] = signal
+    # Upsampling
+    upsamplirano = zero_stuffing(signal, up_factor)
     
     # Filtriranje konvolucijom sa h
-    filtered = np.convolve(upsampled, h, mode='same')
+    filtrirano = np.convolve(upsamplirano, h, mode='same')
 
     # Crtanje
     if plot:
@@ -22,8 +24,8 @@ def half_band_upsample(signal, up_factor=2, N=31, plot=False):
         frekvencijski_odziv = np.zeros(len(frekvencije), dtype=complex)
 
         for i, f in enumerate(frekvencije):
-            analysistone = np.exp(-1j*2*np.pi*f*n)
-            frekvencijski_odziv[i] = (1/N)*np.dot(h, analysistone)
+            tone = np.exp(-1j*2*np.pi*f*n)
+            frekvencijski_odziv[i] = (1/N)*np.dot(h, tone)
 
         log_odziv = 20*np.log10(np.abs(frekvencijski_odziv))
         log_odziv -= np.max(log_odziv)
@@ -51,5 +53,6 @@ def half_band_upsample(signal, up_factor=2, N=31, plot=False):
         plt.ylim([-60, 5])
         plt.tight_layout()
         plt.show()
-    
-    return filtered, h
+
+  
+    return filtrirano, h
