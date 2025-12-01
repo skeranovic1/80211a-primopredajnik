@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from tx.OFDM_mapper import Mapper_OFDM  # zamijeni 'your_module' stvarnim imenom fajla
+from tx.OFDM_mapper import Mapper_OFDM  
 
 def test_invalid_bits():
     # negativni bit
