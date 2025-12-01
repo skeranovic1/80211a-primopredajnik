@@ -9,6 +9,9 @@ def Mapper_OFDM(InputBits, BitsPerSymbol, plot=False):
 
     InputBits = np.asarray(InputBits)
 
+    if np.any(InputBits < 0) or np.any(InputBits > 1):
+        raise ValueError("InputBits must be 0 or 1")
+    
     # Prazan ulaz
     if InputBits.size == 0:
         return np.zeros(0, dtype=complex)
@@ -35,7 +38,7 @@ def Mapper_OFDM(InputBits, BitsPerSymbol, plot=False):
     # Odobrene modulacije
     if BitsPerSymbol not in (1, 2, 4, 6):
         raise ValueError("BitsPerSymbol must be 1,2,4,6.")
-
+    
     # LUT tabele
     BPSK_LUT  = np.array([-1, 1])
     QPSK_LUT  = np.array([-1, 1]) / np.sqrt(2)

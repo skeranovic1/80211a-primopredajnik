@@ -1,21 +1,25 @@
 import numpy as np
 import pytest
 from tx.OFDM_mapper import Mapper_OFDM  
-import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')  
-
+import matplotlib.pyplot as plt
 
 def test_invalid_bits():
     # negativni bit
     bits = np.array([-1, 0, 1])
-    with pytest.raises(IndexError):
+    with pytest.raises(ValueError):
         Mapper_OFDM(bits, 1)
-    
+
     # bit veći od 1
     bits = np.array([0, 2, 1])
-    with pytest.raises(IndexError):
+    with pytest.raises(ValueError):  # ← ovdje mijenjamo IndexError → ValueError
         Mapper_OFDM(bits, 1)
+
+    # mješavina validnih i nevalidnih
+    bits = np.array([0, 1, 0, 3])
+    with pytest.raises(ValueError):
+        Mapper_OFDM(bits, 2)
 
 def test_non_divisible_length():
     bits = np.array([0, 1, 1])  # duzina 3, BitsPerSymbol = 2
