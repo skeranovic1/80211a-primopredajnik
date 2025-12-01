@@ -20,6 +20,12 @@ def zero_stuffing(signal, up_factor=2):
     
     return upsamplirano
 
+def bit_sequence (NumberOf_OFDM_Symbols, BitsPerSymbol,sd=0):
+    np.random.seed(sd)  # Fixing the seed of the random number generator
+    NumberOfBits = (48 * BitsPerSymbol) * NumberOf_OFDM_Symbols
+    Source_Bits = np.round(np.random.rand(NumberOfBits)).astype(int)  # Creating random input bits
+    return Source_Bits
+
 def spektar(x, fs, label):
     """
     Funkcija koja crta spektar signala x
@@ -31,3 +37,4 @@ def spektar(x, fs, label):
     f = np.fft.fftshift(np.fft.fftfreq(N, 1/fs))
     magnitude = np.abs(X) / (N/2)
     plt.plot(f, magnitude, label=label)
+

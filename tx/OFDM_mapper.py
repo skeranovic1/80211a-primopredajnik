@@ -1,6 +1,7 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
-def Mapper_OFDM(InputBits, BitsPerSymbol):
+def Mapper_OFDM(InputBits, BitsPerSymbol,plot=False):
     # BitsPerSymbol: 1, 2, 4, 6 --> BPSK, QPSK, 16QAM, 64QAM
 
     BPSK_LUT  = np.array([-1,  1])
@@ -26,5 +27,29 @@ def Mapper_OFDM(InputBits, BitsPerSymbol):
             Symbol = QAM64_LUT[BitGroup[0]*4 + BitGroup[1]*2 + BitGroup[2]] + 1j * QAM64_LUT[BitGroup[3]*4 + BitGroup[4]*2 + BitGroup[5]]
 
         OutputSymbols[i] = Symbol
+    
+    if plot:
+        plt.figure()  # ispravljeno
+        plt.scatter(OutputSymbols.real, OutputSymbols.imag, color='blue')
+        plt.axhline(0, color='black', linewidth=0.5)
+        plt.axvline(0, color='black', linewidth=0.5)
+        plt.title(f"Constellation for {BitsPerSymbol}-bit modulation")
+        plt.xlabel("I (real)")
+        plt.ylabel("Q (imag)")
+        plt.grid(True)
+        plt.axis('equal')
+        plt.show()
 
     return OutputSymbols
+
+if __name__ == "__main__":
+    import numpy as np
+    #Proba za 16QAM (potreban veći broj bita)
+    np.random.seed(42)
+    num_bits = 400
+    input_bits = np.random.randint(0, 2, num_bits)
+    BitsPerSymbol = 4
+    output_symbols = Mapper_OFDM(input_bits, BitsPerSymbol, plot=True)
+    #Ipsih prvih 10 simbola
+    print("Prvih 10 simbola 16-QAM:")
+    print(output_symbols[:10])
