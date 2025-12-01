@@ -93,7 +93,7 @@ def test_64qam_mapping():
     np.testing.assert_array_almost_equal(output, expected)
 
 def test_output_length():
-    bits = np.arange(24)
+    bits = np.random.randint(0, 2, 24)
     # BPSK
     assert len(Mapper_OFDM(bits, 1)) == 24
     # QPSK
