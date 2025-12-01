@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from utilities import zero_stuffing
+from .utilities import zero_stuffing
 
 
 def half_band_upsample(signal, up_factor=2, N=31, plot=False):
