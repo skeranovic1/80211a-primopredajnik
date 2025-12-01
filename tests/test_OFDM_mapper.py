@@ -2,6 +2,9 @@ import numpy as np
 import pytest
 from tx.OFDM_mapper import Mapper_OFDM  
 import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')  # backend koji ne koristi GUI
+
 
 def test_invalid_bits():
     # negativni bit
