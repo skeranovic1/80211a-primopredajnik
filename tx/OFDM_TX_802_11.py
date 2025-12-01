@@ -1,4 +1,12 @@
 import numpy as np
+import matplotlib.pyplot as plt
+from short_sequence import get_short_training_sequence
+from long_sequence import get_long_training_sequence
+from OFDM_mapper import Mapper_OFDM
+from utilities import bit_sequence
+from utilities import zero_stuffing
+from ifft_ofdm_symbol import IFFT_GI
+from filters import half_band_upsample
 #from scipy.signal import lfilter, hann
 
 def OFDM_TX_802_11(NumberOf_OFDM_Symbols, BitsPerSymbol):
@@ -28,6 +36,6 @@ def OFDM_TX_802_11(NumberOf_OFDM_Symbols, BitsPerSymbol):
     N = 31  # Number of Taps
 
     # 6. The Halfband filtering operation
-    Sample_Output,h = half_band_upsample(signal, up_factor=1, N=31, plot=False)
+    Sample_Output,h = half_band_upsample(Packet_Zero_Stuffed, up_factor=1, N=31, plot=False)
 
     return Sample_Output, Symbol_Stream
