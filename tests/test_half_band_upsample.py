@@ -1,16 +1,6 @@
 import numpy as np
 import pytest
-
-
-import matplotlib
-matplotlib.use("Agg")
-
-
-import matplotlib.pyplot as plt
-plt.show = lambda: None
-
 from tx.filters import half_band_upsample
-
 
 def test_output_length():
     """Testira da izlaz ima ispravnu dužinu nakon upsamplovanja i filtriranja."""
