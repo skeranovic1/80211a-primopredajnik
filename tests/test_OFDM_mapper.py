@@ -1,6 +1,10 @@
 import numpy as np
 import pytest
 from tx.OFDM_mapper import Mapper_OFDM  
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')  
+
 
 def test_invalid_bits():
     # negativni bit
@@ -98,3 +102,13 @@ def test_output_length():
     assert len(Mapper_OFDM(bits, 4)) == 6
     # 64-QAM
     assert len(Mapper_OFDM(bits, 6)) == 4
+
+def test_plot_branch_executes():
+    """
+    Testira da se plot=True grana funkcije Mapper_OFDM izvršava bez greške.
+    Graf se neće prikazati, ali funkcija treba vratiti numpy array.
+    """
+    bits = np.array([0, 1, 1, 0])
+    output = Mapper_OFDM(bits, BitsPerSymbol=2, plot=True)
+    
+    assert isinstance(output, np.ndarray)
