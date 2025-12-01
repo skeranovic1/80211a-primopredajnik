@@ -23,9 +23,7 @@ jobs:
         run: |
           pip install -r requirements.txt
           pip install pytest coverage
-
-      - name: Add project to PYTHONPATH
-        run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)" >> $GITHUB_ENV
+          pip install .
 
       - name: Run tests with coverage
         run: |
