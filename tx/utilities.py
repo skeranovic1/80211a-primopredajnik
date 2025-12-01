@@ -15,7 +15,7 @@ def zero_stuffing(signal, up_factor=2):
     if up_factor <= 0:
         raise ValueError("up_factor must be a positive integer.")
 
-    upsamplirano = np.zeros(len(signal) * up_factor)
+    upsamplirano = np.zeros(len(signal)*up_factor, dtype=complex)
     upsamplirano[::up_factor] = signal
     
     return upsamplirano

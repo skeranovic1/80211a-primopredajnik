@@ -2,7 +2,7 @@ import numpy as np
 
 def get_long_training_sequence(step=1):
     """
-    Generiše Long Training Sequence u vremenskom domenu identično MATLAB literaturi (802.11a).
+    Generiše Long Training Sequence u vremenskom domenu.
     """
 
     # Definicije tona iz MATLAB-a
