@@ -3,6 +3,5 @@ from setuptools import setup
 setup(
     name="tx",
     version="0.1",
-    packages=["tx"],  # direktno navodimo paket
-    package_dir={"tx": "tx"},
+    packages=["tx"],  # direktno navodimo
 )

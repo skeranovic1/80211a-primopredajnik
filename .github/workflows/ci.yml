@@ -27,13 +27,13 @@ jobs:
 
       - name: Install local package
         run: |
-          echo "Installing local package"
+          cd $GITHUB_WORKSPACE
           pip install .
 
       - name: Verify package installed
         run: pip show tx
 
-      - name: Run tests with coverage
+      - name: Run tests
         run: |
           coverage run -m pytest -vv
           coverage report
