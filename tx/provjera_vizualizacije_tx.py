@@ -1,52 +1,44 @@
 import numpy as np
 import matplotlib.pyplot as plt
+
 from tx.vizualizacija_tx import (
     plot_time_domain_tx,
     plot_spectrum_tx,
-    plot_constellation_tx  
+    plot_constellation_tx,
 )
+
+from tx.OFDM_mapper import Mapper_OFDM
+from tx.long_sequence import get_long_training_sequence
+from tx.short_sequence import get_short_training_sequence
 
 
 def main():
-    
-    fs = 20e6  # 20 MHz
-    n = 2048
-    t = np.arange(n) / fs
+    fs = 20e6  # 20 MHz sample rate
 
-    f1 = 2e6   # 2 MHz
-    f2 = 5e6   # 5 MHz
+    # ==================================
+    # 1) PRAVI TX QPSK simboli tima
+    # ==================================
+    bits = np.random.randint(0, 2, size=2*1000)
+    qpsk_symbols = Mapper_OFDM(bits, 2)
 
-    signal = np.exp(1j * 2 * np.pi * f1 * t) + 0.5 * np.exp(1j * 2 * np.pi * f2 * t)
+    plot_constellation_tx(qpsk_symbols, title="QPSK - konstelacioni dijagram (PRAVI TX)")
 
-    # TG1-57: vremenski domen
-    plot_time_domain_tx(signal, fs, title_prefix="Testni TX signal")
+    # ==================================
+    # 2) PRAVA 802.11a SHORT SEQUENCE
+    # ==================================
+    sts = get_short_training_sequence()
 
-    # TG1-56: FFT spektar
-    plot_spectrum_tx(signal, fs, title_prefix="Testni TX signal")
+    plot_time_domain_tx(sts, fs, title_prefix="Short Training Sequence")
+    plot_spectrum_tx(sts, fs, title_prefix="Short Training Sequence")
 
-    
-    # TEST 3: TG1-55 – QPSK konstelacija
-    
-    num_symbols = 500
+    # ==================================
+    # 3) PRAVA 802.11a LONG SEQUENCE
+    # ==================================
+    lts = get_long_training_sequence()
 
-    # nasumični bitovi (2 bita po simbolu)
-    bits = np.random.randint(0, 2, size=2 * num_symbols)
-    bit_pairs = bits.reshape((-1, 2))
+    plot_time_domain_tx(lts, fs, title_prefix="Long Training Sequence")
+    plot_spectrum_tx(lts, fs, title_prefix="Long Training Sequence")
 
-    # Gray mapping za QPSK
-    mapping = {
-        (0, 0): 1 + 1j,
-        (0, 1): -1 + 1j,
-        (1, 1): -1 - 1j,
-        (1, 0): 1 - 1j,
-    }
-
-    symbols = np.array([mapping[tuple(bp)] for bp in bit_pairs])
-  
-    # TG1-55: konstelacioni dijagram
-    plot_constellation_tx(symbols, title="QPSK - konstelacioni dijagram (test)")
-
-    # prikaži sve figure
     plt.show()
 
 
