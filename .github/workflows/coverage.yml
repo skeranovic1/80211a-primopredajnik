@@ -23,6 +23,7 @@ jobs:
         run: |
           pip install -r requirements.txt
           pip install pytest coverage coveralls
+          pip install -e .   # instalira tvoj paket tx
 
       - name: Run tests with coverage
         run: |
