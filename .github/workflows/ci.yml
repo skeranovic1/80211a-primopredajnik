@@ -21,13 +21,21 @@ jobs:
 
       - name: Install dependencies
         run: |
+          pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest coverage
+
+      - name: Install local package
+        run: |
+          echo "Installing local package"
           pip install .
+
+      - name: Verify package installed
+        run: pip show tx
 
       - name: Run tests with coverage
         run: |
-          coverage run -m pytest
+          coverage run -m pytest -vv
           coverage report
           coverage xml
 
