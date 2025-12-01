@@ -116,3 +116,49 @@ def test_plot_branch_executes():
     output = Mapper_OFDM(bits, BitsPerSymbol=2, plot=True)
     
     assert isinstance(output, np.ndarray)
+
+def test_invalid_bits_small_array():
+    # mali niz (<10) → ValueError za negativni bit
+    bits = np.array([0, -1, 1])
+    with pytest.raises(ValueError):
+        Mapper_OFDM(bits, 1)
+
+    # mali niz (<10) → ValueError za bit veći od 1
+    bits = np.array([0, 2, 1])
+    with pytest.raises(ValueError):
+        Mapper_OFDM(bits, 1)
+
+def test_invalid_bits_large_array_wrap():
+    # više se ne koristi wrap, funkcija zahtijeva 0 ili 1
+    bits = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    with pytest.raises(ValueError):
+        Mapper_OFDM(bits, 1)
+
+
+def test_bitsper_symbol_invalid():
+    bits = np.array([0, 1, 0, 1])
+    with pytest.raises(ValueError):
+        Mapper_OFDM(bits, 3)  # nelegalna vrijednost BitsPerSymbol
+
+def test_number_of_symbols_zero():
+    # ulaz manji od BitsPerSymbol → OutputSymbols prazno
+    bits = np.array([0, 1])
+    output = Mapper_OFDM(bits, 4)
+    assert len(output) == 0
+
+def test_non_integer_input_type():
+    bits = np.array([0.0, 1.0])
+    with pytest.raises(IndexError):
+        Mapper_OFDM(bits, 1)
+
+def test_partial_symbols_16qam():
+    # broj bitova nije djeljiv sa 4 → zadnji simbol se ignorira
+    bits = np.array([0,0,0,0, 1,1,1])
+    output = Mapper_OFDM(bits, 4)
+    assert len(output) == 1  # samo prvi simbol
+
+def test_partial_symbols_64qam():
+    # broj bitova nije djeljiv sa 6 → zadnji simbol se ignorira
+    bits = np.array([0,0,0,0,0,0, 1,1,1,1,1])
+    output = Mapper_OFDM(bits, 6)
+    assert len(output) == 1  # samo prvi simbol
