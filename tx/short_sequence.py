@@ -6,14 +6,19 @@ def get_short_training_sequence(step=1):
     koristeći IDFT formulu.
     Short sekvenca se koristi za packet detection, AGC, i coarse CFO.
     """
-    Positive = np.array([0,0,0,0,-1-1j,0,0,0,-1-1j,0,0,0,1+1j,0,0,0,
-                         1+1j,0,0,0,1+1j,0,0,0,-1-1j,0,0,0,-1-1j,0,0,0])
 
-    Negative = np.array([0,0,0,0,0,0,0,0,1+1j,0,0,0,-1-1j,0,0,0,
-                         1+1j,0,0,0,-1-1j,0,0,0,1+1j,0,0,0,-1-1j,0,0,0])
+    Positive = np.array([
+        0,0,0,0,   -1+1j,0,0,0,   -1-1j,0,0,0,   1+1j,0,0,0,
+        1+1j,0,0,0, 1+1j,0,0,0,  -1-1j,0,0,0,  -1+1j,0,0,0
+    ], dtype=complex)
+
+    Negative = np.array([
+        0,0,0,0,   0,0,0,0,   1+1j,0,0,0,   -1-1j,0,0,0,
+        1+1j,0,0,0,  -1+1j,0,0,0,  1+1j,0,0,0,  -1-1j,0,0,0
+    ], dtype=complex)
 
     Total = np.sqrt(13/6) * np.concatenate((Negative, Positive))
-    
+
     N = 64
     m = np.arange(-32, 32)
 

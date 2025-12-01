@@ -2,30 +2,43 @@ import numpy as np
 
 def get_long_training_sequence(step=1):
     """
-    Generiše Long Training Sequence (802.11a) u vremenskom domenu.
-    Long sekvenca se koristi za channel estimation i fine CFO korekciju.
+    Generiše Long Training Sequence u vremenskom domenu identično MATLAB literaturi (802.11a).
     """
-    
-    Positive = np.array([0,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,-1,1,1,
-                         -1,1,1,-1,1,-1,1,-1,1,-1,1,-1,1,1,1,1])
 
-    Negative = np.array([0,1,1,-1,1,-1,1,-1,1,1,-1,1,1,-1,1,-1,
-                         -1,1,1,-1,1,-1,1,-1,1,-1,1,-1,1,1,1,1])
+    # Definicije tona iz MATLAB-a
+    Positive = np.array([
+        0, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1,
+       -1, 1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1, 1, 1, 1
+    ], dtype=complex)
 
+    Negative = np.array([
+        0, 1, 1,-1, 1,-1, 1,-1, 1, 1,-1, 1, 1,-1, 1,-1,
+       -1, 1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1, 1, 1, 1
+    ], dtype=complex)
+
+    # MATLAB: AllTones = [Negative Positive];
     AllTones = np.concatenate((Negative, Positive))
 
     N = 64
-    m = np.arange(-32, 32)
+    m = np.arange(-32, 32)  # MATLAB m = -32:31
 
+    # MATLAB: LongTrainingSymbol = zeros(1, 64/Step)
     length = int(64 / step)
     LongTrainingSymbol = np.zeros(length, dtype=complex)
 
+    # MATLAB IDFT petlja
     for n in range(length):
         t = n * step
         E = np.exp(1j * 2 * np.pi * t * m / N)
-        LongTrainingSymbol[n] = np.dot(AllTones, E)
+        LongTrainingSymbol[n] = np.dot(AllTones, E)  # BEZ 1/N !!
 
-    if step == 1:   # 20 MHz
-        return np.concatenate((LongTrainingSymbol[32:64], LongTrainingSymbol))
-    else:           # 40 MHz (step=0.5 → dvostruko više tačaka)
-        return np.concatenate((LongTrainingSymbol[64:128], LongTrainingSymbol))
+    # MATLAB CP dodavanje
+    if step == 1:
+        # MATLAB: LongTrainingSymbol(1,33:64)
+        cp = LongTrainingSymbol[32:64]
+        return np.concatenate((cp, LongTrainingSymbol))
+
+    else:
+        # MATLAB: LongTrainingSymbol(1,65:128)
+        cp = LongTrainingSymbol[64:128]
+        return np.concatenate((cp, LongTrainingSymbol))
