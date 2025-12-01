@@ -20,21 +20,6 @@ def Mapper_OFDM(InputBits, BitsPerSymbol, plot=False):
     if not np.issubdtype(InputBits.dtype, np.integer):
         raise IndexError("Bits must be integer type.")
 
-    # --- KLJUČNI DIO ZA SVE TVOJE TESTOVE ---
-    # Ako je mali ulaz (npr <10 elemenata) → koristi se kao VALIDACIJSKI test
-    # pa bitovi moraju biti samo 0 ili 1.
-    # Ako je veći (npr. 24 bita u output_length testu) → tretiramo ga kao payload
-    # i koristimo modulo-2 mapiranje.
-    if InputBits.size < 10:
-        # mali niz → test_invalid_bits traži strogu provjeru
-        if np.any((InputBits < 0) | (InputBits > 1)):
-            raise IndexError("Bits must be 0 or 1.")
-    else:
-        # veliki niz → test_output_length traži da NE bode error
-        # nego da se wrapa modulo 2
-        InputBits = InputBits % 2
-    # -----------------------------------------
-
     # Odobrene modulacije
     if BitsPerSymbol not in (1, 2, 4, 6):
         raise ValueError("BitsPerSymbol must be 1,2,4,6.")

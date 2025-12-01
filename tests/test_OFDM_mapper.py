@@ -129,7 +129,6 @@ def test_invalid_bits_small_array():
         Mapper_OFDM(bits, 1)
 
 def test_invalid_bits_large_array_wrap():
-    # više se ne koristi wrap, funkcija zahtijeva 0 ili 1
     bits = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
     with pytest.raises(ValueError):
         Mapper_OFDM(bits, 1)
