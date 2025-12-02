@@ -10,6 +10,7 @@ from tx.utilities import bit_sequence
 from tx.OFDM_mapper import Mapper_OFDM
 from tx.ifft_ofdm_symbol import IFFT_GI
 from tx.short_sequence import get_short_training_sequence
+from tx.long_sequence import get_long_training_sequence   # ← DODANO
 from tx.filters import half_band_upsample
 
 
@@ -19,50 +20,48 @@ def tx_input_output_demo():
 
         Ulaz: bitovi
         Izlaz: finalni interpolirani signal (DAC → RF)
+        + STS (short preamble)
+        + LTS (long preamble)
         + dodatni prikaz: zoom OFDM payloada
-
     """
 
-
+    # 1) Generisanje bitova
     bits = bit_sequence(5, 2, 0)  # 5 OFDM simbola, QPSK
 
-   
-    qpsk = Mapper_OFDM(bits, 2)       # QPSK mapiranje
-    ofdm = IFFT_GI(qpsk)              # OFDM IFFT+GI
-    sts = get_short_training_sequence(1)
+    # 2) Mapiranje → QPSK → IFFT → OFDM signal
+    qpsk = Mapper_OFDM(bits, 2)
+    ofdm = IFFT_GI(qpsk)
 
-    # Kompletan TX paket (preambula + payload)
-    tx_packet = np.concatenate((sts, ofdm))
+    # 3) Preambule
+    sts = get_short_training_sequence(1)     # 10 × STS
+    lts = get_long_training_sequence(1)      # CP + LTS1 + LTS2  (64+32 sample)
 
-    # Interpolacija / upsampling x2
+    # 4) TX paket = preambule + payload
+    tx_packet = np.concatenate((sts, lts, ofdm))
+
+    # 5) Interpolacija x2 (zero-stuffing + half-band filter)
     up2 = np.zeros(len(tx_packet) * 2)
     up2[::2] = tx_packet
     tx_output, _ = half_band_upsample(up2, up_factor=1, N=31, plot=False)
 
+    # 6) Grafički prikaz
     fig, axs = plt.subplots(3, 1, figsize=(12, 10))
 
-    # === SUBPLOT 1: Bitovi (ulaz predajnika) ===
+    # Prikaz ulaznih bitova
     axs[0].stem(bits[:80])
     axs[0].set_title("ULAZ U PREDAJNIK — Bitovi")
-    axs[0].set_xlabel("Sample")
-    axs[0].set_ylabel("Vrijednost")
     axs[0].grid(True)
 
-    # === SUBPLOT 2: Kompletan TX izlaz (STS + OFDM) ===
-    axs[1].plot(np.real(tx_output[:600]))
-    axs[1].set_title("IZLAZ IZ PREDAJNIKA — Interpolirani TX signal (STS + OFDM)")
-    axs[1].set_xlabel("Sample")
-    axs[1].set_ylabel("Amplituda")
+    # Prikaz STS + LTS + OFDM payload
+    axs[1].plot(np.real(tx_output[:1200]))
+    axs[1].set_title("IZLAZ IZ PREDAJNIKA — STS + LTS + OFDM")
     axs[1].grid(True)
 
-    # === SUBPLOT 3: Zoom OFDM payloada ===
-    start = 320   # Početak OFDM payloada (poslije STS-a)
-    stop = 600    # Dio OFDM signala za pregled
-
+    # Zoom OFDM signala
+    start = 700
+    stop = 1200
     axs[2].plot(np.real(tx_output[start:stop]))
     axs[2].set_title("ZOOM — OFDM payload nakon interpolacije")
-    axs[2].set_xlabel("Sample")
-    axs[2].set_ylabel("Amplituda")
     axs[2].grid(True)
 
     plt.tight_layout()
