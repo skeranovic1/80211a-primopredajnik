@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 def Mapper_OFDM(InputBits, BitsPerSymbol, plot=False):
     """
     Mapira ulazne bitove u kompleksne QAM simbole za OFDM modulaciju.

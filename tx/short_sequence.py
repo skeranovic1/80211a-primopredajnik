@@ -23,7 +23,11 @@ def get_short_training_sequence(step=1):
     - Rezultat se normalizuje faktorom sqrt(13/6).
     - Funkcija vraća kompleksnu vremensku sekvencu dužine proporcionalne parametru 'step'.
     """
-
+    if not isinstance(step, (int, float)):
+        raise TypeError(f"Step mora biti numerički tip, dobijeno: {type(step)}")
+    if step <= 0:
+        raise ValueError(f"Step mora biti pozitivan, dobijeno: {step}")
+    
     # Definisanje pozitivnih frekvencijskih komponenti STS
     Positive = np.array([
         0,0,0,0,   -1-1j,0,0,0,   -1-1j,0,0,0,   1+1j,0,0,0,

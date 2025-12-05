@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from filters import half_band_upsample
-from utilities import zero_stuffing
-from utilities import spektar
+from .filters import half_band_upsample
+from .utilities import zero_stuffing
+from .utilities import spektar
 
 def filter_plot():
     """
