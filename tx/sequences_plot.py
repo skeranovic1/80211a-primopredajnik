@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np 
 from short_sequence import get_short_training_sequence
 from long_sequence import get_long_training_sequence
 
@@ -31,6 +32,7 @@ def plot_sequences(step=1):
     plt.plot(long_seq.imag)
     plt.grid()
 
+    plt.xlim(0,160)
     plt.tight_layout()
     plt.show()
 

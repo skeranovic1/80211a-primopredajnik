@@ -11,11 +11,11 @@ def IFFT_GI(symbol_stream):
     
     # broj ofdm simbola dobijemo kao duljinu streama podijeljenu s 48
     # jer svaki OFDM simbol ima 48 nosioca za podatke
-    num_symbols = len(symbol_stream) // 48
+    num_symbols = np.floor(len(symbol_stream) // 48)
     
     # output payload: 80 samples per symbol
     # 64 uzoraka (IFFT) + 16 uzoraka (guard interval) = 80 uzoraka
-    payload = np.zeros(num_symbols * 80, dtype=complex)
+    payload = np.zeros(num_symbols*80, dtype=complex)
 
     # indeksiranje za 48 nosioca podataka
     # Ovo su indeksi u 64-point IFFT-u gdje se postavljaju podaci
@@ -29,8 +29,7 @@ def IFFT_GI(symbol_stream):
         list(range(58,64))      # nosioci 58-63
     ) - 1   # konverzija iz MATLAB 1-based u Python 0-based indekse
     
-    # pozicije pilot nosioca (prema 802.11 standardu)
-    # MATLAB: [7 21 43 57], Python: [6, 20, 42, 56]
+    # pozicije pilot nosioca (prema 802.11 standardu): [6, 20, 42, 56]
     pilot_idx = np.array([7, 21, 43, 57]) - 1
 
     # Procesuiramo svaki OFDM simbol posebno
@@ -60,7 +59,7 @@ def IFFT_GI(symbol_stream):
 
         # kreiramo cijeli simbol: GI + cijeli IFFT izlaz
         # Format: [guard interval (16)] + [cijeli simbol (64)] = 80 uzoraka
-        block = np.concatenate([GI, IFFT_output])
+        block = np.hstack([GI, IFFT_output])
 
         # pohranjujemo u izlazni payload
         payload[i*80 : (i+1)*80] = block

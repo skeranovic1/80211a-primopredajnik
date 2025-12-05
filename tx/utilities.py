@@ -3,38 +3,118 @@ import matplotlib.pyplot as plt
 
 def zero_stuffing(signal, up_factor=2):
     """
-    Zero-stuffing upsampling helper funkcija
-    Ubacuje nule između originalnih uzoraka
+    Funkcija za zero-stuffing (upsampling) signala.
+    
+    Ubacuje nule između originalnih uzoraka signala da bi se postiglo upsampliranje.
+
+    Parametri
+    signal : numpy.ndarray
+        Ulazni signal koji se upsamplira. Mora biti numpy niz.
+    up_factor : int, opcionalno
+        Faktor upsampliranja (koliko puta se povećava broj uzoraka). Default je 2.
+
+    Povratna vrijednost
+    upsamplirano : numpy.ndarray
+        Upsamplirani signal sa ubačenim nulama. Tip podataka je kompleksan (complex).
+
+    Izuzeci
+    TypeError
+        Ako 'signal' nije numpy niz ili 'up_factor' nije cijeli broj.
+    ValueError
+        Ako 'up_factor' nije pozitivan cijeli broj.
+    
+    Napomene
+    - Funkcija radi tako što kreira novi niz dužine 'len(signal) * up_factor'.
+    - Originalni uzorci se stavljaju na pozicije '0, up_factor, 2*up_factor, ...'.
+    - Ostale pozicije su popunjene nulama.
     """
+    # Provjera tipa ulaznog signala
     if not isinstance(signal, np.ndarray):
-        raise TypeError("Signal must be a numpy array.")
+        raise TypeError("Signal mora biti numpy niz.")
 
+    # Provjera tipa up_factor
     if not isinstance(up_factor, int):
-        raise TypeError("up_factor must be an integer.")
+        raise TypeError("up_factor mora biti cijeli broj.")
 
+    # Provjera vrijednosti up_factor
     if up_factor <= 0:
-        raise ValueError("up_factor must be a positive integer.")
+        raise ValueError("up_factor mora biti pozitivan cijeli broj.")
 
-    upsamplirano = np.zeros(len(signal)*up_factor, dtype=complex)
+    # Kreiranje upsampliranog signala sa nulama
+    upsamplirano = np.zeros(len(signal) * up_factor, dtype=complex)
+
+    # Smještanje originalnih uzoraka na odgovarajuće pozicije
     upsamplirano[::up_factor] = signal
     
     return upsamplirano
 
 def bit_sequence (NumberOf_OFDM_Symbols, BitsPerSymbol,sd=0):
-    np.random.seed(sd)  # Fixing the seed of the random number generator
-    NumberOfBits = (48 * BitsPerSymbol) * NumberOf_OFDM_Symbols
-    Source_Bits = np.round(np.random.rand(NumberOfBits)).astype(int)  # Creating random input bits
+    """
+    Generiše nasumičnu bit sekvencu za OFDM prenos.
+
+    Parametri
+    NumberOf_OFDM_Symbols : int
+        Broj OFDM simbola za koje se generišu bitovi.
+    BitsPerSymbol : int
+        Broj bitova po OFDM simbolu.
+    sd : int, opcionalno
+        Sjeme (seed) za generator nasumičnih brojeva (default je 0).
+
+    Povratna vrijednost
+    Source_Bits : numpy.ndarray
+        1D niz nasumično generisanih bitova (0 ili 1).
+
+    Napomene
+    - Ukupan broj bitova se računa kao 48 * BitsPerSymbol * NumberOf_OFDM_Symbols.
+    - 'np.random.seed(sd)' se koristi za reproduktivnost rezultata.
+    - Bitovi se generišu korištenjem uniformne distribucije i zaokružuju na cijele brojeve (0 ili 1).
+    """
+    #Fiksiranje sjemena
+    np.random.seed(sd)  
+
+    #Izračunavanje ukupnog broja bitova
+    NumberOfBits=(48*BitsPerSymbol)*NumberOf_OFDM_Symbols
+
+    #Generisanje nasumičnih bita (0 ili 1)
+    Source_Bits=np.round(np.random.rand(NumberOfBits)).astype(int)
+    
     return Source_Bits
 
 def spektar(x, fs, label):
     """
-    Funkcija koja crta spektar signala x
-    fs: frekvencija uzorkovanja
-    label: oznaka za legendu
-    """
-    N = len(x)
-    X = np.fft.fftshift(np.fft.fft(x))
-    f = np.fft.fftshift(np.fft.fftfreq(N, 1/fs))
-    magnitude = np.abs(X) / (N/2)
-    plt.plot(f, magnitude, label=label)
+    Funkcija za crtanje spektra signala.
 
+    Parametri
+    x : numpy.ndarray
+        Ulazni signal čiji se spektar crta.
+    fs : float
+        Frekvencija uzorkovanja signala u Hz.
+    label : str
+        Oznaka koja se koristi u legendi grafa.
+
+    Povratna vrijednost
+    None
+        Funkcija crta spektar signala koristeći matplotlib i ne vraća vrijednost.
+
+    Napomene
+    - Spektar se računa pomoću Fast Fourier Transform (FFT) funkcije.
+    - Funkcija koristi 'np.fft.fft' za FFT i 'np.fft.fftshift' da centrirano prikaže frekvencijski spektar.
+    - Magnituda se normalizuje sa faktorom N/2.
+    - Za prikazivanje koristiti 'plt.show()' nakon funkcije da bi se graf prikazao.
+    """
+    
+    # Dužina signala
+    N = len(x)
+
+    # Računanje FFT-a i pomjeranje nule u centar spektra
+    X = np.fft.fftshift(np.fft.fft(x))
+
+    # Generisanje vektora frekvencija (centrovan na 0 Hz)
+    f = np.fft.fftshift(np.fft.fftfreq(N, 1/fs))
+
+    # Računanje magnitude spektra i normalizacija
+    magnitude = np.abs(X) / (N/2)
+
+    # Crtanje spektra
+    plt.plot(f, magnitude, label=label)
+    

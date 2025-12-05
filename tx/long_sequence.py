@@ -2,43 +2,64 @@ import numpy as np
 
 def get_long_training_sequence(step=1):
     """
-    Generiše Long Training Sequence u vremenskom domenu.
+    Generiše Long Training Sequence (LTS) u vremenskom domenu za OFDM (802.11a standard).
+
+    Long Training Sequence se koristi za:
+    - Preciznu sinhronizaciju paketa
+    - Kanalnu estimaciju (Channel Estimation)
+
+    Parametri
+    step : int, opcionalno
+        Korak uzorkovanja u vremenu. Default je 1.
+
+    Povratna vrijednost
+    LongTrainingSymbol : numpy.ndarray
+        Kompleksna vremenska sekvenca Long Training Sequence, uključujući Cyclic Prefix (CP).
+
+    Napomene
+    - Ova funkcija vraća samo jednu long sekvencu, kod okvira 802.11a standarda se koriste dvije uzastopne LTS sekvence.
+    - Sekvenca se generiše korištenjem IDFT formule preko definisanih frekvencijskih tonova.
+    - 'Positive' i 'Negative' predstavljaju pozitivne i negativne frekvencijske tonove LTS.
+    - Cyclic Prefix (CP) se dodaje kako bi se olakšala sinhronizacija i zaštita od inter-symbol interference (ISI).
+    - Funkcija vraća kompleksnu vremensku sekvencu čija dužina zavisi od parametra 'step'.
     """
 
-    # Definicije tona iz MATLAB-a
+    #Definisanje pozitivnih frekvencijskih komponenti LTS
     Positive = np.array([
-        0, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1,
-       -1, 1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1, 1, 1, 1
+       0, 1,-1,-1,   1, 1,-1, 1,  -1, 1,-1,-1,  -1,-1,-1, 1,
+       1,-1,-1, 1,  -1, 1,-1, 1,   1, 1, 1, 0,   0, 0, 0, 0
     ], dtype=complex)
 
+    #Definisanje negativnih frekvencijskih komponenti LTS
     Negative = np.array([
-        0, 1, 1,-1, 1,-1, 1,-1, 1, 1,-1, 1, 1,-1, 1,-1,
-       -1, 1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1, 1, 1, 1
+       0, 0, 0, 0,  0, 0, 1, 1,  -1,-1, 1, 1,  -1, 1,-1, 1,
+       1, 1, 1, 1,  1,-1,-1, 1,   1,-1, 1,-1,   1, 1, 1, 1
     ], dtype=complex)
 
-    # MATLAB: AllTones = [Negative Positive];
+    #Kombinovanje negativnih i pozitivnih tonova
     AllTones = np.concatenate((Negative, Positive))
 
+    #Parametri IDFT-a
     N = 64
     m = np.arange(-32, 32)  # MATLAB m = -32:31
 
-    # MATLAB: LongTrainingSymbol = zeros(1, 64/Step)
-    length = int(64 / step)
+    #Kreiranje praznog niza za vremensku sekvencu
+    length = int(64/step)
     LongTrainingSymbol = np.zeros(length, dtype=complex)
 
-    # MATLAB IDFT petlja
+    #IDFT petlja
     for n in range(length):
-        t = n * step
-        E = np.exp(1j * 2 * np.pi * t * m / N)
-        LongTrainingSymbol[n] = np.dot(AllTones, E)  # BEZ 1/N !!
+        t=n*step
+        E=np.exp(1j*2*np.pi*t*m/N)
+        LongTrainingSymbol[n] = np.dot(AllTones,E) 
 
-    # MATLAB CP dodavanje
+    double_long = np.concatenate((LongTrainingSymbol, LongTrainingSymbol))
+
+    #Dodavanje Cyclic Prefix (CP) prema step-u
     if step == 1:
-        # MATLAB: LongTrainingSymbol(1,33:64)
-        cp = LongTrainingSymbol[32:64]
-        return np.concatenate((cp, LongTrainingSymbol))
+        cp = double_long[32:64] #uzimanje zadnja 32 uzorka
+        return np.concatenate((cp, double_long))
 
     else:
-        # MATLAB: LongTrainingSymbol(1,65:128)
-        cp = LongTrainingSymbol[64:128]
-        return np.concatenate((cp, LongTrainingSymbol))
+        cp = double_long[64:128] #uzimanje zadnja 64 uzorka
+        return np.concatenate((cp, double_long))

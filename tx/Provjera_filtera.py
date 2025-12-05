@@ -1,10 +1,29 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from .filters import half_band_upsample
-from .utilities import zero_stuffing
-from .utilities import spektar
+from filters import half_band_upsample
+from utilities import zero_stuffing
+from utilities import spektar
 
-def main():
+def filter_plot():
+    """
+    Demonstrira proces upsampliranja sinusnog signala sa faktorom 2 korištenjem zero stuffing metode,
+    zatim filtrira upsampleirani signal half-band filterom.
+
+    Uključuje prikaz originalnog, upsampleiranog i filtriranog signala u vremenskom domenu,
+    kao i prikaz njihovih spektara u frekvencijskom domenu.
+
+    Koraci:
+    - Generisanje sinusnog signala od 50 Hz uzorkovanog na 1000 Hz
+    - Upsampliranje signala ubacivanjem nula (zero stuffing)
+    - Filtriranje upsampleiranog signala half-band filterom
+    - Vizualizacija signala i njihovih spektara
+
+    Parametri:
+        Nema ulaznih parametara.
+
+    Povratna vrijednost:
+        Nema povratne vrijednosti, samo prikazuje grafike.
+    """
     fs = 1000
     up_factor = 2
 
@@ -48,7 +67,7 @@ def main():
     plt.grid(True)
     plt.xlim(0, 1/f1)
 
-     # Treci plot: spektar
+    # Treci plot: spektar
     plt.figure()
     spektar(signal, fs, 'Originalni signal')
     spektar(filtrirano, fs*up_factor, 'Upsamplirani + filtrirani')
@@ -62,4 +81,4 @@ def main():
     plt.show()
 
 if __name__ == "__main__":
-    main()
+    filter_plot()
