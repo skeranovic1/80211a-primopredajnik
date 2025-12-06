@@ -1,8 +1,9 @@
 import numpy as np
 from tx.ifft_ofdm_symbol import IFFT_GI
+import pytest
+from tx.OFDM_mapper import Mapper_OFDM 
+from tx.utilities import bit_sequence
 
-
-# Test 1 — IFFT output mora imati pravilan broj uzoraka (80 po simbolu)
 def test_ifft_gi_output_length_single_symbol():
     """
     Jedan OFDM simbol: ulaz ima 48 QAM simbola,
@@ -17,8 +18,6 @@ def test_ifft_gi_output_length_single_symbol():
     assert len(payload) == num_symbols * 80
     assert payload.dtype == complex
 
-
-# Test 2 — IFFT output dužina mora skalirati kao N * 80 za više simbola
 def test_ifft_gi_output_length_multiple_symbols():
     """
     Više OFDM simbola: provjera da se dužina skalira kao N * 80.
@@ -31,8 +30,6 @@ def test_ifft_gi_output_length_multiple_symbols():
 
     assert len(payload) == num_symbols * 80
 
-
-# Test 3 — CP mora biti jednak zadnjih 16 uzoraka IFFT simbola (1 simbol)
 def test_ifft_gi_cyclic_prefix_content_single_symbol():
     """
     Provjera da je ciklički prefiks za jedan simbol tačno
@@ -55,35 +52,6 @@ def test_ifft_gi_cyclic_prefix_content_single_symbol():
     assert len(ofdm_symbol) == 64
     assert np.allclose(gi, ofdm_symbol[48:64])
 
-
-# Test 4 — CP mora biti ispravan i za više OFDM simbola (nema preklapanja)
-def test_ifft_gi_cyclic_prefix_content_multiple_symbols():
-    """
-    Provjera da je za svaki simbol prefiks jednak repu tog istog simbola.
-    """
-    num_symbols = 3
-    num_data_carriers = 48
-
-    rng = np.random.default_rng(seed=123)
-    symbol_stream = rng.normal(size=num_symbols * num_data_carriers) + 1j * rng.normal(
-        size=num_symbols * num_data_carriers
-    )
-
-    payload = IFFT_GI(symbol_stream)
-
-    for i in range(num_symbols):
-        start = i * 80
-        stop = start + 80
-        block = payload[start:stop]
-
-        gi = block[:16]
-        ofdm_symbol = block[16:]
-
-        assert len(ofdm_symbol) == 64
-        assert np.allclose(gi, ofdm_symbol[48:64])
-
-
-# Test 5 — IFFT mora biti inverzna operacija FFT-u
 def test_ifft_gi_is_inverse_of_fft():
     """
     Test da ifft(fft(x)) vraća originalni vektor x.
@@ -93,8 +61,6 @@ def test_ifft_gi_is_inverse_of_fft():
     x_rec = np.fft.ifft(X)
     assert np.allclose(x, x_rec)
 
-
-# Test 6 — Ciklički prefiks mora uvijek imati dužinu 16 uzoraka
 def test_ifft_gi_cp_has_correct_length():
     """
     Provjera da CP uvijek ima 16 uzoraka.
@@ -110,8 +76,6 @@ def test_ifft_gi_cp_has_correct_length():
         cp = block[:16]
         assert len(cp) == 16
 
-
-# Test 7 — Ukupna dužina svakog bloka mora biti tačno 80 uzoraka
 def test_ifft_gi_block_total_length():
     """
     CP (16) + IFFT simbol (64) = 80 uzoraka po bloku.
@@ -126,8 +90,6 @@ def test_ifft_gi_block_total_length():
         block = payload[i * 80 : (i + 1) * 80]
         assert len(block) == 80
 
-
-# Test 8 — Funkcija mora raditi stabilno za različite modulacije i seedove
 def test_ifft_gi_random_seeds_and_modulations():
     """
     Test stabilnosti za različite seedove i modulacije: BPSK, QPSK, 16QAM.
@@ -167,3 +129,42 @@ def test_ifft_gi_random_seeds_and_modulations():
                 cp = block[:16]
                 symbol = block[16:]
                 assert np.allclose(cp, symbol[48:64])
+
+def test_ifft_gi_no_plot():
+    """Provjerava da funkcija radi normalno kada se ne plota (default)."""
+    data = np.random.randn(48).astype(complex)
+
+    out = IFFT_GI(data, plot=False)
+
+    assert isinstance(out, np.ndarray)
+    assert out.dtype == complex
+    assert len(out) == 80
+
+def test_ifft_gi_multiple_symbols():
+    """Provjerava da funkcija ispravno obrađuje više OFDM simbola."""
+    num_symbols = 3
+    data = np.arange(48 * num_symbols).astype(complex)
+
+    out = IFFT_GI(data)
+
+    assert len(out) == num_symbols * 80
+
+def test_ifft_gi_real_input():
+    """Realni ulaz bi i dalje trebao raditi (pretvoriti se u complex automatski)."""
+    data = np.ones(48)
+    out = IFFT_GI(data)
+    assert len(out) == 80
+
+def test_ifft_gi_invalid_type():
+    """Provjerava da funkcija ne prihvata pogrešne tipove (npr. string)."""
+    data = "pogresan tip"
+
+    with pytest.raises(Exception):
+        IFFT_GI(data)
+
+def test_ifft_gi_empty_input():
+    """Prazan ulaz treba da izazove grešku ili specifično ponašanje."""
+    data = np.array([], dtype=complex)
+
+    with pytest.raises(ValueError):
+        IFFT_GI(data)

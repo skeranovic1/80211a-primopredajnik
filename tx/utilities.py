@@ -48,7 +48,7 @@ def zero_stuffing(signal, up_factor=2):
     
     return upsamplirano
 
-def bit_sequence (NumberOf_OFDM_Symbols, BitsPerSymbol,sd=0):
+def bit_sequence (NumberOf_OFDM_Symbols, BitsPerSymbol, sd=0):
     """
     Generiše nasumičnu bit sekvencu za OFDM prenos.
 
@@ -117,4 +117,27 @@ def spektar(x, fs, label):
 
     # Crtanje spektra
     plt.plot(f, magnitude, label=label)
-    
+
+def plot_konstelaciju(symbols,title):
+    """
+    Crta konstelacioni dijagram za kompleksne simbole.
+
+    Parametri:
+    - symbols : np.ndarray
+        Niz kompleksnih simbola (npr. izlaz iz Mapper_OFDM)
+    - title : str, optional
+        Naslov grafa (default: "Konstelacioni dijagram")
+    """
+    plt.figure(figsize=(6, 6))
+    plt.scatter(np.real(symbols), np.imag(symbols), s=10)
+
+    # Ose kroz nulu radi lakše čitanja
+    plt.axhline(0, color="gray", linewidth=0.8)
+    plt.axvline(0, color="gray", linewidth=0.8)
+
+    plt.xlabel("I komponenta")
+    plt.ylabel("Q komponenta")
+    plt.title(title)
+    plt.grid(True)
+    plt.gca().set_aspect("equal", "box")  # da bude krug -> kvadrat
+    plt.tight_layout()    
