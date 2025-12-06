@@ -8,7 +8,7 @@ def tx_input_output_demo():
     fs_base=20e6             # 20 MHz (802.11a)
     fs=fs_base*up_factor   # upsamplirani rate
 
-    Sample_Output, Stream =OFDM_TX(num_symbols, 2, up_factor, seed=17)
+    Sample_Output, _ =OFDM_TX(num_symbols, 2, up_factor, seed=17)
 
     t=np.arange(len(Sample_Output))/fs   #vremenska osa u sekundama za plot
 

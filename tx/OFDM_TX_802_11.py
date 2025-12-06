@@ -1,12 +1,12 @@
 import numpy as np
-from short_sequence import get_short_training_sequence
-from long_sequence import get_long_training_sequence
-from OFDM_mapper import Mapper_OFDM
-from utilities import bit_sequence
-from ifft_ofdm_symbol import IFFT_GI
-from filters import half_band_upsample
+from .short_sequence import get_short_training_sequence
+from .long_sequence import get_long_training_sequence
+from .OFDM_mapper import Mapper_OFDM
+from .utilities import bit_sequence
+from .ifft_ofdm_symbol import IFFT_GI
+from .filters import half_band_upsample
 
-def OFDM_TX(NumberOf_OFDM_Symbols, BitsPerSymbol, up_factor=2, seed=13):
+def OFDM_TX(NumberOf_OFDM_Symbols=2, BitsPerSymbol=4, up_factor=2, seed=13):
     """
     Generiše OFDM signal za 802.11 standard.
     Signal se automatski upsampluje korištenjem half-band filtera.
