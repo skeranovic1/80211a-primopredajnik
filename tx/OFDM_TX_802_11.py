@@ -6,7 +6,7 @@ from utilities import bit_sequence
 from ifft_ofdm_symbol import IFFT_GI
 from filters import half_band_upsample
 
-def OFDM_TX(NumberOf_OFDM_Symbols, BitsPerSymbol, up_factor=2):
+def OFDM_TX(NumberOf_OFDM_Symbols, BitsPerSymbol, up_factor=2, seed=13):
     """
     Generiše OFDM signal za 802.11 standard.
     Signal se automatski upsampluje korištenjem half-band filtera.
@@ -15,6 +15,7 @@ def OFDM_TX(NumberOf_OFDM_Symbols, BitsPerSymbol, up_factor=2):
     - NumberOf_OFDM_Symbols : broj OFDM simbola u paketu
     - BitsPerSymbol         : modulacija (1=BPSK, 2=QPSK, 4=16-QAM, 6=64-QAM)
     - up_factor             : faktor upsamplovanja (default=2)
+    - seed                  : sjeme za generator nasumičnih brojeva (default=13)
     
     Vraća:
     - Sample_Output         : upsample-ovan i filtriran OFDM signal
@@ -23,12 +24,11 @@ def OFDM_TX(NumberOf_OFDM_Symbols, BitsPerSymbol, up_factor=2):
 
     #1.Generisanje Short i Long Training Sequence
     Step = 1
-    ShortTrainingSequence = get_short_training_sequence(Step)
-    LongTrainingSequence = get_long_training_sequence(Step)
+    ShortTrainingSequence=(1/64)*get_short_training_sequence(Step)
+    LongTrainingSequence=(1/64)*get_long_training_sequence(Step)
 
     #2.Generisanje random bita
-    sd = 13 #seed za generator slučajnih brojeva
-    Source_Bits=bit_sequence(NumberOf_OFDM_Symbols, BitsPerSymbol, sd) #Izvorni biti
+    Source_Bits=bit_sequence(NumberOf_OFDM_Symbols, BitsPerSymbol, seed) #Izvorni biti
 
     #3.Mapper u kompleksne QAM simbole
     Symbol_Stream=Mapper_OFDM(Source_Bits, BitsPerSymbol)
