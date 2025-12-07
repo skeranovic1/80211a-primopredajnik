@@ -6,40 +6,43 @@ from .utilities import bit_sequence
 from .ifft_ofdm_symbol import IFFT_GI
 from .filters import half_band_upsample
 
-def OFDM_TX(NumberOf_OFDM_Symbols=2, BitsPerSymbol=4, up_factor=2, seed=13):
+class Transmitter80211a:
     """
-    Generiše OFDM signal za 802.11 standard.
-    Signal se automatski upsampluje korištenjem half-band filtera.
+    OFDM Transmitter za IEEE 802.11a standard.
     
-    Parametri:
-    - NumberOf_OFDM_Symbols : broj OFDM simbola u paketu
-    - BitsPerSymbol         : modulacija (1=BPSK, 2=QPSK, 4=16-QAM, 6=64-QAM)
-    - up_factor             : faktor upsamplovanja (default=2)
-    - seed                  : sjeme za generator nasumičnih brojeva (default=13)
-    
-    Vraća:
-    - Sample_Output         : upsample-ovan i filtriran OFDM signal
-    - Symbol_Stream         : kompleksni simboli generisani Mapper_OFDM
+    Atributi:
+    - num_ofdm_symbols : broj OFDM simbola u paketu
+    - bits_per_symbol  : modulacija (1=BPSK, 2=QPSK, 4=16-QAM, 6=64-QAM)
+    - up_factor        : faktor upsamplovanja
+    - seed             : sjeme za generator nasumičnih bita
+    - step             : korak za training sekvence
+    - plot             : ako je True, prikazuju se svi plotovi
     """
+    def __init__(self, num_ofdm_symbols=1, bits_per_symbol=2, up_factor=2, seed=13, step=1, plot=False):
+        self.num_ofdm_symbols = num_ofdm_symbols
+        self.bits_per_symbol = bits_per_symbol
+        self.up_factor = up_factor
+        self.seed = seed
+        self.step = step
+        self.plot = plot  
 
-    #1.Generisanje Short i Long Training Sequence
-    Step = 1
-    ShortTrainingSequence=(1/64)*get_short_training_sequence(Step)
-    LongTrainingSequence=(1/64)*get_long_training_sequence(Step)
-
-    #2.Generisanje random bita
-    Source_Bits=bit_sequence(NumberOf_OFDM_Symbols, BitsPerSymbol, seed) #Izvorni biti
-
-    #3.Mapper u kompleksne QAM simbole
-    Symbol_Stream=Mapper_OFDM(Source_Bits, BitsPerSymbol)
-
-    #4.Generisanje payload-a (IFFT + GI)
-    Payload=IFFT_GI(Symbol_Stream)
-
-    #5.Kreiranje kompletnog paketa (training + payload)
-    Packet_20MHz=np.concatenate((ShortTrainingSequence, LongTrainingSequence, Payload))
-
-    #6.Upsampling i filtriranje pomoću half-band filtera
-    Sample_Output,h=half_band_upsample(Packet_20MHz, up_factor=up_factor, N=31, plot=False)
-
-    return Sample_Output, Symbol_Stream
+    def generate_training_sequences(self):
+        """Generiše Short i Long Training Sequence"""
+        sts=get_short_training_sequence(self.step)
+        lts=get_long_training_sequence(self.step)
+        return sts, lts
+    
+    def generate_payload(self):
+        """Generiše OFDM simbol payload"""
+        bits=bit_sequence(self.num_ofdm_symbols, self.bits_per_symbol, self.seed)
+        symbols=Mapper_OFDM(bits, self.bits_per_symbol, plot=self.plot)
+        payload=IFFT_GI(symbols, plot=self.plot)
+        return payload, symbols
+    
+    def generate_frame(self):
+        """Generiše kompletan OFDM paket sa training sekvencama i upsamplingom"""
+        sts, lts=self.generate_training_sequences()
+        payload, symbols=self.generate_payload()
+        packet_20MHz=np.concatenate((sts, lts, payload))
+        sample_output, _ =half_band_upsample(packet_20MHz, up_factor=self.up_factor, N=31, plot=self.plot)
+        return sample_output, symbols
