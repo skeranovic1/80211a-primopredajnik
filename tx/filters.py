@@ -4,6 +4,43 @@ from .utilities import zero_stuffing
 
 
 def half_band_upsample(signal, up_factor=2, N=31, plot=False):
+    """
+    Vrši upsampliranje diskretnog signala korištenjem half-band FIR filtra.
+
+    Funkcija povećava frekvenciju uzorkovanja ulaznog signala ubacivanjem
+    nula između uzoraka (zero-stuffing), a zatim primjenjuje half-band
+    FIR filter radi uklanjanja neželjenih spektralnih komponenti nastalih
+    procesom upsampliranja.
+
+    Parametri
+    signal : array-like
+        Ulazni diskretni signal koji se upsamplira.
+    up_factor : int, opcionalno
+        Faktor upsampliranja. Podrazumijevana vrijednost je 2.
+    N : int, opcionalno
+        Dužina half-band FIR filtera. Podrazumijevana vrijednost je 31.
+    plot : bool, opcionalno
+        Ako je True, funkcija prikazuje impulsni i frekvencijski odziv
+        half-band filtra.
+
+    Povratne vrijednosti
+    filtrirano : numpy.ndarray
+        Upsamplirani i filtrirani izlazni signal.
+    h : numpy.ndarray
+        Impulsni odziv dizajniranog half-band FIR filtra.
+
+    Izuzeci
+    ValueError
+        - Ako je faktor upsampliranja manji ili jednak nuli.
+    TypeError
+        - Ako ulazni signal nije numeričkog tipa.
+
+    Napomene
+    - Half-band filteri imaju graničnu frekvenciju na polovini Nyquistove
+      frekvencije i često se koriste za interpolaciju sa faktorom dva.
+    - Filter je dizajniran korištenjem sinc funkcije sa Hanning (Hann) prozorom.
+    - Prikaz frekvencijskog odziva služi isključivo za analizu i vizualizaciju.
+    """
     # Dizajn half-band filtera
     n = np.arange(N)
     Arg = n/2 - (N-1)/4

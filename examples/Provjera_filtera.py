@@ -15,13 +15,13 @@ def filter_plot():
     Koraci:
     - Generisanje sinusnog signala od 50 Hz uzorkovanog na 1000 Hz
     - Upsampliranje signala ubacivanjem nula (zero stuffing)
-    - Filtriranje upsampleiranog signala half-band filterom
+    - Filtriranje upsampliranog signala half-band filterom
     - Vizualizacija signala i njihovih spektara
 
-    Parametri:
+    Parametri
         Nema ulaznih parametara.
 
-    Povratna vrijednost:
+    Povratna vrijednost
         Nema povratne vrijednosti, samo prikazuje grafike.
     """
     fs=1000

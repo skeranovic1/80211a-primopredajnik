@@ -50,7 +50,7 @@ def zero_stuffing(signal, up_factor=2):
 
 def bit_sequence (NumberOf_OFDM_Symbols, BitsPerSymbol, sd=0):
     """
-    Generiše nasumičnu bit sekvencu za OFDM prenos.
+    Generiše nasumičnu bit sekvencu za OFDM prijenos.
 
     Parametri
     NumberOf_OFDM_Symbols : int

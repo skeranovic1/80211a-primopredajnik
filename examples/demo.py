@@ -3,6 +3,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def demo():
+    """
+    Demonstrira generisanje i prikaz OFDM signala koristeći Transmitter80211a.
+
+    Funkcija kreira instancu TX modula za 802.11a standard sa zadanim
+    parametrima (QPSK modulacija, broj OFDM simbola, faktor upsampliranja),
+    generiše OFDM okvir i prikazuje realni dio signala u vremenskom domenu
+    sa označenim sekvencama STS, LTS, payload i guard intervalima (GI).
+
+    Napomene
+    - Vrijeme na x-osi je u mikrosekundama (µs) radi preglednosti.
+    """
     # Kreiranje TX instance sa parametrima
     num_ofdm_symbols=2
     up_factor=2

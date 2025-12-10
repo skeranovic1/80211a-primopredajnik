@@ -17,7 +17,8 @@ def get_long_training_sequence(step=1):
         Kompleksna vremenska sekvenca Long Training Sequence, uključujući Cyclic Prefix (CP).
 
     Napomene
-    - Ova funkcija vraća samo jednu long sekvencu, kod okvira 802.11a standarda se koriste dvije uzastopne LTS sekvence.
+    - Ova funkcija vraća samo long sekvencu koja se kod okvira 802.11a standarda sastoji od ciklicnog prefiksa 
+      i dvije uzastopne LTS sekvence.
     - Sekvenca se generiše korištenjem IDFT formule preko definisanih frekvencijskih tonova.
     - 'Positive' i 'Negative' predstavljaju pozitivne i negativne frekvencijske tonove LTS.
     - Cyclic Prefix (CP) se dodaje kako bi se olakšala sinhronizacija i zaštita od inter-symbol interference (ISI).
