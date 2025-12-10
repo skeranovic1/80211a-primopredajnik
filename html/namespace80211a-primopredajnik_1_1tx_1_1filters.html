@@ -125,7 +125,42 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<pre class="fragment">Vrši upsampliranje diskretnog signala korištenjem half-band FIR filtra.
 
+Funkcija povećava frekvenciju uzorkovanja ulaznog signala ubacivanjem
+nula između uzoraka (zero-stuffing), a zatim primjenjuje half-band
+FIR filter radi uklanjanja neželjenih spektralnih komponenti nastalih
+procesom upsampliranja.
+
+Parametri
+signal : array-like
+    Ulazni diskretni signal koji se upsamplira.
+up_factor : int, opcionalno
+    Faktor upsampliranja. Podrazumijevana vrijednost je 2.
+N : int, opcionalno
+    Dužina half-band FIR filtera. Podrazumijevana vrijednost je 31.
+plot : bool, opcionalno
+    Ako je True, funkcija prikazuje impulsni i frekvencijski odziv
+    half-band filtra.
+
+Povratne vrijednosti
+filtrirano : numpy.ndarray
+    Upsamplirani i filtrirani izlazni signal.
+h : numpy.ndarray
+    Impulsni odziv dizajniranog half-band FIR filtra.
+
+Izuzeci
+ValueError
+    - Ako je faktor upsampliranja manji ili jednak nuli.
+TypeError
+    - Ako ulazni signal nije numeričkog tipa.
+
+Napomene
+- Half-band filteri imaju graničnu frekvenciju na polovini Nyquistove
+  frekvencije i često se koriste za interpolaciju sa faktorom dva.
+- Filter je dizajniran korištenjem sinc funkcije sa Hanning (Hann) prozorom.
+- Prikaz frekvencijskog odziva služi isključivo za analizu i vizualizaciju.
+</pre> 
 <p class="definition">Definition at line <a class="el" href="filters_8py_source.html#l00006">6</a> of file <a class="el" href="filters_8py_source.html">filters.py</a>.</p>
 
 </div>

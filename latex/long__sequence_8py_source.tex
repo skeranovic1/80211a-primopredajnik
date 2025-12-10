@@ -21,51 +21,52 @@
 \DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00017}00017\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Kompleksna\ vremenska\ sekvenca\ Long\ Training\ Sequence,\ uključujući\ Cyclic\ Prefix\ (CP).}}
 \DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00018}00018\ \textcolor{stringliteral}{}}
 \DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00019}00019\ \textcolor{stringliteral}{\ \ \ \ Napomene}}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00020}00020\ \textcolor{stringliteral}{\ \ \ \ -\/\ Ova\ funkcija\ vraća\ samo\ jednu\ long\ sekvencu,\ kod\ okvira\ 802.11a\ standarda\ se\ koriste\ dvije\ uzastopne\ LTS\ sekvence.}}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00021}00021\ \textcolor{stringliteral}{\ \ \ \ -\/\ Sekvenca\ se\ generiše\ korištenjem\ IDFT\ formule\ preko\ definisanih\ frekvencijskih\ tonova.}}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00022}00022\ \textcolor{stringliteral}{\ \ \ \ -\/\ 'Positive'\ i\ 'Negative'\ predstavljaju\ pozitivne\ i\ negativne\ frekvencijske\ tonove\ LTS.}}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00023}00023\ \textcolor{stringliteral}{\ \ \ \ -\/\ Cyclic\ Prefix\ (CP)\ se\ dodaje\ kako\ bi\ se\ olakšala\ sinhronizacija\ i\ zaštita\ od\ inter-\/symbol\ interference\ (ISI).}}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00024}00024\ \textcolor{stringliteral}{\ \ \ \ -\/\ Funkcija\ vraća\ kompleksnu\ vremensku\ sekvencu\ čija\ dužina\ zavisi\ od\ parametra\ 'step'.}}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00025}00025\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00026}00026\ }
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00027}00027\ \ \ \ \ \textcolor{comment}{\#Definisanje\ pozitivnih\ frekvencijskih\ komponenti\ LTS}}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00028}00028\ \ \ \ \ Positive\ =\ np.array([}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00029}00029\ \ \ \ \ \ \ \ 0,\ 1,-\/1,-\/1,\ \ \ 1,\ 1,-\/1,\ 1,\ \ -\/1,\ 1,-\/1,-\/1,\ \ -\/1,-\/1,-\/1,\ 1,}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00030}00030\ \ \ \ \ \ \ \ 1,-\/1,-\/1,\ 1,\ \ -\/1,\ 1,-\/1,\ 1,\ \ \ 1,\ 1,\ 1,\ 0,\ \ \ 0,\ 0,\ 0,\ 0}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00031}00031\ \ \ \ \ ],\ dtype=complex)}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00032}00032\ }
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00033}00033\ \ \ \ \ \textcolor{comment}{\#Definisanje\ negativnih\ frekvencijskih\ komponenti\ LTS}}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00034}00034\ \ \ \ \ Negative\ =\ np.array([}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00035}00035\ \ \ \ \ \ \ \ 0,\ 0,\ 0,\ 0,\ \ 0,\ 0,\ 1,\ 1,\ \ -\/1,-\/1,\ 1,\ 1,\ \ -\/1,\ 1,-\/1,\ 1,}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00036}00036\ \ \ \ \ \ \ \ 1,\ 1,\ 1,\ 1,\ \ 1,-\/1,-\/1,\ 1,\ \ \ 1,-\/1,\ 1,-\/1,\ \ \ 1,\ 1,\ 1,\ 1}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00037}00037\ \ \ \ \ ],\ dtype=complex)}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00038}00038\ }
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00039}00039\ \ \ \ \ \textcolor{comment}{\#Kombinovanje\ negativnih\ i\ pozitivnih\ tonova}}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00040}00040\ \ \ \ \ AllTones\ =\ np.concatenate((Negative,\ Positive))}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00041}00041\ }
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00042}00042\ \ \ \ \ \textcolor{comment}{\#Parametri\ IDFT-\/a}}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00043}00043\ \ \ \ \ N\ =\ 64}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00044}00044\ \ \ \ \ m\ =\ np.arange(-\/32,\ 32)\ \ \textcolor{comment}{\#\ MATLAB\ m\ =\ -\/32:31}}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00045}00045\ }
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00046}00046\ \ \ \ \ \textcolor{comment}{\#Kreiranje\ praznog\ niza\ za\ vremensku\ sekvencu}}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00047}00047\ \ \ \ \ length\ =\ int(64/step)}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00048}00048\ \ \ \ \ LongTrainingSymbol\ =\ np.zeros(length,\ dtype=complex)}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00049}00049\ }
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00050}00050\ \ \ \ \ \textcolor{comment}{\#IDFT\ petlja}}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00051}00051\ \ \ \ \ \textcolor{keywordflow}{for}\ n\ \textcolor{keywordflow}{in}\ range(length):}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ t=n*step}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ E=np.exp(1j*2*np.pi*t*m/N)}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ LongTrainingSymbol[n]\ =\ np.dot(AllTones,E)\ }
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00055}00055\ }
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00056}00056\ \ \ \ \ double\_long\ =\ np.concatenate((LongTrainingSymbol,\ LongTrainingSymbol))}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00057}00057\ }
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00058}00058\ \ \ \ \ \textcolor{comment}{\#Dodavanje\ Cyclic\ Prefix\ (CP)\ prema\ step-\/u}}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00059}00059\ \ \ \ \ \textcolor{keywordflow}{if}\ step\ ==\ 1:}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ cp\ =\ double\_long[32:64]\ \textcolor{comment}{\#uzimanje\ zadnja\ 32\ uzorka}}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ np.concatenate((cp,\ double\_long))}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00062}00062\ }
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00063}00063\ \ \ \ \ \textcolor{keywordflow}{else}:}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00064}00064\ \ \ \ \ \ \ \ \ cp\ =\ double\_long[64:128]\ \textcolor{comment}{\#uzimanje\ zadnja\ 64\ uzorka}}
-\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ np.concatenate((cp,\ double\_long))}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00020}00020\ \textcolor{stringliteral}{\ \ \ \ -\/\ Ova\ funkcija\ vraća\ samo\ long\ sekvencu\ koja\ se\ kod\ okvira\ 802.11a\ standarda\ sastoji\ od\ ciklicnog\ prefiksa\ }}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00021}00021\ \textcolor{stringliteral}{\ \ \ \ \ \ i\ dvije\ uzastopne\ LTS\ sekvence.}}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00022}00022\ \textcolor{stringliteral}{\ \ \ \ -\/\ Sekvenca\ se\ generiše\ korištenjem\ IDFT\ formule\ preko\ definisanih\ frekvencijskih\ tonova.}}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00023}00023\ \textcolor{stringliteral}{\ \ \ \ -\/\ 'Positive'\ i\ 'Negative'\ predstavljaju\ pozitivne\ i\ negativne\ frekvencijske\ tonove\ LTS.}}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00024}00024\ \textcolor{stringliteral}{\ \ \ \ -\/\ Cyclic\ Prefix\ (CP)\ se\ dodaje\ kako\ bi\ se\ olakšala\ sinhronizacija\ i\ zaštita\ od\ inter-\/symbol\ interference\ (ISI).}}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00025}00025\ \textcolor{stringliteral}{\ \ \ \ -\/\ Funkcija\ vraća\ kompleksnu\ vremensku\ sekvencu\ čija\ dužina\ zavisi\ od\ parametra\ 'step'.}}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00026}00026\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00028}00028\ \ \ \ \ \textcolor{comment}{\#Definisanje\ pozitivnih\ frekvencijskih\ komponenti\ LTS}}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00029}00029\ \ \ \ \ Positive\ =\ np.array([}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00030}00030\ \ \ \ \ \ \ \ 0,\ 1,-\/1,-\/1,\ \ \ 1,\ 1,-\/1,\ 1,\ \ -\/1,\ 1,-\/1,-\/1,\ \ -\/1,-\/1,-\/1,\ 1,}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00031}00031\ \ \ \ \ \ \ \ 1,-\/1,-\/1,\ 1,\ \ -\/1,\ 1,-\/1,\ 1,\ \ \ 1,\ 1,\ 1,\ 0,\ \ \ 0,\ 0,\ 0,\ 0}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00032}00032\ \ \ \ \ ],\ dtype=complex)}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00034}00034\ \ \ \ \ \textcolor{comment}{\#Definisanje\ negativnih\ frekvencijskih\ komponenti\ LTS}}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00035}00035\ \ \ \ \ Negative\ =\ np.array([}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00036}00036\ \ \ \ \ \ \ \ 0,\ 0,\ 0,\ 0,\ \ 0,\ 0,\ 1,\ 1,\ \ -\/1,-\/1,\ 1,\ 1,\ \ -\/1,\ 1,-\/1,\ 1,}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00037}00037\ \ \ \ \ \ \ \ 1,\ 1,\ 1,\ 1,\ \ 1,-\/1,-\/1,\ 1,\ \ \ 1,-\/1,\ 1,-\/1,\ \ \ 1,\ 1,\ 1,\ 1}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00038}00038\ \ \ \ \ ],\ dtype=complex)}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00040}00040\ \ \ \ \ \textcolor{comment}{\#Kombinovanje\ negativnih\ i\ pozitivnih\ tonova}}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00041}00041\ \ \ \ \ AllTones\ =\ np.concatenate((Negative,\ Positive))}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00043}00043\ \ \ \ \ \textcolor{comment}{\#Parametri\ IDFT-\/a}}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00044}00044\ \ \ \ \ N\ =\ 64}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00045}00045\ \ \ \ \ m\ =\ np.arange(-\/32,\ 32)\ \ \textcolor{comment}{\#\ MATLAB\ m\ =\ -\/32:31}}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00047}00047\ \ \ \ \ \textcolor{comment}{\#Kreiranje\ praznog\ niza\ za\ vremensku\ sekvencu}}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00048}00048\ \ \ \ \ length\ =\ int(64/step)}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00049}00049\ \ \ \ \ LongTrainingSymbol\ =\ np.zeros(length,\ dtype=complex)}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00051}00051\ \ \ \ \ \textcolor{comment}{\#IDFT\ petlja}}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00052}00052\ \ \ \ \ \textcolor{keywordflow}{for}\ n\ \textcolor{keywordflow}{in}\ range(length):}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ t=n*step}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ E=np.exp(1j*2*np.pi*t*m/N)}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00055}00055\ \ \ \ \ \ \ \ \ LongTrainingSymbol[n]\ =\ np.dot(AllTones,E)\ }
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00057}00057\ \ \ \ \ double\_long\ =\ np.concatenate((LongTrainingSymbol,\ LongTrainingSymbol))}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00059}00059\ \ \ \ \ \textcolor{comment}{\#Dodavanje\ Cyclic\ Prefix\ (CP)\ prema\ step-\/u}}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00060}00060\ \ \ \ \ \textcolor{keywordflow}{if}\ step\ ==\ 1:}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ cp\ =\ double\_long[32:64]\ \textcolor{comment}{\#uzimanje\ zadnja\ 32\ uzorka}}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ np.concatenate((cp,\ double\_long))}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00064}00064\ \ \ \ \ \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ cp\ =\ double\_long[64:128]\ \textcolor{comment}{\#uzimanje\ zadnja\ 64\ uzorka}}
+\DoxyCodeLine{\Hypertarget{long__sequence_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ np.concatenate((cp,\ double\_long))}
 
 \end{DoxyCode}

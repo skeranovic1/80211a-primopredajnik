@@ -12,18 +12,18 @@
 \DoxyCodeLine{\Hypertarget{ifft__ofdm__symbol_8py_source_l00008}00008\ \textcolor{stringliteral}{\ \ \ \ Funkcija\ prima\ niz\ od\ 48-\/tonski\ modulisanih\ simbola\ za\ svaki\ OFDM\ simbol,}}
 \DoxyCodeLine{\Hypertarget{ifft__ofdm__symbol_8py_source_l00009}00009\ \textcolor{stringliteral}{\ \ \ \ raspoređuje\ ih\ na\ odgovarajuće\ frekvencijske\ podnosioca\ prema\ IEEE\ 802.11a}}
 \DoxyCodeLine{\Hypertarget{ifft__ofdm__symbol_8py_source_l00010}00010\ \textcolor{stringliteral}{\ \ \ \ strukturi,\ ubacuje\ pilot-\/nosioca,\ vrši\ IFFT\ i\ dodaje\ ciklički\ prefiks\ dužine\ 16.}}
-\DoxyCodeLine{\Hypertarget{ifft__ofdm__symbol_8py_source_l00011}00011\ \textcolor{stringliteral}{\ \ \ \ Rezultat\ je\ niz\ kompleksnih\ uzoraka\ u\ vremenskoj\ domeni.}}
+\DoxyCodeLine{\Hypertarget{ifft__ofdm__symbol_8py_source_l00011}00011\ \textcolor{stringliteral}{\ \ \ \ Rezultat\ je\ niz\ kompleksnih\ uzoraka\ u\ vremenskom\ domenu.}}
 \DoxyCodeLine{\Hypertarget{ifft__ofdm__symbol_8py_source_l00012}00012\ \textcolor{stringliteral}{}}
-\DoxyCodeLine{\Hypertarget{ifft__ofdm__symbol_8py_source_l00013}00013\ \textcolor{stringliteral}{\ \ \ \ Parameters}}
+\DoxyCodeLine{\Hypertarget{ifft__ofdm__symbol_8py_source_l00013}00013\ \textcolor{stringliteral}{\ \ \ \ Parameteri}}
 \DoxyCodeLine{\Hypertarget{ifft__ofdm__symbol_8py_source_l00014}00014\ \textcolor{stringliteral}{\ \ \ \ symbol\_stream\ :\ np.ndarray}}
 \DoxyCodeLine{\Hypertarget{ifft__ofdm__symbol_8py_source_l00015}00015\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Kompleksni\ ulazni\ niz\ modulisani\ podataka.\ Dužina\ mora\ biti}}
 \DoxyCodeLine{\Hypertarget{ifft__ofdm__symbol_8py_source_l00016}00016\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ 'N\ *\ 48',\ gdje\ je\ 'N'\ broj\ OFDM\ simbola.}}
 \DoxyCodeLine{\Hypertarget{ifft__ofdm__symbol_8py_source_l00017}00017\ \textcolor{stringliteral}{\ \ \ \ plot\ :\ bool,\ optional}}
 \DoxyCodeLine{\Hypertarget{ifft__ofdm__symbol_8py_source_l00018}00018\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Ako\ je\ True,\ prikazuju\ se\ grafovi\ različitih\ faza\ obrade.}}
 \DoxyCodeLine{\Hypertarget{ifft__ofdm__symbol_8py_source_l00019}00019\ \textcolor{stringliteral}{}}
-\DoxyCodeLine{\Hypertarget{ifft__ofdm__symbol_8py_source_l00020}00020\ \textcolor{stringliteral}{\ \ \ \ Returns}}
+\DoxyCodeLine{\Hypertarget{ifft__ofdm__symbol_8py_source_l00020}00020\ \textcolor{stringliteral}{\ \ \ \ Povratna\ vrijednost}}
 \DoxyCodeLine{\Hypertarget{ifft__ofdm__symbol_8py_source_l00021}00021\ \textcolor{stringliteral}{\ \ \ \ payload\ :\ np.ndarray}}
-\DoxyCodeLine{\Hypertarget{ifft__ofdm__symbol_8py_source_l00022}00022\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Kompleksni\ niz\ u\ vremenskoj\ domeni\ dužine\ 'N\ *\ 80',\ gdje\ je:}}
+\DoxyCodeLine{\Hypertarget{ifft__ofdm__symbol_8py_source_l00022}00022\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ Kompleksni\ niz\ u\ vremenskom\ domenu\ dužine\ 'N\ *\ 80',\ gdje\ je:}}
 \DoxyCodeLine{\Hypertarget{ifft__ofdm__symbol_8py_source_l00023}00023\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ -\/\ 64\ uzorka\ IFFT\ izlaz\ (OFDM\ simbol),}}
 \DoxyCodeLine{\Hypertarget{ifft__ofdm__symbol_8py_source_l00024}00024\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ -\/\ 16\ uzoraka\ ciklički\ prefiks\ (GI).}}
 \DoxyCodeLine{\Hypertarget{ifft__ofdm__symbol_8py_source_l00025}00025\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}

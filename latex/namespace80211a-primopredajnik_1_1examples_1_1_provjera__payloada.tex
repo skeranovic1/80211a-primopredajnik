@@ -16,7 +16,19 @@
 {\footnotesize\ttfamily \label{namespace80211a-primopredajnik_1_1examples_1_1_provjera__payloada_a285c075f6b6c2c6832197fcf793ef031} 
 80211a-\/primopredajnik.\+examples.\+Provjera\+\_\+payloada.\+main (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
 
+\begin{DoxyVerb}Demonstrira generisanje i prikaz OFDM payload signala.
 
+Funkcija:
+- Generiše nasumične ulazne bitove.
+- Mapira bitove u QPSK simbole koristeći Mapper_OFDM.
+- Primjenjuje IFFT i dodaje guard interval koristeći IFFT_GI.
+- Prikazuje realni i imaginarni dio OFDM payload signala u vremenskom domenu.
+
+Napomene
+- Plot prikazuje strukturu OFDM payload-a po uzorcima.
+- Parametri simulacije (broj simbola, seme generatora) su fiksni unutar funkcije.
+\end{DoxyVerb}
+ 
 
 Definition at line \mbox{\hyperlink{_provjera__payloada_8py_source_l00007}{7}} of file \mbox{\hyperlink{_provjera__payloada_8py_source}{Provjera\+\_\+payloada.\+py}}.
 

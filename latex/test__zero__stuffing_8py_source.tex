@@ -7,62 +7,78 @@
 \DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00003}00003\ \textcolor{keyword}{import}\ pytest\ }
 \DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00004}00004\ }
 \DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00005}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_ab90ad5a343a369de54d3761c6ad0e6f3}{00005}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_ab90ad5a343a369de54d3761c6ad0e6f3}{test\_zero\_stuffing\_basic}}():}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00006}00006\ \ \ \ \ signal\ =\ np.array([1,\ 2,\ 3])}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00007}00007\ \ \ \ \ result\ =\ zero\_stuffing(signal,\ up\_factor=2)}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00008}00008\ \ \ \ \ expected\ =\ np.array([1,\ 0,\ 2,\ 0,\ 3,\ 0])}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00009}00009\ \ \ \ \ \textcolor{keyword}{assert}\ np.array\_equal(result,\ expected)}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00010}00010\ }
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00011}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_a70bd2db7d810aae301dc10e0858ae407}{00011}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_a70bd2db7d810aae301dc10e0858ae407}{test\_zero\_stuffing\_with\_upfactor\_3}}():}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00012}00012\ \ \ \ \ signal\ =\ np.array([5,\ 10])}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00013}00013\ \ \ \ \ result\ =\ zero\_stuffing(signal,\ up\_factor=3)}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00014}00014\ \ \ \ \ expected\ =\ np.array([5,\ 0,\ 0,\ 10,\ 0,\ 0])}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00015}00015\ \ \ \ \ \textcolor{keyword}{assert}\ np.array\_equal(result,\ expected)}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00016}00016\ }
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00017}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_a0defd8e4bc37c0a67ed218f4e33369b7}{00017}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_a0defd8e4bc37c0a67ed218f4e33369b7}{test\_zero\_stuffing\_empty\_signal}}():}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00018}00018\ \ \ \ \ signal\ =\ np.array([])}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00019}00019\ \ \ \ \ result\ =\ zero\_stuffing(signal,\ up\_factor=2)}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00020}00020\ \ \ \ \ expected\ =\ np.array([])}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00021}00021\ \ \ \ \ \textcolor{keyword}{assert}\ np.array\_equal(result,\ expected)}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00022}00022\ }
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00023}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_a2b97790ec8e9072a73714c872d2ffaa1}{00023}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_a2b97790ec8e9072a73714c872d2ffaa1}{test\_zero\_stuffing\_negative\_values}}():}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00024}00024\ \ \ \ \ signal\ =\ np.array([-\/1,\ -\/2])}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00025}00025\ \ \ \ \ result\ =\ zero\_stuffing(signal,\ up\_factor=2)}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00026}00026\ \ \ \ \ expected\ =\ np.array([-\/1,\ 0,\ -\/2,\ 0])}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00027}00027\ \ \ \ \ \textcolor{keyword}{assert}\ np.array\_equal(result,\ expected)}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00006}00006\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ osnovno\ zero-\/stuffing\ upsampliranje\ sa\ faktorom\ 2."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00007}00007\ \ \ \ \ signal\ =\ np.array([1,\ 2,\ 3])}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00008}00008\ \ \ \ \ result\ =\ zero\_stuffing(signal,\ up\_factor=2)}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00009}00009\ \ \ \ \ expected\ =\ np.array([1,\ 0,\ 2,\ 0,\ 3,\ 0])}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00010}00010\ \ \ \ \ \textcolor{keyword}{assert}\ np.array\_equal(result,\ expected)}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00013}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_a70bd2db7d810aae301dc10e0858ae407}{00013}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_a70bd2db7d810aae301dc10e0858ae407}{test\_zero\_stuffing\_with\_upfactor\_3}}():}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00014}00014\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ zero-\/stuffing\ sa\ faktorom\ upsampliranja\ 3."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00015}00015\ \ \ \ \ signal\ =\ np.array([5,\ 10])}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00016}00016\ \ \ \ \ result\ =\ zero\_stuffing(signal,\ up\_factor=3)}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00017}00017\ \ \ \ \ expected\ =\ np.array([5,\ 0,\ 0,\ 10,\ 0,\ 0])}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00018}00018\ \ \ \ \ \textcolor{keyword}{assert}\ np.array\_equal(result,\ expected)}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00021}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_a0defd8e4bc37c0a67ed218f4e33369b7}{00021}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_a0defd8e4bc37c0a67ed218f4e33369b7}{test\_zero\_stuffing\_empty\_signal}}():}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00022}00022\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ ponašanje\ funkcije\ za\ prazan\ ulazni\ signal."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00023}00023\ \ \ \ \ signal\ =\ np.array([])}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00024}00024\ \ \ \ \ result\ =\ zero\_stuffing(signal,\ up\_factor=2)}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00025}00025\ \ \ \ \ expected\ =\ np.array([])}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00026}00026\ \ \ \ \ \textcolor{keyword}{assert}\ np.array\_equal(result,\ expected)}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00027}00027\ }
 \DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00028}00028\ }
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00029}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_ae5c8d0d78b16108af0d6e00e87d21197}{00029}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_ae5c8d0d78b16108af0d6e00e87d21197}{test\_zero\_stuffing\_float\_values}}():}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00030}00030\ \ \ \ \ signal\ =\ np.array([1.5,\ 2.5])}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00031}00031\ \ \ \ \ result\ =\ zero\_stuffing(signal,\ up\_factor=2)}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00032}00032\ \ \ \ \ expected\ =\ np.array([1.5,\ 0,\ 2.5,\ 0])}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00033}00033\ \ \ \ \ \textcolor{keyword}{assert}\ np.array\_equal(result,\ expected)}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00034}00034\ }
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00035}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_a4b7137f7c77287746d9d3afca6c8c6d6}{00035}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_a4b7137f7c77287746d9d3afca6c8c6d6}{test\_zero\_stuffing\_non\_numpy\_signal}}():}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00036}00036\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(TypeError):}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00037}00037\ \ \ \ \ \ \ \ \ zero\_stuffing([1,\ 2,\ 3],\ up\_factor=2)\ \ \textcolor{comment}{\#\ nije\ numpy\ array}}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00038}00038\ }
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00039}00039\ }
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00040}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_a25a17bb9d4130775ee712635b8f01830}{00040}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_a25a17bb9d4130775ee712635b8f01830}{test\_zero\_stuffing\_string\_instead\_of\_signal}}():}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00041}00041\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(TypeError):}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ zero\_stuffing(\textcolor{stringliteral}{"{}abc"{}},\ up\_factor=2)}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00029}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_a2b97790ec8e9072a73714c872d2ffaa1}{00029}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_a2b97790ec8e9072a73714c872d2ffaa1}{test\_zero\_stuffing\_negative\_values}}():}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00030}00030\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ li\ negativne\ vrijednosti\ ostaju\ očuvane\ nakon\ upsampliranja."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00031}00031\ \ \ \ \ signal\ =\ np.array([-\/1,\ -\/2])}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00032}00032\ \ \ \ \ result\ =\ zero\_stuffing(signal,\ up\_factor=2)}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00033}00033\ \ \ \ \ expected\ =\ np.array([-\/1,\ 0,\ -\/2,\ 0])}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00034}00034\ \ \ \ \ \textcolor{keyword}{assert}\ np.array\_equal(result,\ expected)}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00037}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_ae5c8d0d78b16108af0d6e00e87d21197}{00037}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_ae5c8d0d78b16108af0d6e00e87d21197}{test\_zero\_stuffing\_float\_values}}():}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00038}00038\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ rad\ funkcije\ sa\ ulaznim\ signalom\ tipa\ float."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00039}00039\ \ \ \ \ signal\ =\ np.array([1.5,\ 2.5])}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00040}00040\ \ \ \ \ result\ =\ zero\_stuffing(signal,\ up\_factor=2)}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00041}00041\ \ \ \ \ expected\ =\ np.array([1.5,\ 0,\ 2.5,\ 0])}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00042}00042\ \ \ \ \ \textcolor{keyword}{assert}\ np.array\_equal(result,\ expected)}
 \DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00043}00043\ }
 \DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00044}00044\ }
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00045}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_ac27c732e18261aaf084e88535b7ef1dc}{00045}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_ac27c732e18261aaf084e88535b7ef1dc}{test\_zero\_stuffing\_none\_signal}}():}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00046}00046\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(TypeError):}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00047}00047\ \ \ \ \ \ \ \ \ zero\_stuffing(\textcolor{keywordtype}{None},\ up\_factor=2)}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00045}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_a4b7137f7c77287746d9d3afca6c8c6d6}{00045}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_a4b7137f7c77287746d9d3afca6c8c6d6}{test\_zero\_stuffing\_non\_numpy\_signal}}():}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00046}00046\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ li\ se\ baca\ TypeError\ ako\ ulaz\ nije\ numpy\ array."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00047}00047\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(TypeError):}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00048}00048\ \ \ \ \ \ \ \ \ zero\_stuffing([1,\ 2,\ 3],\ up\_factor=2)}
 \DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00049}00049\ }
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00050}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_a21136c70c47c891f8e1eb7bf002bede9}{00050}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_a21136c70c47c891f8e1eb7bf002bede9}{test\_zero\_stuffing\_non\_integer\_upfactor}}():}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00051}00051\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(TypeError):}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ zero\_stuffing(np.array([1,2,3]),\ up\_factor=2.5)}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00053}00053\ }
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00054}00054\ }
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00055}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_acf02494bf06fae701cf5a56662ec9a44}{00055}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_acf02494bf06fae701cf5a56662ec9a44}{test\_zero\_stuffing\_negative\_upfactor}}():}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00056}00056\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(ValueError):}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00057}00057\ \ \ \ \ \ \ \ \ zero\_stuffing(np.array([1,2,3]),\ up\_factor=-\/1)}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00058}00058\ }
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00059}00059\ }
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00060}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_aaa8154b7027e5f948974e72c4ba98baa}{00060}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_aaa8154b7027e5f948974e72c4ba98baa}{test\_zero\_stuffing\_zero\_upfactor}}():}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00061}00061\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(ValueError):}
-\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ zero\_stuffing(np.array([1,2,3]),\ up\_factor=0)}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00051}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_a25a17bb9d4130775ee712635b8f01830}{00051}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_a25a17bb9d4130775ee712635b8f01830}{test\_zero\_stuffing\_string\_instead\_of\_signal}}():}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00052}00052\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ li\ se\ baca\ TypeError\ ako\ je\ ulazni\ signal\ string."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00053}00053\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(TypeError):}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ zero\_stuffing(\textcolor{stringliteral}{"{}abc"{}},\ up\_factor=2)}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00057}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_ac27c732e18261aaf084e88535b7ef1dc}{00057}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_ac27c732e18261aaf084e88535b7ef1dc}{test\_zero\_stuffing\_none\_signal}}():}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00058}00058\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ li\ se\ baca\ TypeError\ ako\ je\ ulazni\ signal\ None."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00059}00059\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(TypeError):}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00060}00060\ \ \ \ \ \ \ \ \ zero\_stuffing(\textcolor{keywordtype}{None},\ up\_factor=2)}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00063}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_a21136c70c47c891f8e1eb7bf002bede9}{00063}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_a21136c70c47c891f8e1eb7bf002bede9}{test\_zero\_stuffing\_non\_integer\_upfactor}}():}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00064}00064\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ li\ se\ baca\ TypeError\ za\ ne-\/cjelobrojni\ faktor\ upsampliranja."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00065}00065\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(TypeError):}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ zero\_stuffing(np.array([1,2,3]),\ up\_factor=2.5)}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00069}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_acf02494bf06fae701cf5a56662ec9a44}{00069}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_acf02494bf06fae701cf5a56662ec9a44}{test\_zero\_stuffing\_negative\_upfactor}}():}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00070}00070\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ li\ se\ baca\ ValueError\ za\ negativan\ faktor\ upsampliranja."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00071}00071\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(ValueError):}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00072}00072\ \ \ \ \ \ \ \ \ zero\_stuffing(np.array([1,2,3]),\ up\_factor=-\/1)}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00074}00074\ }
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00075}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_aaa8154b7027e5f948974e72c4ba98baa}{00075}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__zero__stuffing_aaa8154b7027e5f948974e72c4ba98baa}{test\_zero\_stuffing\_zero\_upfactor}}():}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00076}00076\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ li\ se\ baca\ ValueError\ za\ faktor\ upsampliranja\ jednak\ nuli."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00077}00077\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(ValueError):}
+\DoxyCodeLine{\Hypertarget{test__zero__stuffing_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ zero\_stuffing(np.array([1,2,3]),\ up\_factor=0)}
 
 \end{DoxyCode}

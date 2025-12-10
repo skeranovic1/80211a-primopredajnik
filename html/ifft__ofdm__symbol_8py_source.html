@@ -102,18 +102,18 @@ $(function(){initNavTree('ifft__ofdm__symbol_8py_source.html','',''); });
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="stringliteral">    Funkcija prima niz od 48-tonski modulisanih simbola za svaki OFDM simbol,</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="stringliteral">    raspoređuje ih na odgovarajuće frekvencijske podnosioca prema IEEE 802.11a</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="stringliteral">    strukturi, ubacuje pilot-nosioca, vrši IFFT i dodaje ciklički prefiks dužine 16.</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="stringliteral">    Rezultat je niz kompleksnih uzoraka u vremenskoj domeni.</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="stringliteral">    Rezultat je niz kompleksnih uzoraka u vremenskom domenu.</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="stringliteral"></span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="stringliteral">    Parameters</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="stringliteral">    Parameteri</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="stringliteral">    symbol_stream : np.ndarray</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="stringliteral">        Kompleksni ulazni niz modulisani podataka. Dužina mora biti</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="stringliteral">        &#39;N * 48&#39;, gdje je &#39;N&#39; broj OFDM simbola.</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="stringliteral">    plot : bool, optional</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="stringliteral">        Ako je True, prikazuju se grafovi različitih faza obrade.</span></div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="stringliteral"></span> </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="stringliteral">    Returns</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="stringliteral">    Povratna vrijednost</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="stringliteral">    payload : np.ndarray</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="stringliteral">        Kompleksni niz u vremenskoj domeni dužine &#39;N * 80&#39;, gdje je:</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="stringliteral">        Kompleksni niz u vremenskom domenu dužine &#39;N * 80&#39;, gdje je:</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="stringliteral">        - 64 uzorka IFFT izlaz (OFDM simbol),</span></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="stringliteral">        - 16 uzoraka ciklički prefiks (GI).</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="stringliteral">    &quot;&quot;&quot;</span></div>

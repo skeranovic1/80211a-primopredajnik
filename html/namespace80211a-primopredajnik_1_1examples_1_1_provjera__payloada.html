@@ -111,7 +111,18 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<pre class="fragment">Demonstrira generisanje i prikaz OFDM payload signala.
 
+Funkcija:
+- Generiše nasumične ulazne bitove.
+- Mapira bitove u QPSK simbole koristeći Mapper_OFDM.
+- Primjenjuje IFFT i dodaje guard interval koristeći IFFT_GI.
+- Prikazuje realni i imaginarni dio OFDM payload signala u vremenskom domenu.
+
+Napomene
+- Plot prikazuje strukturu OFDM payload-a po uzorcima.
+- Parametri simulacije (broj simbola, seme generatora) su fiksni unutar funkcije.
+</pre> 
 <p class="definition">Definition at line <a class="el" href="_provjera__payloada_8py_source.html#l00007">7</a> of file <a class="el" href="_provjera__payloada_8py_source.html">Provjera_payloada.py</a>.</p>
 
 </div>

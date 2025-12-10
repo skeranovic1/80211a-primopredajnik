@@ -21,18 +21,18 @@
 Funkcija prima niz od 48-tonski modulisanih simbola za svaki OFDM simbol,
 raspoređuje ih na odgovarajuće frekvencijske podnosioca prema IEEE 802.11a
 strukturi, ubacuje pilot-nosioca, vrši IFFT i dodaje ciklički prefiks dužine 16.
-Rezultat je niz kompleksnih uzoraka u vremenskoj domeni.
+Rezultat je niz kompleksnih uzoraka u vremenskom domenu.
 
-Parameters
+Parameteri
 symbol_stream : np.ndarray
     Kompleksni ulazni niz modulisani podataka. Dužina mora biti
     'N * 48', gdje je 'N' broj OFDM simbola.
 plot : bool, optional
     Ako je True, prikazuju se grafovi različitih faza obrade.
 
-Returns
+Povratna vrijednost
 payload : np.ndarray
-    Kompleksni niz u vremenskoj domeni dužine 'N * 80', gdje je:
+    Kompleksni niz u vremenskom domenu dužine 'N * 80', gdje je:
     - 64 uzorka IFFT izlaz (OFDM simbol),
     - 16 uzoraka ciklički prefiks (GI).
 \end{DoxyVerb}
