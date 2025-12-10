@@ -1,0 +1,130 @@
+\doxysection{80211a-\/primopredajnik.tx.\+utilities Namespace Reference}
+\hypertarget{namespace80211a-primopredajnik_1_1tx_1_1utilities}{}\label{namespace80211a-primopredajnik_1_1tx_1_1utilities}\index{80211a-\/primopredajnik.tx.utilities@{80211a-\/primopredajnik.tx.utilities}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tx_1_1utilities_abd49e9678fab4655e359c5917f2505c4}{zero\+\_\+stuffing}} (signal, up\+\_\+factor=2)
+\item 
+\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tx_1_1utilities_ad6c9f25ab6dc9cb2d749b2522438eb44}{bit\+\_\+sequence}} (Number\+Of\+\_\+\+OFDM\+\_\+\+Symbols, Bits\+Per\+Symbol, sd=0)
+\item 
+\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tx_1_1utilities_a8215f2a4df65074ff87b425525a6ac74}{spektar}} (x, fs, label)
+\item 
+\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tx_1_1utilities_a74aedaed719a4e1c499c6c25e540e60e}{plot\+\_\+konstelaciju}} (symbols, title)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{namespace80211a-primopredajnik_1_1tx_1_1utilities_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespace80211a-primopredajnik_1_1tx_1_1utilities_ad6c9f25ab6dc9cb2d749b2522438eb44}\index{80211a-\/primopredajnik.tx.utilities@{80211a-\/primopredajnik.tx.utilities}!bit\_sequence@{bit\_sequence}}
+\index{bit\_sequence@{bit\_sequence}!80211a-\/primopredajnik.tx.utilities@{80211a-\/primopredajnik.tx.utilities}}
+\doxysubsubsection{\texorpdfstring{bit\_sequence()}{bit\_sequence()}}
+{\footnotesize\ttfamily \label{namespace80211a-primopredajnik_1_1tx_1_1utilities_ad6c9f25ab6dc9cb2d749b2522438eb44} 
+80211a-\/primopredajnik.\+tx.\+utilities.\+bit\+\_\+sequence (\begin{DoxyParamCaption}\item[{}]{Number\+Of\+\_\+\+OFDM\+\_\+\+Symbols}{, }\item[{}]{Bits\+Per\+Symbol}{, }\item[{}]{sd}{ = {\ttfamily 0}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Generiše nasumičnu bit sekvencu za OFDM prenos.
+
+Parametri
+NumberOf_OFDM_Symbols : int
+    Broj OFDM simbola za koje se generišu bitovi.
+BitsPerSymbol : int
+    Broj bitova po OFDM simbolu.
+sd : int, opcionalno
+    Sjeme (seed) za generator nasumičnih brojeva (default je 0).
+
+Povratna vrijednost
+Source_Bits : numpy.ndarray
+    1D niz nasumično generisanih bitova (0 ili 1).
+
+Napomene
+- Ukupan broj bitova se računa kao 48 * BitsPerSymbol * NumberOf_OFDM_Symbols.
+- 'np.random.seed(sd)' se koristi za reproduktivnost rezultata.
+- Bitovi se generišu korištenjem uniformne distribucije i zaokružuju na cijele brojeve (0 ili 1).
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{utilities_8py_source_l00051}{51}} of file \mbox{\hyperlink{utilities_8py_source}{utilities.\+py}}.
+
+\Hypertarget{namespace80211a-primopredajnik_1_1tx_1_1utilities_a74aedaed719a4e1c499c6c25e540e60e}\index{80211a-\/primopredajnik.tx.utilities@{80211a-\/primopredajnik.tx.utilities}!plot\_konstelaciju@{plot\_konstelaciju}}
+\index{plot\_konstelaciju@{plot\_konstelaciju}!80211a-\/primopredajnik.tx.utilities@{80211a-\/primopredajnik.tx.utilities}}
+\doxysubsubsection{\texorpdfstring{plot\_konstelaciju()}{plot\_konstelaciju()}}
+{\footnotesize\ttfamily \label{namespace80211a-primopredajnik_1_1tx_1_1utilities_a74aedaed719a4e1c499c6c25e540e60e} 
+80211a-\/primopredajnik.\+tx.\+utilities.\+plot\+\_\+konstelaciju (\begin{DoxyParamCaption}\item[{}]{symbols}{, }\item[{}]{title}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Crta konstelacioni dijagram za kompleksne simbole.
+
+Parametri:
+- symbols : np.ndarray
+    Niz kompleksnih simbola (npr. izlaz iz Mapper_OFDM)
+- title : str, optional
+    Naslov grafa (default: "Konstelacioni dijagram")
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{utilities_8py_source_l00121}{121}} of file \mbox{\hyperlink{utilities_8py_source}{utilities.\+py}}.
+
+\Hypertarget{namespace80211a-primopredajnik_1_1tx_1_1utilities_a8215f2a4df65074ff87b425525a6ac74}\index{80211a-\/primopredajnik.tx.utilities@{80211a-\/primopredajnik.tx.utilities}!spektar@{spektar}}
+\index{spektar@{spektar}!80211a-\/primopredajnik.tx.utilities@{80211a-\/primopredajnik.tx.utilities}}
+\doxysubsubsection{\texorpdfstring{spektar()}{spektar()}}
+{\footnotesize\ttfamily \label{namespace80211a-primopredajnik_1_1tx_1_1utilities_a8215f2a4df65074ff87b425525a6ac74} 
+80211a-\/primopredajnik.\+tx.\+utilities.\+spektar (\begin{DoxyParamCaption}\item[{}]{x}{, }\item[{}]{fs}{, }\item[{}]{label}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Funkcija za crtanje spektra signala.
+
+Parametri
+x : numpy.ndarray
+    Ulazni signal čiji se spektar crta.
+fs : float
+    Frekvencija uzorkovanja signala u Hz.
+label : str
+    Oznaka koja se koristi u legendi grafa.
+
+Povratna vrijednost
+None
+    Funkcija crta spektar signala koristeći matplotlib i ne vraća vrijednost.
+
+Napomene
+- Spektar se računa pomoću Fast Fourier Transform (FFT) funkcije.
+- Funkcija koristi 'np.fft.fft' za FFT i 'np.fft.fftshift' da centrirano prikaže frekvencijski spektar.
+- Magnituda se normalizuje sa faktorom N/2.
+- Za prikazivanje koristiti 'plt.show()' nakon funkcije da bi se graf prikazao.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{utilities_8py_source_l00083}{83}} of file \mbox{\hyperlink{utilities_8py_source}{utilities.\+py}}.
+
+\Hypertarget{namespace80211a-primopredajnik_1_1tx_1_1utilities_abd49e9678fab4655e359c5917f2505c4}\index{80211a-\/primopredajnik.tx.utilities@{80211a-\/primopredajnik.tx.utilities}!zero\_stuffing@{zero\_stuffing}}
+\index{zero\_stuffing@{zero\_stuffing}!80211a-\/primopredajnik.tx.utilities@{80211a-\/primopredajnik.tx.utilities}}
+\doxysubsubsection{\texorpdfstring{zero\_stuffing()}{zero\_stuffing()}}
+{\footnotesize\ttfamily \label{namespace80211a-primopredajnik_1_1tx_1_1utilities_abd49e9678fab4655e359c5917f2505c4} 
+80211a-\/primopredajnik.\+tx.\+utilities.\+zero\+\_\+stuffing (\begin{DoxyParamCaption}\item[{}]{signal}{, }\item[{}]{up\+\_\+factor}{ = {\ttfamily 2}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Funkcija za zero-stuffing (upsampling) signala.
+
+Ubacuje nule između originalnih uzoraka signala da bi se postiglo upsampliranje.
+
+Parametri
+signal : numpy.ndarray
+    Ulazni signal koji se upsamplira. Mora biti numpy niz.
+up_factor : int, opcionalno
+    Faktor upsampliranja (koliko puta se povećava broj uzoraka). Default je 2.
+
+Povratna vrijednost
+upsamplirano : numpy.ndarray
+    Upsamplirani signal sa ubačenim nulama. Tip podataka je kompleksan (complex).
+
+Izuzeci
+TypeError
+    Ako 'signal' nije numpy niz ili 'up_factor' nije cijeli broj.
+ValueError
+    Ako 'up_factor' nije pozitivan cijeli broj.
+
+Napomene
+- Funkcija radi tako što kreira novi niz dužine 'len(signal) * up_factor'.
+- Originalni uzorci se stavljaju na pozicije '0, up_factor, 2*up_factor, ...'.
+- Ostale pozicije su popunjene nulama.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{utilities_8py_source_l00004}{4}} of file \mbox{\hyperlink{utilities_8py_source}{utilities.\+py}}.
+

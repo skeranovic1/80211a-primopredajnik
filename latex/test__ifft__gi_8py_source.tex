@@ -1,0 +1,176 @@
+\doxysection{test\+\_\+ifft\+\_\+gi.\+py}
+\hypertarget{test__ifft__gi_8py_source}{}\label{test__ifft__gi_8py_source}\index{tests/test\_ifft\_gi.py@{tests/test\_ifft\_gi.py}}
+\mbox{\hyperlink{test__ifft__gi_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00001}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi}{00001}}\ \textcolor{keyword}{import}\ numpy\ \textcolor{keyword}{as}\ np}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00002}00002\ \textcolor{keyword}{from}\ tx.ifft\_ofdm\_symbol\ \textcolor{keyword}{import}\ IFFT\_GI}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00003}00003\ \textcolor{keyword}{import}\ pytest}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00004}00004\ \textcolor{keyword}{from}\ tx.OFDM\_mapper\ \textcolor{keyword}{import}\ Mapper\_OFDM\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00005}00005\ \textcolor{keyword}{from}\ tx.utilities\ \textcolor{keyword}{import}\ bit\_sequence}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00007}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi_a26e6d61576532d5a7521d0206cace7c9}{00007}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi_a26e6d61576532d5a7521d0206cace7c9}{test\_ifft\_gi\_output\_length\_single\_symbol}}():}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00008}00008\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00009}00009\ \textcolor{stringliteral}{\ \ \ \ Jedan\ OFDM\ simbol:\ ulaz\ ima\ 48\ QAM\ simbola,}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00010}00010\ \textcolor{stringliteral}{\ \ \ \ izlaz\ treba\ imati\ 80\ uzoraka\ (16\ GI\ +\ 64\ IFFT).}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00011}00011\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00012}00012\ \ \ \ \ num\_symbols\ =\ 1}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00013}00013\ \ \ \ \ num\_data\_carriers\ =\ 48}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00015}00015\ \ \ \ \ symbol\_stream\ =\ np.ones(num\_symbols\ *\ num\_data\_carriers,\ dtype=complex)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00016}00016\ \ \ \ \ payload\ =\ IFFT\_GI(symbol\_stream)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00018}00018\ \ \ \ \ \textcolor{keyword}{assert}\ len(payload)\ ==\ num\_symbols\ *\ 80}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00019}00019\ \ \ \ \ \textcolor{keyword}{assert}\ payload.dtype\ ==\ complex}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00021}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi_a5aa5d5a65d180fe416b6930105fb552f}{00021}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi_a5aa5d5a65d180fe416b6930105fb552f}{test\_ifft\_gi\_output\_length\_multiple\_symbols}}():}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00022}00022\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00023}00023\ \textcolor{stringliteral}{\ \ \ \ Više\ OFDM\ simbola:\ provjera\ da\ se\ dužina\ skalira\ kao\ N\ *\ 80.}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00024}00024\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00025}00025\ \ \ \ \ num\_symbols\ =\ 5}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00026}00026\ \ \ \ \ num\_data\_carriers\ =\ 48}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00028}00028\ \ \ \ \ symbol\_stream\ =\ np.arange(num\_symbols\ *\ num\_data\_carriers,\ dtype=float)\ +\ 1j}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00029}00029\ \ \ \ \ payload\ =\ IFFT\_GI(symbol\_stream)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00031}00031\ \ \ \ \ \textcolor{keyword}{assert}\ len(payload)\ ==\ num\_symbols\ *\ 80}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00033}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi_a5f7587f5ee9eaf4b546baa5bcd87c0b2}{00033}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi_a5f7587f5ee9eaf4b546baa5bcd87c0b2}{test\_ifft\_gi\_cyclic\_prefix\_content\_single\_symbol}}():}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00034}00034\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00035}00035\ \textcolor{stringliteral}{\ \ \ \ Provjera\ da\ je\ ciklički\ prefiks\ za\ jedan\ simbol\ tačno}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00036}00036\ \textcolor{stringliteral}{\ \ \ \ jednak\ zadnjih\ 16\ uzoraka\ osnovnog\ OFDM\ simbola.}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00037}00037\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00038}00038\ \ \ \ \ num\_symbols\ =\ 1}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00039}00039\ \ \ \ \ num\_data\_carriers\ =\ 48}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00041}00041\ \ \ \ \ rng\ =\ np.random.default\_rng(seed=42)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00042}00042\ \ \ \ \ symbol\_stream\ =\ rng.normal(size=num\_symbols\ *\ num\_data\_carriers)\ +\ 1j\ *\ rng.normal(}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ size=num\_symbols\ *\ num\_data\_carriers}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00044}00044\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00046}00046\ \ \ \ \ payload\ =\ IFFT\_GI(symbol\_stream)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00048}00048\ \ \ \ \ block\ =\ payload[0:80]}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00049}00049\ \ \ \ \ gi\ =\ block[:16]}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00050}00050\ \ \ \ \ ofdm\_symbol\ =\ block[16:]}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00052}00052\ \ \ \ \ \textcolor{keyword}{assert}\ len(ofdm\_symbol)\ ==\ 64}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00053}00053\ \ \ \ \ \textcolor{keyword}{assert}\ np.allclose(gi,\ ofdm\_symbol[48:64])}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00055}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi_ab85a481b74a206aba3c400523d2d52f5}{00055}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi_ab85a481b74a206aba3c400523d2d52f5}{test\_ifft\_gi\_is\_inverse\_of\_fft}}():}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00056}00056\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00057}00057\ \textcolor{stringliteral}{\ \ \ \ Test\ da\ ifft(fft(x))\ vraća\ originalni\ vektor\ x.}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00058}00058\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00059}00059\ \ \ \ \ x\ =\ np.array([1,\ 2,\ 3,\ 4],\ dtype=complex)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00060}00060\ \ \ \ \ X\ =\ np.fft.fft(x)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00061}00061\ \ \ \ \ x\_rec\ =\ np.fft.ifft(X)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00062}00062\ \ \ \ \ \textcolor{keyword}{assert}\ np.allclose(x,\ x\_rec)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00064}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi_ac7d06678559632a1e19da0208b920d15}{00064}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi_ac7d06678559632a1e19da0208b920d15}{test\_ifft\_gi\_cp\_has\_correct\_length}}():}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00065}00065\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00066}00066\ \textcolor{stringliteral}{\ \ \ \ Provjera\ da\ CP\ uvijek\ ima\ 16\ uzoraka.}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00067}00067\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00068}00068\ \ \ \ \ num\_symbols\ =\ 2}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00069}00069\ \ \ \ \ num\_data\_carriers\ =\ 48}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00070}00070\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00071}00071\ \ \ \ \ stream\ =\ np.ones(num\_symbols\ *\ num\_data\_carriers,\ dtype=complex)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00072}00072\ \ \ \ \ payload\ =\ IFFT\_GI(stream)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00074}00074\ \ \ \ \ \textcolor{keywordflow}{for}\ i\ \textcolor{keywordflow}{in}\ range(num\_symbols):}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ block\ =\ payload[i\ *\ 80\ :\ (i\ +\ 1)\ *\ 80]}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ cp\ =\ block[:16]}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ len(cp)\ ==\ 16}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00079}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi_a891f26a3ebb09c17fa4a2c51dba8ffe4}{00079}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi_a891f26a3ebb09c17fa4a2c51dba8ffe4}{test\_ifft\_gi\_block\_total\_length}}():}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00080}00080\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00081}00081\ \textcolor{stringliteral}{\ \ \ \ CP\ (16)\ +\ IFFT\ simbol\ (64)\ =\ 80\ uzoraka\ po\ bloku.}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00082}00082\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00083}00083\ \ \ \ \ num\_symbols\ =\ 4}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00084}00084\ \ \ \ \ num\_data\_carriers\ =\ 48}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00086}00086\ \ \ \ \ stream\ =\ np.arange(num\_symbols\ *\ num\_data\_carriers,\ dtype=complex)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00087}00087\ \ \ \ \ payload\ =\ IFFT\_GI(stream)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00088}00088\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00089}00089\ \ \ \ \ \textcolor{keywordflow}{for}\ i\ \textcolor{keywordflow}{in}\ range(num\_symbols):}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00090}00090\ \ \ \ \ \ \ \ \ block\ =\ payload[i\ *\ 80\ :\ (i\ +\ 1)\ *\ 80]}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ len(block)\ ==\ 80}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00092}00092\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00093}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi_a0314abec3cd9d9b487a27c6079a1c6b9}{00093}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi_a0314abec3cd9d9b487a27c6079a1c6b9}{test\_ifft\_gi\_random\_seeds\_and\_modulations}}():}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00094}00094\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00095}00095\ \textcolor{stringliteral}{\ \ \ \ Test\ stabilnosti\ za\ različite\ seedove\ i\ modulacije:\ BPSK,\ QPSK,\ 16QAM.}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00096}00096\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00097}00097\ \ \ \ \ seeds\ =\ [0,\ 42,\ 999]}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00098}00098\ \ \ \ \ bits\_per\_symbol\_list\ =\ [1,\ 2,\ 4]\ \ \textcolor{comment}{\#\ BPSK,\ QPSK,\ 16QAM}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00100}00100\ \ \ \ \ \textcolor{keywordflow}{for}\ seed\ \textcolor{keywordflow}{in}\ seeds:}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ bps\ \textcolor{keywordflow}{in}\ bits\_per\_symbol\_list:}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ num\_symbols\ =\ 2}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ num\_data\_carriers\ =\ 48}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00104}00104\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ rng\ =\ np.random.default\_rng(seed)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00106}00106\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ generiši\ random\ QAM\ simbole\ svih\ modulacija}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ bps\ ==\ 1:\ \ \textcolor{comment}{\#\ BPSK}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ symbols\ =\ (rng.integers(0,\ 2,\ num\_symbols\ *\ num\_data\_carriers)\ *\ 2\ -\/\ 1).astype(}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ complex}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{elif}\ bps\ ==\ 2:\ \ \textcolor{comment}{\#\ QPSK}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ real\ =\ rng.choice([-\/1,\ 1],\ num\_symbols\ *\ num\_data\_carriers)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ imag\ =\ rng.choice([-\/1,\ 1],\ num\_symbols\ *\ num\_data\_carriers)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ symbols\ =\ (real\ +\ 1j\ *\ imag)\ /\ np.sqrt(2)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}:\ \ \textcolor{comment}{\#\ 16QAM}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ const\ =\ np.array([-\/3,\ -\/1,\ 1,\ 3])\ /\ np.sqrt(10)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ real\ =\ rng.choice(const,\ num\_symbols\ *\ num\_data\_carriers)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ imag\ =\ rng.choice(const,\ num\_symbols\ *\ num\_data\_carriers)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ symbols\ =\ real\ +\ 1j\ *\ imag}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00121}00121\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ payload\ =\ IFFT\_GI(symbols)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ osnovne\ provjere\ integriteta}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ len(payload)\ ==\ num\_symbols\ *\ 80}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ i\ \textcolor{keywordflow}{in}\ range(num\_symbols):}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ block\ =\ payload[i\ *\ 80\ :\ (i\ +\ 1)\ *\ 80]}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ len(block)\ ==\ 80}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00129}00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cp\ =\ block[:16]}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ symbol\ =\ block[16:]}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ np.allclose(cp,\ symbol[48:64])}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00132}00132\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00133}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi_a545210d49bd5abb1004cb76a92d765e7}{00133}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi_a545210d49bd5abb1004cb76a92d765e7}{test\_ifft\_gi\_no\_plot}}():}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00134}00134\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ funkcija\ radi\ normalno\ kada\ se\ ne\ plota\ (default)."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00135}00135\ \ \ \ \ data\ =\ np.random.randn(48).astype(complex)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00136}00136\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00137}00137\ \ \ \ \ out\ =\ IFFT\_GI(data,\ plot=\textcolor{keyword}{False})}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00138}00138\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00139}00139\ \ \ \ \ \textcolor{keyword}{assert}\ isinstance(out,\ np.ndarray)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00140}00140\ \ \ \ \ \textcolor{keyword}{assert}\ out.dtype\ ==\ complex}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00141}00141\ \ \ \ \ \textcolor{keyword}{assert}\ len(out)\ ==\ 80}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00142}00142\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00143}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi_ad69742049e560ee9d09ab176ae39a224}{00143}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi_ad69742049e560ee9d09ab176ae39a224}{test\_ifft\_gi\_multiple\_symbols}}():}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00144}00144\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ funkcija\ ispravno\ obrađuje\ više\ OFDM\ simbola."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00145}00145\ \ \ \ \ num\_symbols\ =\ 3}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00146}00146\ \ \ \ \ data\ =\ np.arange(48\ *\ num\_symbols).astype(complex)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00148}00148\ \ \ \ \ out\ =\ IFFT\_GI(data)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00149}00149\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00150}00150\ \ \ \ \ \textcolor{keyword}{assert}\ len(out)\ ==\ num\_symbols\ *\ 80}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00151}00151\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00152}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi_a22bcfa940baafed8eb941f8e85cb8db8}{00152}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi_a22bcfa940baafed8eb941f8e85cb8db8}{test\_ifft\_gi\_real\_input}}():}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00153}00153\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Realni\ ulaz\ bi\ i\ dalje\ trebao\ raditi\ (pretvoriti\ se\ u\ complex\ automatski)."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00154}00154\ \ \ \ \ data\ =\ np.ones(48)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00155}00155\ \ \ \ \ out\ =\ IFFT\_GI(data)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00156}00156\ \ \ \ \ \textcolor{keyword}{assert}\ len(out)\ ==\ 80}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00157}00157\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00158}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi_a91be2d68274e5d78a83610dc70a057c1}{00158}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi_a91be2d68274e5d78a83610dc70a057c1}{test\_ifft\_gi\_invalid\_type}}():}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00159}00159\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ funkcija\ ne\ prihvata\ pogrešne\ tipove\ (npr.\ string)."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00160}00160\ \ \ \ \ data\ =\ \textcolor{stringliteral}{"{}pogresan\ tip"{}}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00161}00161\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00162}00162\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(Exception):}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00163}00163\ \ \ \ \ \ \ \ \ IFFT\_GI(data)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00164}00164\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00165}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi_a198ca4682aa5dd818b9f715cbc087661}{00165}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__ifft__gi_a198ca4682aa5dd818b9f715cbc087661}{test\_ifft\_gi\_empty\_input}}():}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00166}00166\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Prazan\ ulaz\ treba\ da\ izazove\ grešku\ ili\ specifično\ ponašanje."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00167}00167\ \ \ \ \ data\ =\ np.array([],\ dtype=complex)}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00168}00168\ }
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00169}00169\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(ValueError):}
+\DoxyCodeLine{\Hypertarget{test__ifft__gi_8py_source_l00170}00170\ \ \ \ \ \ \ \ \ IFFT\_GI(data)}
+
+\end{DoxyCode}

@@ -1,0 +1,70 @@
+\doxysection{test\+\_\+half\+\_\+band\+\_\+upsample.\+py}
+\hypertarget{test__half__band__upsample_8py_source}{}\label{test__half__band__upsample_8py_source}\index{tests/test\_half\_band\_upsample.py@{tests/test\_half\_band\_upsample.py}}
+\mbox{\hyperlink{test__half__band__upsample_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00001}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__half__band__upsample}{00001}}\ \textcolor{keyword}{import}\ numpy\ \textcolor{keyword}{as}\ np}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00002}00002\ \textcolor{keyword}{import}\ pytest}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00003}00003\ \textcolor{keyword}{from}\ tx.filters\ \textcolor{keyword}{import}\ half\_band\_upsample}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00004}00004\ \textcolor{keyword}{import}\ warnings\ }
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00006}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__half__band__upsample_a75cd6571f50da483e2942e4ceddf9c55}{00006}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__half__band__upsample_a75cd6571f50da483e2942e4ceddf9c55}{test\_output\_length}}():}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00007}00007\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Testira\ da\ izlaz\ ima\ ispravnu\ dužinu\ nakon\ upsamplovanja\ i\ filtriranja."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00008}00008\ \ \ \ \ signal\ =\ np.array([1,\ 2,\ 3,\ 4])}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00009}00009\ \ \ \ \ result,\ h\ =\ half\_band\_upsample(signal,\ up\_factor=2)}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00011}00011\ \ \ \ \ expected\_length\ =\ max(len(signal)\ *\ 2,\ len(h))}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00012}00012\ \ \ \ \ \textcolor{keyword}{assert}\ len(result)\ ==\ expected\_length}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00015}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__half__band__upsample_ab0398c4928b9b34df38f2ffe45583edc}{00015}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__half__band__upsample_ab0398c4928b9b34df38f2ffe45583edc}{test\_output\_type}}():}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00016}00016\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ je\ izlaz\ numpy\ array."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00017}00017\ \ \ \ \ signal\ =\ np.array([1,\ 2,\ 3])}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00018}00018\ \ \ \ \ result,\ h\ =\ half\_band\_upsample(signal)}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00019}00019\ \ \ \ \ \textcolor{keyword}{assert}\ isinstance(result,\ np.ndarray)}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00022}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__half__band__upsample_afc5a33842d77e0c339ef4d78e5d559f4}{00022}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__half__band__upsample_afc5a33842d77e0c339ef4d78e5d559f4}{test\_original\_signal\_not\_changed}}():}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00023}00023\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Osigurava\ da\ ulazni\ signal\ nije\ promijenjen\ tokom\ obrade."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00024}00024\ \ \ \ \ signal\ =\ np.array([1,\ 2,\ 3])}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00025}00025\ \ \ \ \ original\ =\ signal.copy()}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00026}00026\ \ \ \ \ \_\ =\ half\_band\_upsample(signal)}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00027}00027\ \ \ \ \ \textcolor{keyword}{assert}\ np.array\_equal(signal,\ original)}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00030}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__half__band__upsample_a4ea47ea06514051c71b9a2eee2b97254}{00030}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__half__band__upsample_a4ea47ea06514051c71b9a2eee2b97254}{test\_filter\_basic\_properties}}():}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00031}00031\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ osnovne\ karakteristike\ filtera."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00032}00032\ \ \ \ \ \_,\ h\ =\ half\_band\_upsample(np.array([1,\ 2,\ 3]))}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00033}00033\ \ \ \ \ \textcolor{keyword}{assert}\ np.isrealobj(h)}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00034}00034\ \ \ \ \ \textcolor{keyword}{assert}\ len(h)\ \%\ 2\ ==\ 1\ \ \textcolor{comment}{\#\ half-\/band\ filter\ ima\ neparnu\ dužinu}}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00037}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__half__band__upsample_ac8af930e5ab0a4a4d9b752d365447dd7}{00037}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__half__band__upsample_ac8af930e5ab0a4a4d9b752d365447dd7}{test\_invalid\_inputs}}():}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00038}00038\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Testira\ reakcije\ na\ nevalidne\ parametre\ i\ tipove."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00039}00039\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(TypeError):}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00040}00040\ \ \ \ \ \ \ \ \ half\_band\_upsample(\textcolor{stringliteral}{"{}abc"{}})}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00042}00042\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(TypeError):}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ half\_band\_upsample(\textcolor{keywordtype}{None})}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00045}00045\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(ValueError):}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00046}00046\ \ \ \ \ \ \ \ \ half\_band\_upsample(np.array([1,\ 2,\ 3]),\ up\_factor=0)}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00048}00048\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(ValueError):}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00049}00049\ \ \ \ \ \ \ \ \ half\_band\_upsample(np.array([1,\ 2,\ 3]),\ up\_factor=-\/2)}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00051}00051\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(TypeError):}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ half\_band\_upsample(np.array([1,\ 2,\ 3]),\ up\_factor=2.5)}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00055}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__half__band__upsample_adf2bb84f7b4e4dcb83986de3b967124e}{00055}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__half__band__upsample_adf2bb84f7b4e4dcb83986de3b967124e}{test\_plot\_branch\_executes}}():}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00056}00056\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00057}00057\ \textcolor{stringliteral}{\ \ \ \ Testira\ da\ se\ plot=True\ grana\ izvršava\ bez\ greške.}}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00058}00058\ \textcolor{stringliteral}{\ \ \ \ plt.show()\ je\ utišan\ globalno,\ tako\ da\ nema\ warninga.}}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00059}00059\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00060}00060\ \ \ \ \ signal\ =\ np.array([1,\ 2,\ 3])}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00061}00061\ \ \ \ \ result,\ h\ =\ half\_band\_upsample(signal,\ plot=\textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00063}00063\ \ \ \ \ \textcolor{keyword}{assert}\ isinstance(result,\ np.ndarray)}
+\DoxyCodeLine{\Hypertarget{test__half__band__upsample_8py_source_l00064}00064\ \ \ \ \ \textcolor{keyword}{assert}\ isinstance(h,\ np.ndarray)}
+
+\end{DoxyCode}

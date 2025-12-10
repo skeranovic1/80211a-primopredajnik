@@ -1,0 +1,169 @@
+\doxysection{test\+\_\+\+OFDM\+\_\+mapper.\+py}
+\hypertarget{test___o_f_d_m__mapper_8py_source}{}\label{test___o_f_d_m__mapper_8py_source}\index{tests/test\_OFDM\_mapper.py@{tests/test\_OFDM\_mapper.py}}
+\mbox{\hyperlink{test___o_f_d_m__mapper_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00001}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper}{00001}}\ \textcolor{keyword}{import}\ numpy\ \textcolor{keyword}{as}\ np}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00002}00002\ \textcolor{keyword}{import}\ pytest}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00003}00003\ \textcolor{keyword}{from}\ tx.OFDM\_mapper\ \textcolor{keyword}{import}\ Mapper\_OFDM\ \ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00004}00004\ \textcolor{keyword}{import}\ matplotlib}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00005}00005\ matplotlib.use(\textcolor{stringliteral}{'Agg'})\ \ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00006}00006\ \textcolor{keyword}{import}\ matplotlib.pyplot\ \textcolor{keyword}{as}\ plt}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00008}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_aa43c066bab7e7a5dade310077990434e}{00008}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_aa43c066bab7e7a5dade310077990434e}{test\_invalid\_bits}}():}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00009}00009\ \ \ \ \ \textcolor{comment}{\#\ negativni\ bit}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00010}00010\ \ \ \ \ bits\ =\ np.array([-\/1,\ 0,\ 1])}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00011}00011\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(ValueError):}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00012}00012\ \ \ \ \ \ \ \ \ Mapper\_OFDM(bits,\ 1)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00014}00014\ \ \ \ \ \textcolor{comment}{\#\ bit\ veći\ od\ 1}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00015}00015\ \ \ \ \ bits\ =\ np.array([0,\ 2,\ 1])}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00016}00016\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(ValueError):\ \ \textcolor{comment}{\#\ ←\ ovdje\ mijenjamo\ IndexError\ →\ ValueError}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00017}00017\ \ \ \ \ \ \ \ \ Mapper\_OFDM(bits,\ 1)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00019}00019\ \ \ \ \ \textcolor{comment}{\#\ mješavina\ validnih\ i\ nevalidnih}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00020}00020\ \ \ \ \ bits\ =\ np.array([0,\ 1,\ 0,\ 3])}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00021}00021\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(ValueError):}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00022}00022\ \ \ \ \ \ \ \ \ Mapper\_OFDM(bits,\ 2)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00024}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_ab1d3bd6b8d6d9de4076061211c74791c}{00024}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_ab1d3bd6b8d6d9de4076061211c74791c}{test\_non\_divisible\_length}}():}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00025}00025\ \ \ \ \ bits\ =\ np.array([0,\ 1,\ 1])\ \ \textcolor{comment}{\#\ duzina\ 3,\ BitsPerSymbol\ =\ 2}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00026}00026\ \ \ \ \ output\ =\ Mapper\_OFDM(bits,\ 2)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00027}00027\ \ \ \ \ \textcolor{comment}{\#\ Funkcija\ će\ ignorirati\ zadnje\ 1\ bit,\ tako\ da\ očekujemo\ 1\ simbol}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00028}00028\ \ \ \ \ \textcolor{keyword}{assert}\ len(output)\ ==\ 1}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00030}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_ac29b106fd7d81fa00328c9dbf71acd5f}{00030}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_ac29b106fd7d81fa00328c9dbf71acd5f}{test\_empty\_input}}():}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00031}00031\ \ \ \ \ bits\ =\ np.array([],\ dtype=int)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00032}00032\ \ \ \ \ output\ =\ Mapper\_OFDM(bits,\ 1)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00033}00033\ \ \ \ \ \textcolor{keyword}{assert}\ len(output)\ ==\ 0}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00035}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_ab56dc0269849e8177873f723dda794c8}{00035}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_ab56dc0269849e8177873f723dda794c8}{test\_large\_input}}():}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00036}00036\ \ \ \ \ bits\ =\ np.random.randint(0,2,\ size=10**6)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00037}00037\ \ \ \ \ output\ =\ Mapper\_OFDM(bits,\ 2)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00038}00038\ \ \ \ \ \textcolor{comment}{\#\ očekujemo\ pola\ broja\ bitova\ simbol}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00039}00039\ \ \ \ \ \textcolor{keyword}{assert}\ len(output)\ ==\ 10**6\ //\ 2}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00041}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_a74d549eff4a0b605ab090239621d8fc7}{00041}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_a74d549eff4a0b605ab090239621d8fc7}{test\_invalid\_type\_input}}():}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00042}00042\ \ \ \ \ bits\ =\ np.array([0.5,\ 1.0,\ 0])}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00043}00043\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(IndexError):}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ Mapper\_OFDM(bits,\ 1)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00046}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_a304a01ef8ca472a15343cce39045e203}{00046}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_a304a01ef8ca472a15343cce39045e203}{test\_qpsk\_partial\_bits}}():}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00047}00047\ \ \ \ \ \textcolor{comment}{\#\ ako\ broj\ bita\ nije\ djeljiv\ sa\ 2,\ zadnji\ bit\ se\ ignorira}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00048}00048\ \ \ \ \ bits\ =\ np.array([0,1,1])}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00049}00049\ \ \ \ \ sqrt2\_inv\ =\ 1/np.sqrt(2)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00050}00050\ \ \ \ \ expected\ =\ np.array([-\/1*sqrt2\_inv\ +\ 1j*1*sqrt2\_inv])}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00051}00051\ \ \ \ \ output\ =\ Mapper\_OFDM(bits,\ 2)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00052}00052\ \ \ \ \ np.testing.assert\_array\_almost\_equal(output,\ expected)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00054}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_ad9062b0bcdca3475ddd6649cad33ba1e}{00054}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_ad9062b0bcdca3475ddd6649cad33ba1e}{test\_bpsk\_mapping}}():}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00055}00055\ \ \ \ \ bits\ =\ np.array([0,\ 1,\ 1,\ 0])}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00056}00056\ \ \ \ \ expected\ =\ np.array([-\/1,\ 1,\ 1,\ -\/1],\ dtype=complex)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00057}00057\ \ \ \ \ output\ =\ Mapper\_OFDM(bits,\ 1)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00058}00058\ \ \ \ \ np.testing.assert\_array\_almost\_equal(output,\ expected)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00060}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_a35a78da81b298110803480a2a3b90adf}{00060}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_a35a78da81b298110803480a2a3b90adf}{test\_qpsk\_mapping}}():}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00061}00061\ \ \ \ \ bits\ =\ np.array([0,\ 0,\ 0,\ 1,\ 1,\ 0,\ 1,\ 1])}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00062}00062\ \ \ \ \ \textcolor{comment}{\#\ QPSK\_LUT\ =\ [-\/1,\ 1]/sqrt(2)}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00063}00063\ \ \ \ \ sqrt2\_inv\ =\ 1/np.sqrt(2)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00064}00064\ \ \ \ \ expected\ =\ np.array([}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ -\/1*sqrt2\_inv\ +\ 1j*-\/1*sqrt2\_inv,\ \ \textcolor{comment}{\#\ 0,0}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ -\/1*sqrt2\_inv\ +\ 1j*1*sqrt2\_inv,\ \ \ \textcolor{comment}{\#\ 0,1}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ 1*sqrt2\_inv\ +\ 1j*-\/1*sqrt2\_inv,\ \ \ \textcolor{comment}{\#\ 1,0}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ 1*sqrt2\_inv\ +\ 1j*1*sqrt2\_inv\ \ \ \ \ \textcolor{comment}{\#\ 1,1}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00069}00069\ \ \ \ \ ],\ dtype=complex)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00070}00070\ \ \ \ \ output\ =\ Mapper\_OFDM(bits,\ 2)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00071}00071\ \ \ \ \ np.testing.assert\_array\_almost\_equal(output,\ expected)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00072}00072\ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00073}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_a0978a0217704780b57a764a677577748}{00073}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_a0978a0217704780b57a764a677577748}{test\_16qam\_mapping}}():}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00074}00074\ \ \ \ \ bits\ =\ np.array([0,0,0,0,\ 0,1,1,0,\ 1,0,1,1,\ 1,1,1,1])}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00075}00075\ \ \ \ \ sqrt10\_inv\ =\ 1/np.sqrt(10)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00076}00076\ \ \ \ \ expected\ =\ np.array([}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ (-\/3\ +\ 1j*-\/3)*sqrt10\_inv,}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ (-\/1\ +\ 1j*1)*sqrt10\_inv,}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ (1\ +\ 1j*3)*sqrt10\_inv,}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ (3\ +\ 1j*3)*sqrt10\_inv}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00081}00081\ \ \ \ \ ],\ dtype=complex)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00082}00082\ \ \ \ \ output\ =\ Mapper\_OFDM(bits,\ 4)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00083}00083\ \ \ \ \ np.testing.assert\_array\_almost\_equal(output,\ expected)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00085}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_a274a7b119576fe21860bcbfaafce4025}{00085}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_a274a7b119576fe21860bcbfaafce4025}{test\_64qam\_mapping}}():}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00086}00086\ \ \ \ \ bits\ =\ np.array([}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ 0,0,0,0,0,0,\ \ \ \textcolor{comment}{\#\ simbol\ 1}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ 1,0,1,1,1,0\ \ \ \ \textcolor{comment}{\#\ simbol\ 2}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00089}00089\ \ \ \ \ ])}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00090}00090\ \ \ \ \ sqrt42\_inv\ =\ 1/np.sqrt(42)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00091}00091\ \ \ \ \ Q64\ =\ np.array([-\/7,-\/5,-\/3,-\/1,1,3,5,7])}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00092}00092\ \ \ \ \ expected\ =\ np.array([}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ (Q64[0*4+0*2+0]\ +\ 1j*Q64[0*4+0*2+0])*sqrt42\_inv,}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ (Q64[1*4+0*2+1]\ +\ 1j*Q64[1*4+1*2+0])*sqrt42\_inv}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00095}00095\ \ \ \ \ ],\ dtype=complex)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00096}00096\ \ \ \ \ output\ =\ Mapper\_OFDM(bits,\ 6)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00097}00097\ \ \ \ \ np.testing.assert\_array\_almost\_equal(output,\ expected)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00098}00098\ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00099}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_a5e2507e899ac30b552663dca79375da6}{00099}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_a5e2507e899ac30b552663dca79375da6}{test\_output\_length}}():}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00100}00100\ \ \ \ \ bits\ =\ np.random.randint(0,\ 2,\ 24)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00101}00101\ \ \ \ \ \textcolor{comment}{\#\ BPSK}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00102}00102\ \ \ \ \ \textcolor{keyword}{assert}\ len(Mapper\_OFDM(bits,\ 1))\ ==\ 24}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00103}00103\ \ \ \ \ \textcolor{comment}{\#\ QPSK}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00104}00104\ \ \ \ \ \textcolor{keyword}{assert}\ len(Mapper\_OFDM(bits,\ 2))\ ==\ 12}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00105}00105\ \ \ \ \ \textcolor{comment}{\#\ 16-\/QAM}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00106}00106\ \ \ \ \ \textcolor{keyword}{assert}\ len(Mapper\_OFDM(bits,\ 4))\ ==\ 6}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00107}00107\ \ \ \ \ \textcolor{comment}{\#\ 64-\/QAM}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00108}00108\ \ \ \ \ \textcolor{keyword}{assert}\ len(Mapper\_OFDM(bits,\ 6))\ ==\ 4}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00110}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_a58b55e8f41f852c3e9c74cd4506877e7}{00110}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_a58b55e8f41f852c3e9c74cd4506877e7}{test\_plot\_branch\_executes}}():}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00111}00111\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00112}00112\ \textcolor{stringliteral}{\ \ \ \ Testira\ da\ se\ plot=True\ grana\ funkcije\ Mapper\_OFDM\ izvršava\ bez\ greške.}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00113}00113\ \textcolor{stringliteral}{\ \ \ \ Graf\ se\ neće\ prikazati,\ ali\ funkcija\ treba\ vratiti\ numpy\ array.}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00114}00114\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00115}00115\ \ \ \ \ bits\ =\ np.array([0,\ 1,\ 1,\ 0])}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00116}00116\ \ \ \ \ output\ =\ Mapper\_OFDM(bits,\ BitsPerSymbol=2,\ plot=\textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00117}00117\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00118}00118\ \ \ \ \ \textcolor{keyword}{assert}\ isinstance(output,\ np.ndarray)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00119}00119\ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00120}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_ad33075f9d26f885dd300aee7c1d0a4f6}{00120}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_ad33075f9d26f885dd300aee7c1d0a4f6}{test\_invalid\_bits\_small\_array}}():}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00121}00121\ \ \ \ \ \textcolor{comment}{\#\ mali\ niz\ (<10)\ →\ ValueError\ za\ negativni\ bit}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00122}00122\ \ \ \ \ bits\ =\ np.array([0,\ -\/1,\ 1])}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00123}00123\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(ValueError):}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00124}00124\ \ \ \ \ \ \ \ \ Mapper\_OFDM(bits,\ 1)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00126}00126\ \ \ \ \ \textcolor{comment}{\#\ mali\ niz\ (<10)\ →\ ValueError\ za\ bit\ veći\ od\ 1}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00127}00127\ \ \ \ \ bits\ =\ np.array([0,\ 2,\ 1])}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00128}00128\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(ValueError):}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00129}00129\ \ \ \ \ \ \ \ \ Mapper\_OFDM(bits,\ 1)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00130}00130\ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00131}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_a37d21dfd9211318fe344aeaa6df195da}{00131}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_a37d21dfd9211318fe344aeaa6df195da}{test\_invalid\_bits\_large\_array\_wrap}}():}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00132}00132\ \ \ \ \ bits\ =\ np.array([0,\ 1,\ 2,\ 3,\ 4,\ 5,\ 6,\ 7,\ 8,\ 9])}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00133}00133\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(ValueError):}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ Mapper\_OFDM(bits,\ 1)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00135}00135\ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00136}00136\ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00137}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_af1e47adfb1d8104ee31e22172d46b6eb}{00137}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_af1e47adfb1d8104ee31e22172d46b6eb}{test\_bitsper\_symbol\_invalid}}():}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00138}00138\ \ \ \ \ bits\ =\ np.array([0,\ 1,\ 0,\ 1])}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00139}00139\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(ValueError):}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00140}00140\ \ \ \ \ \ \ \ \ Mapper\_OFDM(bits,\ 3)\ \ \textcolor{comment}{\#\ nelegalna\ vrijednost\ BitsPerSymbol}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00141}00141\ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00142}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_a181012d9d072af874f8992209d7dba75}{00142}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_a181012d9d072af874f8992209d7dba75}{test\_number\_of\_symbols\_zero}}():}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00143}00143\ \ \ \ \ \textcolor{comment}{\#\ ulaz\ manji\ od\ BitsPerSymbol\ →\ OutputSymbols\ prazno}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00144}00144\ \ \ \ \ bits\ =\ np.array([0,\ 1])}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00145}00145\ \ \ \ \ output\ =\ Mapper\_OFDM(bits,\ 4)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00146}00146\ \ \ \ \ \textcolor{keyword}{assert}\ len(output)\ ==\ 0}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00148}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_a72189779ed532cad3742c2698e314290}{00148}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_a72189779ed532cad3742c2698e314290}{test\_non\_integer\_input\_type}}():}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00149}00149\ \ \ \ \ bits\ =\ np.array([0.0,\ 1.0])}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00150}00150\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(IndexError):}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00151}00151\ \ \ \ \ \ \ \ \ Mapper\_OFDM(bits,\ 1)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00152}00152\ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00153}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_a3b21c012cbb61de61eab13f8b20e80d7}{00153}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_a3b21c012cbb61de61eab13f8b20e80d7}{test\_partial\_symbols\_16qam}}():}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00154}00154\ \ \ \ \ \textcolor{comment}{\#\ broj\ bitova\ nije\ djeljiv\ sa\ 4\ →\ zadnji\ simbol\ se\ ignorira}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00155}00155\ \ \ \ \ bits\ =\ np.array([0,0,0,0,\ 1,1,1])}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00156}00156\ \ \ \ \ output\ =\ Mapper\_OFDM(bits,\ 4)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00157}00157\ \ \ \ \ \textcolor{keyword}{assert}\ len(output)\ ==\ 1\ \ \textcolor{comment}{\#\ samo\ prvi\ simbol}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00158}00158\ }
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00159}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_a7ce571d8e6da4bd965bd9694668ab4e9}{00159}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test___o_f_d_m__mapper_a7ce571d8e6da4bd965bd9694668ab4e9}{test\_partial\_symbols\_64qam}}():}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00160}00160\ \ \ \ \ \textcolor{comment}{\#\ broj\ bitova\ nije\ djeljiv\ sa\ 6\ →\ zadnji\ simbol\ se\ ignorira}}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00161}00161\ \ \ \ \ bits\ =\ np.array([0,0,0,0,0,0,\ 1,1,1,1,1])}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00162}00162\ \ \ \ \ output\ =\ Mapper\_OFDM(bits,\ 6)}
+\DoxyCodeLine{\Hypertarget{test___o_f_d_m__mapper_8py_source_l00163}00163\ \ \ \ \ \textcolor{keyword}{assert}\ len(output)\ ==\ 1\ \ \textcolor{comment}{\#\ samo\ prvi\ simbol}}
+
+\end{DoxyCode}

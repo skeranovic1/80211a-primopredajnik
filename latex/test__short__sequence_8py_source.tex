@@ -1,0 +1,130 @@
+\doxysection{test\+\_\+short\+\_\+sequence.\+py}
+\hypertarget{test__short__sequence_8py_source}{}\label{test__short__sequence_8py_source}\index{tests/test\_short\_sequence.py@{tests/test\_short\_sequence.py}}
+\mbox{\hyperlink{test__short__sequence_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00001}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence}{00001}}\ \textcolor{keyword}{import}\ numpy\ \textcolor{keyword}{as}\ np}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00002}00002\ \textcolor{keyword}{from}\ tx.short\_sequence\ \textcolor{keyword}{import}\ get\_short\_training\_sequence}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00003}00003\ \textcolor{keyword}{import}\ pytest}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00005}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_aad6d445387e150d3caa4794934fe9e98}{00005}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_aad6d445387e150d3caa4794934fe9e98}{test\_length\_step\_1}}():}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00006}00006\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ STS\ ima\ dužinu\ 160\ uzoraka\ za\ step=1."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00007}00007\ \ \ \ \ seq\ =\ get\_short\_training\_sequence(step=1)}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00008}00008\ \ \ \ \ \textcolor{keyword}{assert}\ len(seq)\ ==\ 160}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00011}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_aedf3fae0fc3b644d6bf037c053a411d4}{00011}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_aedf3fae0fc3b644d6bf037c053a411d4}{test\_length\_step\_half}}():}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00012}00012\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ STS\ ima\ dužinu\ 320\ uzoraka\ za\ step=0.5."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00013}00013\ \ \ \ \ seq\ =\ get\_short\_training\_sequence(step=0.5)}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00014}00014\ \ \ \ \ \textcolor{keyword}{assert}\ len(seq)\ ==\ 320}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00016}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a09e821ae447802564112480cfb614293}{00016}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a09e821ae447802564112480cfb614293}{test\_energy\_positive}}():}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00017}00017\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ STS\ ima\ nenultu\ energiju."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00018}00018\ \ \ \ \ seq\ =\ get\_short\_training\_sequence(step=1)}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00019}00019\ \ \ \ \ \textcolor{keyword}{assert}\ np.sum(np.abs(seq)**2)\ >\ 0}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00021}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_acec5bec8f5829c9b95d9e8871aaab70a}{00021}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_acec5bec8f5829c9b95d9e8871aaab70a}{test\_first\_sample\_idft\_definition}}():}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00022}00022\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ prvi\ STS\ uzorak\ odgovara\ IDFT\ definiciji."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00023}00023\ \ \ \ \ \textcolor{comment}{\#\ Ponovimo\ ručno\ prvi\ sample\ (t\ =\ 0)}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00024}00024\ \ \ \ \ Positive\ =\ np.array([}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00025}00025\ \ \ \ \ \ \ \ \ 0,0,0,0,\ \ \ -\/1-\/1j,0,0,0,\ \ \ -\/1-\/1j,0,0,0,\ \ \ 1+1j,0,0,0,}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00026}00026\ \ \ \ \ \ \ \ \ 1+1j,0,0,0,\ 1+1j,0,0,0,\ \ 1+1j,0,0,0,\ \ 0,0,0,0}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00027}00027\ \ \ \ \ ],\ dtype=complex)}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00029}00029\ \ \ \ \ Negative\ =\ np.array([}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00030}00030\ \ \ \ \ \ \ \ \ 0,0,0,0,\ \ \ 0,0,0,0,\ \ \ 1+1j,0,0,0,\ \ \ -\/1-\/1j,0,0,0,}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00031}00031\ \ \ \ \ \ \ \ \ 1+1j,0,0,0,\ \ -\/1-\/1j,0,0,0,\ \ -\/1-\/1j,0,0,0,\ \ 1+1j,0,0,0}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00032}00032\ \ \ \ \ ],\ dtype=complex)}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00034}00034\ \ \ \ \ Total\ =\ np.sqrt(13/6)\ *\ np.concatenate((Negative,\ Positive))}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00036}00036\ \ \ \ \ m\ =\ np.arange(-\/32,\ 32)}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00037}00037\ \ \ \ \ E0\ =\ np.exp(1j\ *\ 2\ *\ np.pi\ *\ 0\ *\ m\ /\ 64)\ \ \textcolor{comment}{\#\ =\ 1}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00039}00039\ \ \ \ \ expected\ =\ np.dot(Total,\ E0)}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00041}00041\ \ \ \ \ seq\ =\ get\_short\_training\_sequence(step=1)}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00043}00043\ \ \ \ \ \textcolor{keyword}{assert}\ np.isclose(seq[0],\ expected)}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00045}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a580477d6f54cb4fad6eabbe2a4abad33}{00045}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a580477d6f54cb4fad6eabbe2a4abad33}{test\_periodicity\_matches\_16\_sample\_block}}():}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00046}00046\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ STS\ ima\ period\ 16\ uzoraka\ kao\ u\ literaturi."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00047}00047\ \ \ \ \ seq\ =\ get\_short\_training\_sequence(step=1)}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00049}00049\ \ \ \ \ \textcolor{comment}{\#\ 160\ uzoraka\ →\ 10\ ponavljanja\ bloka\ od\ 16\ uzoraka}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00050}00050\ \ \ \ \ block\ =\ seq[:16]}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00052}00052\ \ \ \ \ \textcolor{keywordflow}{for}\ i\ \textcolor{keywordflow}{in}\ range(1,\ 10):}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ \textcolor{keyword}{assert}\ np.allclose(seq[i*16:(i+1)*16],\ block)}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00055}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a0ff2cc40166aab1df9c045191d40be45}{00055}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a0ff2cc40166aab1df9c045191d40be45}{test\_return\_type}}():}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00056}00056\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ funkcija\ vraća\ numpy.ndarray."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00057}00057\ \ \ \ \ sts\ =\ get\_short\_training\_sequence()}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00058}00058\ \ \ \ \ \textcolor{keyword}{assert}\ isinstance(sts,\ np.ndarray),\ \textcolor{stringliteral}{"{}Vraćeni\ tip\ nije\ numpy.ndarray"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00060}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a213f312308085df17a5fffe51392e2f3}{00060}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a213f312308085df17a5fffe51392e2f3}{test\_return\_complex\_dtype}}():}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00061}00061\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ je\ dtype\ kompleksni."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00062}00062\ \ \ \ \ sts\ =\ get\_short\_training\_sequence()}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00063}00063\ \ \ \ \ \textcolor{keyword}{assert}\ np.issubdtype(sts.dtype,\ np.complexfloating),\ \textcolor{stringliteral}{"{}Vraćeni\ niz\ nije\ kompleksnog\ tipa"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00065}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a44b79f3d32ae7cae863bc7a35d64b915}{00065}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a44b79f3d32ae7cae863bc7a35d64b915}{test\_length\_default\_step}}():}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00066}00066\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ dužinu\ STS\ za\ step=1."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00067}00067\ \ \ \ \ step\ =\ 1}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00068}00068\ \ \ \ \ sts\ =\ get\_short\_training\_sequence(step=step)}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00069}00069\ \ \ \ \ expected\_length\ =\ int(160\ /\ step)}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00070}00070\ \ \ \ \ \textcolor{keyword}{assert}\ len(sts)\ ==\ expected\_length,\ f\textcolor{stringliteral}{"{}Dužina\ nije\ \{expected\_length\},\ nego\ \{len(sts)\}"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00072}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a386d1439b0c25f20f46673895437d268}{00072}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a386d1439b0c25f20f46673895437d268}{test\_length\_half\_step}}():}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00073}00073\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ dužinu\ STS\ za\ step=0.5."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00074}00074\ \ \ \ \ step\ =\ 0.5}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00075}00075\ \ \ \ \ sts\ =\ get\_short\_training\_sequence(step=step)}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00076}00076\ \ \ \ \ expected\_length\ =\ int(160\ /\ step)}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00077}00077\ \ \ \ \ \textcolor{keyword}{assert}\ len(sts)\ ==\ expected\_length,\ f\textcolor{stringliteral}{"{}Dužina\ za\ step=\{step\}\ nije\ \{expected\_length\},\ nego\ \{len(sts)\}"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00079}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a3d68cbab4c350a1d168d86ca379008e2}{00079}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a3d68cbab4c350a1d168d86ca379008e2}{test\_output\_values\_stability}}():}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00080}00080\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ funkcija\ vraća\ iste\ vrijednosti\ pri\ ponovnom\ pozivu."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00081}00081\ \ \ \ \ sts1\ =\ get\_short\_training\_sequence()}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00082}00082\ \ \ \ \ sts2\ =\ get\_short\_training\_sequence()}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00083}00083\ \ \ \ \ \textcolor{keyword}{assert}\ np.allclose(sts1,\ sts2),\ \textcolor{stringliteral}{"{}Sekvence\ nisu\ iste\ pri\ ponovnom\ pozivu"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00085}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a0e770e7c6a2d85e6ea8132ec823fa7f2}{00085}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a0e770e7c6a2d85e6ea8132ec823fa7f2}{test\_nonzero\_content}}():}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00086}00086\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ sekvenca\ nije\ sve\ nula."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00087}00087\ \ \ \ \ sts\ =\ get\_short\_training\_sequence()}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00088}00088\ \ \ \ \ \textcolor{keyword}{assert}\ \textcolor{keywordflow}{not}\ np.allclose(sts,\ 0),\ \textcolor{stringliteral}{"{}Sekvenca\ je\ sva\ nula"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00090}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_ae8e15d1f9100c86f88e43114636ed982}{00090}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_ae8e15d1f9100c86f88e43114636ed982}{test\_magnitude\_consistency}}():}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00091}00091\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ su\ magnitudni\ uzorci\ realni\ i\ nenegativni\ (ne-\/potpuno,\ ali\ osnovna\ provjera)."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00092}00092\ \ \ \ \ sts\ =\ get\_short\_training\_sequence()}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00093}00093\ \ \ \ \ magnitudes\ =\ np.abs(sts)}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00094}00094\ \ \ \ \ \textcolor{keyword}{assert}\ np.all(magnitudes\ >=\ 0),\ \textcolor{stringliteral}{"{}Magnituda\ STS\ sadrži\ negativne\ vrijednosti"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00096}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a041174ebe1e61bb22df4abdb5d27dc82}{00096}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a041174ebe1e61bb22df4abdb5d27dc82}{test\_step\_zero\_raises}}():}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00097}00097\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ step=0\ podiže\ grešku\ (dieljenje\ nulom)."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00098}00098\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(ValueError):}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ get\_short\_training\_sequence(step=0)}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00101}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a92289501d8c80babfcd9b6a06fd03f5f}{00101}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a92289501d8c80babfcd9b6a06fd03f5f}{test\_step\_negative\_raises}}():}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00102}00102\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ negativan\ step\ podiže\ grešku."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00103}00103\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(ValueError):}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00104}00104\ \ \ \ \ \ \ \ \ get\_short\_training\_sequence(step=-\/1)}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00106}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a3ad50f35147464784651d7bfda1d40cb}{00106}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a3ad50f35147464784651d7bfda1d40cb}{test\_step\_non\_numeric\_raises}}():}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00107}00107\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ nenumerički\ step\ podiže\ grešku."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00108}00108\ \ \ \ \ \textcolor{keyword}{with}\ pytest.raises(TypeError):}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00109}00109\ \ \ \ \ \ \ \ \ get\_short\_training\_sequence(step=\textcolor{stringliteral}{"{}abc"{}})}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00111}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a52126bdab785990b61a01db7c2ab1c6f}{00111}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a52126bdab785990b61a01db7c2ab1c6f}{test\_very\_small\_step}}():}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00112}00112\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ veoma\ mali\ step\ ne\ baca\ grešku\ i\ vraća\ niz\ veće\ dužine."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00113}00113\ \ \ \ \ step\ =\ 0.01}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00114}00114\ \ \ \ \ seq\ =\ get\_short\_training\_sequence(step=step)}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00115}00115\ \ \ \ \ expected\_length\ =\ int(160\ /\ step)}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00116}00116\ \ \ \ \ \textcolor{keyword}{assert}\ len(seq)\ ==\ expected\_length}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00117}00117\ \ \ \ \ \textcolor{keyword}{assert}\ np.any(np.abs(seq)\ >\ 0),\ \textcolor{stringliteral}{"{}Sekvenca\ nije\ nenulta"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00118}00118\ }
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00119}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a855274f827ef3a969b7761604864b877}{00119}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__short__sequence_a855274f827ef3a969b7761604864b877}{test\_large\_step\_truncates\_length}}():}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00120}00120\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjerava\ da\ veoma\ veliki\ step\ vraća\ niz\ kraći\ od\ 1\ LTS\ bloka."{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00121}00121\ \ \ \ \ step\ =\ 500}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00122}00122\ \ \ \ \ seq\ =\ get\_short\_training\_sequence(step=step)}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00123}00123\ \ \ \ \ expected\_length\ =\ int(160\ /\ step)}
+\DoxyCodeLine{\Hypertarget{test__short__sequence_8py_source_l00124}00124\ \ \ \ \ \textcolor{keyword}{assert}\ len(seq)\ ==\ expected\_length}
+
+\end{DoxyCode}

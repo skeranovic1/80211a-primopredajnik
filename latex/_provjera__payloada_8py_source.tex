@@ -1,0 +1,34 @@
+\doxysection{Provjera\+\_\+payloada.\+py}
+\hypertarget{_provjera__payloada_8py_source}{}\label{_provjera__payloada_8py_source}\index{examples/Provjera\_payloada.py@{examples/Provjera\_payloada.py}}
+\mbox{\hyperlink{_provjera__payloada_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00001}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1examples_1_1_provjera__payloada}{00001}}\ \textcolor{keyword}{import}\ numpy\ \textcolor{keyword}{as}\ np}
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00002}00002\ \textcolor{keyword}{import}\ matplotlib.pyplot\ \textcolor{keyword}{as}\ plt}
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00003}00003\ \textcolor{keyword}{from}\ ifft\_ofdm\_symbol\ \textcolor{keyword}{import}\ IFFT\_GI}
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00004}00004\ \textcolor{keyword}{from}\ OFDM\_mapper\ \textcolor{keyword}{import}\ Mapper\_OFDM}
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00005}00005\ \textcolor{keyword}{from}\ utilities\ \textcolor{keyword}{import}\ bit\_sequence}
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00007}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1examples_1_1_provjera__payloada_a285c075f6b6c2c6832197fcf793ef031}{00007}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1examples_1_1_provjera__payloada_a285c075f6b6c2c6832197fcf793ef031}{main}}():}
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00008}00008\ \ \ \ \ \textcolor{comment}{\#\ Generišemo\ nasumične\ ulazne\ bitove}}
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00009}00009\ \ \ \ \ input\_bits\ =\ bit\_sequence(2,\ 2,\ sd=41)}
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00010}00010\ \ \ \ \ symbols\ =\ Mapper\_OFDM(input\_bits,\ 2)}
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00011}00011\ \ \ \ \ payload\ =\ IFFT\_GI(symbols,\ plot=\textcolor{keyword}{False})\ \ }
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00013}00013\ \ \ \ \ \textcolor{comment}{\#Crtanje\ cijelog\ payload-\/a}}
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00014}00014\ \ \ \ \ plt.figure(figsize=(14,5))}
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00015}00015\ \ \ \ \ plt.subplot(2,1,1)}
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00016}00016\ \ \ \ \ plt.plot(np.real(payload),\ \textcolor{stringliteral}{'b'},\ label=\textcolor{stringliteral}{'Real'})}
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00017}00017\ \ \ \ \ plt.subplot(2,1,2)}
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00018}00018\ \ \ \ \ plt.plot(np.imag(payload),\ \textcolor{stringliteral}{'r'},\ label=\textcolor{stringliteral}{'Imag'})}
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00019}00019\ \ \ \ \ plt.title(f\textcolor{stringliteral}{"{}OFDM\ payload\ za\ \{2\}\ simbola"{}})}
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00020}00020\ \ \ \ \ plt.xlabel(\textcolor{stringliteral}{"{}Uzorci"{}})}
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00021}00021\ \ \ \ \ plt.ylabel(\textcolor{stringliteral}{"{}Amplituda"{}})}
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00022}00022\ \ \ \ \ plt.grid(\textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00023}00023\ \ \ \ \ plt.legend()}
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00024}00024\ \ \ \ \ plt.show()}
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00026}00026\ \textcolor{keywordflow}{if}\ \_\_name\_\_\ ==\ \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00027}00027\ \ \ \ \ \mbox{\hyperlink{namespace80211a-primopredajnik_1_1examples_1_1_provjera__payloada_a285c075f6b6c2c6832197fcf793ef031}{main}}()}
+\DoxyCodeLine{\Hypertarget{_provjera__payloada_8py_source_l00028}00028\ }
+
+\end{DoxyCode}

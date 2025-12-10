@@ -1,0 +1,94 @@
+\doxysection{test\+\_\+tx\+\_\+packet.\+py}
+\hypertarget{test__tx__packet_8py_source}{}\label{test__tx__packet_8py_source}\index{tests/test\_tx\_packet.py@{tests/test\_tx\_packet.py}}
+\mbox{\hyperlink{test__tx__packet_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00001}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__tx__packet}{00001}}\ \textcolor{keyword}{import}\ numpy\ \textcolor{keyword}{as}\ np}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00002}00002\ \textcolor{keyword}{import}\ pytest}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00003}00003\ \textcolor{keyword}{from}\ tx.OFDM\_TX\_802\_11\ \textcolor{keyword}{import}\ Transmitter80211a}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00005}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__tx__packet_a60b789b42f4ada2b9d7d86fdd65066b5}{00005}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__tx__packet_a60b789b42f4ada2b9d7d86fdd65066b5}{test\_transmitter\_basic\_happy\_path}}():}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00006}00006\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Provjera\ da\ metoda\ generate\_frame\ vraća\ ispravne\ tipove\ i\ dimenzije"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00007}00007\ \ \ \ \ tx\ =\ \mbox{\hyperlink{class80211a-primopredajnik_1_1tx_1_1_o_f_d_m___t_x__802__11_1_1_transmitter80211a}{Transmitter80211a}}(num\_ofdm\_symbols=1,\ bits\_per\_symbol=2,\ up\_factor=2,\ seed=13)}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00008}00008\ \ \ \ \ sample\_out,\ symbols\ =\ tx.generate\_frame()}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00010}00010\ \ \ \ \ \textcolor{keyword}{assert}\ isinstance(sample\_out,\ np.ndarray)}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00011}00011\ \ \ \ \ \textcolor{keyword}{assert}\ isinstance(symbols,\ np.ndarray)}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00012}00012\ \ \ \ \ \textcolor{keyword}{assert}\ sample\_out.dtype\ ==\ complex}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00013}00013\ \ \ \ \ \textcolor{keyword}{assert}\ symbols.dtype\ ==\ complex}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00014}00014\ \ \ \ \ \textcolor{keyword}{assert}\ len(sample\_out)\ >\ 0}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00015}00015\ \ \ \ \ \textcolor{keyword}{assert}\ len(symbols)\ >\ 0}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00017}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__tx__packet_a4e92fba3103166d5e96171630a05d323}{00017}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__tx__packet_a4e92fba3103166d5e96171630a05d323}{test\_transmitter\_deterministic\_seed}}():}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00018}00018\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Isti\ seed\ daje\ identične\ izlaze"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00019}00019\ \ \ \ \ tx1\ =\ \mbox{\hyperlink{class80211a-primopredajnik_1_1tx_1_1_o_f_d_m___t_x__802__11_1_1_transmitter80211a}{Transmitter80211a}}(num\_ofdm\_symbols=2,\ bits\_per\_symbol=2,\ seed=42)}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00020}00020\ \ \ \ \ tx2\ =\ \mbox{\hyperlink{class80211a-primopredajnik_1_1tx_1_1_o_f_d_m___t_x__802__11_1_1_transmitter80211a}{Transmitter80211a}}(num\_ofdm\_symbols=2,\ bits\_per\_symbol=2,\ seed=42)}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00022}00022\ \ \ \ \ out1,\ sym1\ =\ tx1.generate\_frame()}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00023}00023\ \ \ \ \ out2,\ sym2\ =\ tx2.generate\_frame()}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00025}00025\ \ \ \ \ np.testing.assert\_allclose(out1,\ out2)}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00026}00026\ \ \ \ \ np.testing.assert\_allclose(sym1,\ sym2)}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00028}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__tx__packet_a664cf0f6fd792754f386357c001ab0d4}{00028}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__tx__packet_a664cf0f6fd792754f386357c001ab0d4}{test\_transmitter\_payload\_length\_increases\_with\_symbols}}():}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00029}00029\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Više\ OFDM\ simbola\ daje\ duži\ signal"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00030}00030\ \ \ \ \ tx1\ =\ \mbox{\hyperlink{class80211a-primopredajnik_1_1tx_1_1_o_f_d_m___t_x__802__11_1_1_transmitter80211a}{Transmitter80211a}}(num\_ofdm\_symbols=1,\ bits\_per\_symbol=2,\ up\_factor=2)}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00031}00031\ \ \ \ \ tx2\ =\ \mbox{\hyperlink{class80211a-primopredajnik_1_1tx_1_1_o_f_d_m___t_x__802__11_1_1_transmitter80211a}{Transmitter80211a}}(num\_ofdm\_symbols=5,\ bits\_per\_symbol=2,\ up\_factor=2)}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00033}00033\ \ \ \ \ out1,\ \_\ =\ tx1.generate\_frame()}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00034}00034\ \ \ \ \ out2,\ \_\ =\ tx2.generate\_frame()}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00036}00036\ \ \ \ \ \textcolor{keyword}{assert}\ len(out2)\ >\ len(out1)}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00038}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__tx__packet_a02286d88a208c4305318757bfecd9143}{00038}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__tx__packet_a02286d88a208c4305318757bfecd9143}{test\_transmitter\_upsampling\_factor\_changes\_length}}():}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00039}00039\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Veći\ up\_factor\ daje\ više\ uzoraka"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00040}00040\ \ \ \ \ tx1\ =\ \mbox{\hyperlink{class80211a-primopredajnik_1_1tx_1_1_o_f_d_m___t_x__802__11_1_1_transmitter80211a}{Transmitter80211a}}(num\_ofdm\_symbols=1,\ bits\_per\_symbol=2,\ up\_factor=1)}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00041}00041\ \ \ \ \ tx2\ =\ \mbox{\hyperlink{class80211a-primopredajnik_1_1tx_1_1_o_f_d_m___t_x__802__11_1_1_transmitter80211a}{Transmitter80211a}}(num\_ofdm\_symbols=1,\ bits\_per\_symbol=2,\ up\_factor=2)}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00043}00043\ \ \ \ \ out1,\ \_\ =\ tx1.generate\_frame()}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00044}00044\ \ \ \ \ out2,\ \_\ =\ tx2.generate\_frame()}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00046}00046\ \ \ \ \ \textcolor{keyword}{assert}\ len(out2)\ >\ len(out1)}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00048}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__tx__packet_a4ad3eeb55f44e06750930152916b9bdc}{00048}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__tx__packet_a4ad3eeb55f44e06750930152916b9bdc}{test\_transmitter\_symbol\_stream\_length\_matches\_ofdm\_symbols}}():}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00049}00049\ \ \ \ \ \textcolor{stringliteral}{"{}"{}"{}Mapper\ mora\ dati\ 48\ data\ nosioca\ po\ OFDM\ simbolu"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00050}00050\ \textcolor{stringliteral}{\ \ \ \ num\_symbols\ =\ 3}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00051}00051\ \textcolor{stringliteral}{\ \ \ \ bits\_per\_symbol\ =\ 2}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00052}00052\ \textcolor{stringliteral}{\ \ \ \ tx\ =\ Transmitter80211a(num\_ofdm\_symbols=num\_symbols,\ bits\_per\_symbol=bits\_per\_symbol)}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00053}00053\ \textcolor{stringliteral}{\ \ \ \ \_,\ symbols\ =\ tx.generate\_frame()}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00054}00054\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00055}00055\ \textcolor{stringliteral}{\ \ \ \ expected\ =\ num\_symbols\ *\ 48}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00056}00056\ \textcolor{stringliteral}{\ \ \ \ assert\ len(symbols)\ ==\ expected}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00057}00057\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00058}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__tx__packet_acacec5f2bd58172235e07e4451c38dd5}{00058}}\ \textcolor{stringliteral}{def\ test\_transmitter\_signal\_energy\_nonzero():}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00059}00059\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}Signal\ mora\ imati\ energij\textcolor{stringliteral}{u"{}"{}"{}}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00060}00060\ \textcolor{stringliteral}{\ \ \ \ tx\ =\ Transmitter80211a(num\_ofdm\_symbols=1,\ bits\_per\_symbol=2)}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00061}00061\ \textcolor{stringliteral}{\ \ \ \ out,\ \_\ =\ tx.generate\_frame()}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00062}00062\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00063}00063\ \textcolor{stringliteral}{\ \ \ \ rms\ =\ np.sqrt(np.mean(np.abs(out)**2))}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00064}00064\ \textcolor{stringliteral}{\ \ \ \ assert\ rms\ >\ 0}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00065}00065\ \textcolor{stringliteral}{}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00066}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__tx__packet_a7a3e200cb25f3cc64a2fbe99c6f35668}{00066}}\ \textcolor{stringliteral}{def\ test\_transmitter\_invalid\_bits\_per\_symbol():}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00067}00067\ \textcolor{stringliteral}{\ \ \ \ "{}"{}"{}}Nevažeća\ modulacija"{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00068}00068\ \ \ \ \ with\ pytest.raises(ValueError):}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ tx\ =\ Transmitter80211a(num\_ofdm\_symbols=1,\ bits\_per\_symbol=3)}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00070}00070\ \ \ \ \ \ \ \ \ tx.generate\_frame()}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00072}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__tx__packet_a8f8bb0cfeec2cb0c1af89c1cedf6bcc2}{00072}}\ def\ test\_transmitter\_negative\_number\_of\_symbols():}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00073}00073\ \ \ \ \ "{}"{}"{}Negativan\ broj\ OFDM\ simbola\ nije\ dozvoljen"{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00074}00074\ \ \ \ \ with\ pytest.raises(ValueError):}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ tx\ =\ Transmitter80211a(num\_ofdm\_symbols=-\/1,\ bits\_per\_symbol=2)}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00076}00076\ \ \ \ \ \ \ \ \ tx.generate\_frame()}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00078}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__tx__packet_a3f37cd7f3021c9092bdb8eeb2404d9db}{00078}}\ def\ test\_transmitter\_zero\_symbols():}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00079}00079\ \ \ \ \ "{}"{}"{}Nula\ simbola\ –\ očekuje\ se\ greška"{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00080}00080\ \ \ \ \ with\ pytest.raises(ValueError):}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ tx\ =\ Transmitter80211a(num\_ofdm\_symbols=0,\ bits\_per\_symbol=2)}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ tx.generate\_frame()}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00084}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1tests_1_1test__tx__packet_acd7e9b077260c2b105d6674dae13e13c}{00084}}\ def\ test\_transmitter\_invalid\_upsampling\_factor():}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00085}00085\ \ \ \ \ "{}"{}"{}Upsampling\ faktor\ mora\ biti\ >=\ 1"{}"{}"{}}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00086}00086\ \ \ \ \ with\ pytest.raises(ValueError):}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ tx\ =\ Transmitter80211a(num\_ofdm\_symbols=1,\ bits\_per\_symbol=2,\ up\_factor=0)}
+\DoxyCodeLine{\Hypertarget{test__tx__packet_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ tx.generate\_frame()}
+
+\end{DoxyCode}

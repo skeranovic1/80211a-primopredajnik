@@ -1,0 +1,79 @@
+\chapter{802.\+11a OFDM Transmitter (Work in Progress) }
+\hypertarget{md__r_e_a_d_m_e}{}\label{md__r_e_a_d_m_e}\index{802.11a OFDM Transmitter (Work in Progress)@{802.11a OFDM Transmitter (Work in Progress)}}
+\label{md__r_e_a_d_m_e_autotoc_md0}%
+\Hypertarget{md__r_e_a_d_m_e_autotoc_md0}%
+\hypertarget{md__r_e_a_d_m_e_autotoc_md1}{}\doxysection{\texorpdfstring{Status}{Status}}\label{md__r_e_a_d_m_e_autotoc_md1}
+Ovaj projekt trenutno implementira osnovne dijelove OFDM TX lanca\+:
+
+
+\begin{DoxyItemize}
+\item OFDM mapper za BPSK, QPSK, 16-\/QAM i 64-\/QAM
+\item Generisanje short i long training sequences
+\item IFFT sa guard intervalom (GI)
+\item Upsampling i half-\/band filtriranje
+\item Osnovni testovi pokrivenosti OFDM mappera
+\end{DoxyItemize}
+
+{\bfseries{Trenutno nije implementirano\+:}}
+
+
+\begin{DoxyItemize}
+\item Model kanala
+\item RX lanac i sinkronizacija
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md2}{}\doxysection{\texorpdfstring{Instalacija}{Instalacija}}\label{md__r_e_a_d_m_e_autotoc_md2}
+
+\begin{DoxyEnumerate}
+\item Kloniraj repozitorij i uđi u direktorij\+: ~\newline
+ {\ttfamily git clone \href{https://github.com/skeranovic1/80211a-primopredajnik.git}{\texttt{https\+://github.\+com/skeranovic1/80211a-\/primopredajnik.\+git}}} ~\newline
+ {\ttfamily cd 80211a-\/primopredajnik}
+\item Kreiraj i aktiviraj virtualno okruženje\+: ~\newline
+ {\ttfamily python -\/m venv .venv} ~\newline
+ Na Linux/mac\+OS\+: {\ttfamily source .venv/bin/activate} ~\newline
+ Na Windows\+: {\ttfamily .venv\textbackslash{}Scripts\textbackslash{}activate}
+\item Instaliraj zavisnosti\+: ~\newline
+ {\ttfamily pip install -\/r requirements.\+txt}
+\end{DoxyEnumerate}\hypertarget{md__r_e_a_d_m_e_autotoc_md3}{}\doxysection{\texorpdfstring{Korištenje trenutno implementiranih funkcija}{Korištenje trenutno implementiranih funkcija}}\label{md__r_e_a_d_m_e_autotoc_md3}
+U Python skripti ili interaktivnom okruženju\+: ~\newline
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily from tx.\+OFDM\+\_\+\+TX\+\_\+802\+\_\+11 import OFDM\+\_\+\+TX\+\_\+802\+\_\+11} ~\newline
+
+\item Generiše 5 OFDM simbola sa QPSK modulacijom (2 bita po simbolu)\+: ~\newline
+ {\ttfamily samples, symbols = OFDM\+\_\+\+TX\+\_\+802\+\_\+11(Number\+Of\+\_\+\+OFDM\+\_\+\+Symbols=5, Bits\+Per\+Symbol=2)} ~\newline
+ {\ttfamily print("{}Oblik signala\+:"{}, samples.\+shape)} ~\newline
+ {\ttfamily print("{}Prikaz simbola\+:"{}, symbols)}
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md4}{}\doxysection{\texorpdfstring{Testiranje}{Testiranje}}\label{md__r_e_a_d_m_e_autotoc_md4}
+Testovi koriste {\ttfamily pytest} i pokrivaju trenutno\+:
+
+
+\begin{DoxyItemize}
+\item OFDM mapper ~\newline
+
+\item Half-\/band upsampling filter ~\newline
+
+\item Zero-\/stuffing funkcije ~\newline
+
+\end{DoxyItemize}
+
+Pokretanje testiranja\+: ~\newline
+ {\ttfamily pytest}\hypertarget{md__r_e_a_d_m_e_autotoc_md5}{}\doxysection{\texorpdfstring{Struktura projekta}{Struktura projekta}}\label{md__r_e_a_d_m_e_autotoc_md5}
+
+\begin{DoxyItemize}
+\item {\ttfamily tx/} — Glavni kod ~\newline
+
+\item {\ttfamily tests/} — Pytest testovi ~\newline
+
+\item {\ttfamily \doxylink{_r_e_a_d_m_e_8md}{README.\+md}} ~\newline
+
+\item {\ttfamily requirements.\+txt}
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md6}{}\doxysection{\texorpdfstring{Plan razvoja / TODO}{Plan razvoja / TODO}}\label{md__r_e_a_d_m_e_autotoc_md6}
+
+\begin{DoxyItemize}
+\item Dodati RX lanac i sinhronizaciju ~\newline
+
+\item Poboljšati testove za integraciju cijelog sistema ~\newline
+
+\item Dodati dokumentaciju i primjere korištenja 
+\end{DoxyItemize}

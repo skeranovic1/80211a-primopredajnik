@@ -1,0 +1,62 @@
+\doxysection{demo.\+py}
+\hypertarget{demo_8py_source}{}\label{demo_8py_source}\index{examples/demo.py@{examples/demo.py}}
+\mbox{\hyperlink{demo_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00001}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1examples_1_1demo}{00001}}\ \textcolor{keyword}{from}\ tx.OFDM\_TX\_802\_11\ \textcolor{keyword}{import}\ Transmitter80211a}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00002}00002\ \textcolor{keyword}{import}\ numpy\ \textcolor{keyword}{as}\ np}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00003}00003\ \textcolor{keyword}{import}\ matplotlib.pyplot\ \textcolor{keyword}{as}\ plt}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00005}\mbox{\hyperlink{namespace80211a-primopredajnik_1_1examples_1_1demo_ae3dbcc68cae884f1f19fa65173c90952}{00005}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace80211a-primopredajnik_1_1examples_1_1demo_ae3dbcc68cae884f1f19fa65173c90952}{demo}}():}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00006}00006\ \ \ \ \ \textcolor{comment}{\#\ Kreiranje\ TX\ instance\ sa\ parametrima}}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00007}00007\ \ \ \ \ num\_ofdm\_symbols=2}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00008}00008\ \ \ \ \ up\_factor=2}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00009}00009\ \ \ \ \ tx\ =\ \mbox{\hyperlink{class80211a-primopredajnik_1_1tx_1_1_o_f_d_m___t_x__802__11_1_1_transmitter80211a}{Transmitter80211a}}(}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00010}00010\ \ \ \ \ \ \ \ \ num\_ofdm\_symbols=num\_ofdm\_symbols,}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00011}00011\ \ \ \ \ \ \ \ \ bits\_per\_symbol=2,\ \ \textcolor{comment}{\#QPSK}}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00012}00012\ \ \ \ \ \ \ \ \ step=1,}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00013}00013\ \ \ \ \ \ \ \ \ up\_factor=up\_factor,}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00014}00014\ \ \ \ \ \ \ \ \ seed=42,}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00015}00015\ \ \ \ \ \ \ \ \ plot=\textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00016}00016\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00018}00018\ \ \ \ \ signal,\ \_\ =\ tx.generate\_frame()}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00019}00019\ \ \ \ \ fs\_base=20e6\ }
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00020}00020\ \ \ \ \ fs=fs\_base*2\ \ \ \textcolor{comment}{\#\ upsamplirani\ rate}}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00021}00021\ \ \ \ \ t=np.arange(len(signal))/fs\ \ \ \textcolor{comment}{\#vremenska\ osa\ u\ sekundama\ za\ plot}}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00023}00023\ \ \ \ \ \textcolor{comment}{\#Dužine\ komponenti\ za\ plot\ oznake}}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00024}00024\ \ \ \ \ STS\_len=16*up\_factor*10\ \ \ \ \ \ \textcolor{comment}{\#10\ kratkih\ simbola\ =\ 160\ uzoraka}}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00025}00025\ \ \ \ \ LTS\_len=160*up\_factor\ \ \ \ \ \ \ \ \textcolor{comment}{\#160\ *\ up\_factor}}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00026}00026\ \ \ \ \ OFDM\_symbol\_len=64*up\_factor\ \textcolor{comment}{\#dužina\ OFDM\ simbola\ =\ 64}}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00027}00027\ \ \ \ \ GI\_len=16*up\_factor\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{\#dužina\ guard\ intervala\ =\ 16}}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00029}00029\ \ \ \ \ plt.figure(figsize=(16,6))}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00030}00030\ \ \ \ \ plt.plot(t*1e6,\ np.real(signal),\ label=\textcolor{stringliteral}{'Realni\ dio'})\ \ \textcolor{comment}{\#u\ µs\ za\ laksi\ prikaz}}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00032}00032\ \ \ \ \ \textcolor{comment}{\#Oznake\ za\ krajeve\ sekvenci}}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00033}00033\ \ \ \ \ sts\_end=STS\_len/fs}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00034}00034\ \ \ \ \ lts\_end=(STS\_len+LTS\_len)/fs}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00035}00035\ \ \ \ \ payload\_end=len(signal)/fs}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00036}00036\ \ \ \ \ plt.axvline(sts\_end*1e6,\ color=\textcolor{stringliteral}{'green'},\ linestyle=\textcolor{stringliteral}{'-\/-\/'},\ label=\textcolor{stringliteral}{'Kraj\ STS'})}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00037}00037\ \ \ \ \ plt.axvline(lts\_end*1e6,\ color=\textcolor{stringliteral}{'orange'},\ linestyle=\textcolor{stringliteral}{'-\/-\/'},\ label=\textcolor{stringliteral}{'Kraj\ LTS'})}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00038}00038\ \ \ \ \ plt.axvline(payload\_end*1e6,\ color=\textcolor{stringliteral}{'purple'},\ linestyle=\textcolor{stringliteral}{'-\/-\/'},\ label=\textcolor{stringliteral}{'Kraj\ payload'})}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00040}00040\ \ \ \ \ \textcolor{comment}{\#GI\ označavanje}}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00041}00041\ \ \ \ \ \textcolor{keywordflow}{for}\ i\ \textcolor{keywordflow}{in}\ range(num\_ofdm\_symbols):}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ gi\_start=(STS\_len+LTS\_len+i*(GI\_len+OFDM\_symbol\_len))/fs}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ gi\_end=(STS\_len+LTS\_len+i*(GI\_len+OFDM\_symbol\_len)+GI\_len)/fs}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ plt.axvspan(gi\_start*1e6,\ gi\_end*1e6,\ color=\textcolor{stringliteral}{'green'},\ alpha=0.3)}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00046}00046\ \ \ \ \ plt.title(f\textcolor{stringliteral}{"{}OFDM\ signal\ u\ vremenskoj\ domeni\ (\{num\_ofdm\_symbols\}\ simbol,\ QPSK)"{}})}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00047}00047\ \ \ \ \ plt.xlabel(\textcolor{stringliteral}{"{}Vrijeme\ [µs]"{}})}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00048}00048\ \ \ \ \ plt.ylabel(\textcolor{stringliteral}{"{}Amplituda"{}})}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00049}00049\ \ \ \ \ plt.grid(\textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00050}00050\ \ \ \ \ plt.legend()}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00051}00051\ \ \ \ \ plt.tight\_layout()}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00052}00052\ \ \ \ \ plt.show()}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00054}00054\ \ \ }
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00055}00055\ \textcolor{keywordflow}{if}\ \_\_name\_\_\ ==\ \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
+\DoxyCodeLine{\Hypertarget{demo_8py_source_l00056}00056\ \ \ \ \ \mbox{\hyperlink{namespace80211a-primopredajnik_1_1examples_1_1demo_ae3dbcc68cae884f1f19fa65173c90952}{demo}}()}
+
+\end{DoxyCode}
