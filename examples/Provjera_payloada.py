@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from ifft_ofdm_symbol import IFFT_GI
-from OFDM_mapper import Mapper_OFDM
-from utilities import bit_sequence
+from tx.ifft_ofdm_symbol import IFFT_GI
+from tx.OFDM_mapper import Mapper_OFDM
+from tx.utilities import bit_sequence
 
 def main():
     """
@@ -26,9 +26,9 @@ def main():
     #Crtanje cijelog payload-a
     plt.figure(figsize=(14,5))
     plt.subplot(2,1,1)
-    plt.plot(np.real(payload), 'b', label='Real')
+    plt.stem(np.real(payload), 'b', label='Real')
     plt.subplot(2,1,2)
-    plt.plot(np.imag(payload), 'r', label='Imag')
+    plt.stem(np.imag(payload), 'r', label='Imag')
     plt.title(f"OFDM payload za {2} simbola")
     plt.xlabel("Uzorci")
     plt.ylabel("Amplituda")

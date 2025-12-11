@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from OFDM_mapper import Mapper_OFDM  
-from utilities import bit_sequence
+from tx.OFDM_mapper import Mapper_OFDM  
+from tx.utilities import bit_sequence
 
 def mapper_test(bit_seq):
     """
@@ -9,7 +9,6 @@ def mapper_test(bit_seq):
     i prikazuje konstelacije za sve modulacije.
 
     Parametri
-    ----------
     bit_seq : array-like
         Niz ulaznih bitova (0 ili 1)
     """
