@@ -42,6 +42,8 @@ class Transmitter80211a:
     def generate_frame(self):
         """Generiše kompletan OFDM paket sa training sekvencama i upsamplingom"""
         sts, lts=self.generate_training_sequences()
+        sts=sts/64
+        lts=lts/64
         payload, symbols=self.generate_payload()
         packet_20MHz=np.concatenate((sts, lts, payload))
         sample_output, _ =half_band_upsample(packet_20MHz, up_factor=self.up_factor, N=31, plot=self.plot)
