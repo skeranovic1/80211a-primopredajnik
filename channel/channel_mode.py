@@ -1,7 +1,7 @@
 
 class ChannelMode:
     """
-    SimulationMode definira režime simulacije.
+    ChannelMode definira režime kanala.
     Attributes:
         Multipath (int): 0 = exclude, 1 = include
         ThermalNoise (int): 0 = exclude, 1 = include
