@@ -1,4 +1,7 @@
 import numpy as np
+from Multipath import GetMultipathFilter
+from AWGN import Generate_AWGN
+import scipy as sc
 
 def Channel_Model(TX_Samples, Settings, Mode):
     # 1. Transferring the mode parameters
@@ -14,7 +17,7 @@ def Channel_Model(TX_Samples, Settings, Mode):
     # 3. Generating multipath filterpp
     FIR_Taps = GetMultipathFilter(SampleRate, DelaySpread, N)
     if Multipath_Select == 1:
-        TX_Samples = lfilter(FIR_Taps, 1, TX_Samples)
+        TX_Samples = sc.lfilter(FIR_Taps, 1, TX_Samples)
     VarOutput = np.var(TX_Samples)
     TX_Samples = TX_Samples / np.sqrt(VarOutput)
 
