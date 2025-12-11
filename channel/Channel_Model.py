@@ -8,7 +8,7 @@ def Channel_Model(TX_Samples, Settings, Mode):
     # 2. Transferring settings
     N = Settings.NumberOfTaps  # For Multipath Modelpy
     DelaySpread = Settings.DelaySpread
-    SampleRate = SetVtings.SampleRate
+    SampleRate = Settings.SampleRate
     SNR_dB = Settings.SNR_dB  # Thermal Noise
 
     # 3. Generating multipath filterpp
