@@ -51,12 +51,14 @@ Pokretanje testiranja:
 
 ## Struktura projekta
 
-
 - `tx/` — Glavni kod  
 - `tests/` — Pytest testovi  
 - `README.md`  
 - `requirements.txt`
 
+## Dokumentacija
+
+- Automatski generisana Doxygen HTML dokumentacija dostupna je ovdje:  
 
 
 ## Plan razvoja / TODO
