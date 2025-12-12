@@ -91,7 +91,7 @@ class OFDMGui:
         # ---- TAPS ----
         ttk.Label(ctrl, text="Broj tapova").pack(anchor="w")
         ttk.Spinbox(
-            ctrl, from_=1, to=10,
+            ctrl, from_=1, to=50,
             textvariable=self.taps
         ).pack(fill=tk.X)
 
