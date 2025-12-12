@@ -15,7 +15,7 @@ def demo():
     - Vrijeme na x-osi je u mikrosekundama (µs) radi preglednosti.
     """
     # Kreiranje TX instance sa parametrima
-    num_ofdm_symbols=2
+    num_ofdm_symbols=3
     up_factor=2
     tx = Transmitter80211a(
         num_ofdm_symbols=num_ofdm_symbols,
@@ -54,14 +54,13 @@ def demo():
         gi_end=(STS_len+LTS_len+i*(GI_len+OFDM_symbol_len)+GI_len)/fs
         plt.axvspan(gi_start*1e6, gi_end*1e6, color='green', alpha=0.3)
 
-    plt.title(f"OFDM signal u vremenskoj domeni ({num_ofdm_symbols} simbol, QPSK)")
+    plt.title(f"OFDM signal u vremenskoj domeni ({num_ofdm_symbols} simbola, QPSK)")
     plt.xlabel("Vrijeme [µs]")
     plt.ylabel("Amplituda")
     plt.grid(True)
     plt.legend()
     plt.tight_layout()
     plt.show()
-
   
 if __name__ == "__main__":
     demo()

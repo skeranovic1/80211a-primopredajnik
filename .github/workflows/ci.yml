@@ -37,3 +37,21 @@ jobs:
         with:
           name: coverage-report
           path: coverage.xml
+
+      - name: Install Doxygen
+        run: sudo apt-get update && sudo apt-get install -y doxygen
+          
+      - name: Generate Doxygen documentation
+        run: |
+          if [ ! -f Doxyfile ]; then
+            doxygen -g Doxyfile
+          fi
+       
+          doxygen Doxyfile
+
+      - name: Upload Doxygen docs
+        uses: actions/upload-artifact@v4
+        with:
+          name: doxygen-html-docs
+          path: ./html   
+          

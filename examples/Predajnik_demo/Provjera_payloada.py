@@ -19,9 +19,9 @@ def main():
     - Parametri simulacije (broj simbola, seme generatora) su fiksni unutar funkcije.
     """
     # Generišemo nasumične ulazne bitove
-    input_bits = bit_sequence(2, 2, sd=41)
+    input_bits = bit_sequence(1, 2, sd=41)
     symbols = Mapper_OFDM(input_bits, 2)
-    payload = IFFT_GI(symbols, plot=False)  
+    payload = IFFT_GI(symbols, plot=True)  
 
     #Crtanje cijelog payload-a
     plt.figure(figsize=(14,5))

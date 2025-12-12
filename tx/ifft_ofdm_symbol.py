@@ -64,11 +64,9 @@ def IFFT_GI(symbol_stream, plot=False):
             plt.stem(np.real(current_input))
             plt.title("Ulazni stream - realni dio")
             plt.grid(True)
-            plt.xlim(0,64)
             plt.subplot(2,1,2)
             plt.stem(np.imag(current_input))
             plt.grid(True)
-            plt.xlim(-1,65)
             plt.title("Ulazni stream - imaginarni dio")
             plt.show(block=False)
 

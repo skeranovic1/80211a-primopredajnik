@@ -1,0 +1,31 @@
+\doxysection{Channel\+\_\+\+Model.\+py}
+\hypertarget{_channel___model_8py_source}{}\label{_channel___model_8py_source}\index{channel/Channel\_Model.py@{channel/Channel\_Model.py}}
+\mbox{\hyperlink{_channel___model_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00001}\mbox{\hyperlink{namespace_channel___model}{00001}}\ \textcolor{keyword}{import}\ numpy\ \textcolor{keyword}{as}\ np}
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00003}\mbox{\hyperlink{namespace_channel___model_ac9033c0c3f8d2cd1f924b8adeb7ac473}{00003}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespace_channel___model}{Channel\_Model}}(TX\_Samples,\ Settings,\ Mode):}
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00004}00004\ \ \ \ \ \textcolor{comment}{\#\ 1.\ Transferring\ the\ mode\ parameters}}
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00005}00005\ \ \ \ \ Multipath\_Select\ =\ Mode.Multipath\ \ \textcolor{comment}{\#\ 0/1\ means\ exclude/include\ }}
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00006}00006\ \ \ \ \ AW\_GaussianNoise\_Select\ =\ Mode.ThermalNoise}
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00008}00008\ \ \ \ \ \textcolor{comment}{\#\ 2.\ Transferring\ settings}}
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00009}00009\ \ \ \ \ N\ =\ Settings.NumberOfTaps\ \ \textcolor{comment}{\#\ For\ Multipath\ Modelpy}}
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00010}00010\ \ \ \ \ DelaySpread\ =\ Settings.DelaySpread}
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00011}00011\ \ \ \ \ SampleRate\ =\ Settings.SampleRate}
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00012}00012\ \ \ \ \ SNR\_dB\ =\ Settings.SNR\_dB\ \ \textcolor{comment}{\#\ Thermal\ Noise}}
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00014}00014\ \ \ \ \ \textcolor{comment}{\#\ 3.\ Generating\ multipath\ filterpp}}
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00015}00015\ \ \ \ \ FIR\_Taps\ =\ GetMultipathFilter(SampleRate,\ DelaySpread,\ N)}
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00016}00016\ \ \ \ \ \textcolor{keywordflow}{if}\ Multipath\_Select\ ==\ 1:}
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00017}00017\ \ \ \ \ \ \ \ \ TX\_Samples\ =\ lfilter(FIR\_Taps,\ 1,\ TX\_Samples)}
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00018}00018\ \ \ \ \ VarOutput\ =\ np.var(TX\_Samples)}
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00019}00019\ \ \ \ \ TX\_Samples\ =\ TX\_Samples\ /\ np.sqrt(VarOutput)}
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00021}00021\ \ \ \ \ \textcolor{comment}{\#\ 4.\ Generating\ additive\ white\ gaussian\ noise\ (thermal\ noise)}}
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00022}00022\ \ \ \ \ \textcolor{keywordflow}{if}\ AW\_GaussianNoise\_Select\ ==\ 1:}
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00023}00023\ \ \ \ \ \ \ \ \ TX\_Samples\ =\ TX\_Samples\ +\ Generate\_AWGN(TX\_Samples,\ SNR\_dB)}
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{_channel___model_8py_source_l00025}00025\ \ \ \ \ \textcolor{keywordflow}{return}\ TX\_Samples,\ FIR\_Taps}
+
+\end{DoxyCode}
