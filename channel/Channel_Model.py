@@ -1,6 +1,6 @@
 import numpy as np
-from Multipath import GetMultipathFilter
-from AWGN import Generate_AWGN
+from channel.Multipath import GetMultipathFilter
+from channel.AWGN import Generate_AWGN
 import scipy.signal as sc
 
 

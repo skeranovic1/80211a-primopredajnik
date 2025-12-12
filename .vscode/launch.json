@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Pokreni demo_channel",
+            "type": "python",
+            "request": "launch",
+            "module": "examples.Kanal_demo.demo_channel",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal"
+        }
+    ]
+}
