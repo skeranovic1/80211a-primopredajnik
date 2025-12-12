@@ -53,6 +53,7 @@ jobs:
           sed -i "s|^INPUT .*|INPUT = ./tx ./channel ./examples ./gui|" Doxyfile
           sed -i "s|^OUTPUT_DIRECTORY .*|OUTPUT_DIRECTORY = html|" Doxyfile
           sed -i "s|^GENERATE_HTML .*|GENERATE_HTML = YES|" Doxyfile
+          sed -i "s|^RECURSIVE .*|RECURSIVE = YES|" Doxyfile
           
           doxygen Doxyfile
 
