@@ -4,7 +4,7 @@ OUTPUT_DIRECTORY = docs
 GENERATE_HTML = YES
 GENERATE_LATEX = NO
 
-INPUT = ./tx ./channel ./examples ./gui
+INPUT = .
 RECURSIVE = YES
 
 EXTRACT_ALL = YES
