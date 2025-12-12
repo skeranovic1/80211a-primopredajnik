@@ -47,6 +47,9 @@ jobs:
             doxygen -g Doxyfile
           fi
           
+          FILES=$(find ./ -name "*.py" | tr '\n' ' ')
+          echo "INPUT = $FILES" >> Doxyfile
+
           sed -i "s|^INPUT .*|INPUT = ./tx ./channel ./examples ./gui|" Doxyfile
           sed -i "s|^OUTPUT_DIRECTORY .*|OUTPUT_DIRECTORY = html|" Doxyfile
           sed -i "s|^GENERATE_HTML .*|GENERATE_HTML = YES|" Doxyfile
