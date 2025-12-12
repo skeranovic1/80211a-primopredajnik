@@ -38,28 +38,20 @@ jobs:
           name: coverage-report
           path: coverage.xml
 
+  doxygen:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
       - name: Install Doxygen
-        run: sudo apt-get update && sudo apt-get install -y doxygen
-          
+        run: sudo apt-get update && sudo apt-get install -y doxygen graphviz
+
       - name: Generate Doxygen documentation
-        run: |
-          if [ ! -f Doxyfile ]; then
-            doxygen -g Doxyfile
-          fi
-          
-          FILES=$(find ./ -name "*.py" | tr '\n' ' ')
-          echo "INPUT = $FILES" >> Doxyfile
+        run: doxygen Doxyfile
 
-          sed -i "s|^INPUT .*|INPUT = ./tx ./channel ./examples ./gui|" Doxyfile
-          sed -i "s|^OUTPUT_DIRECTORY .*|OUTPUT_DIRECTORY = html|" Doxyfile
-          sed -i "s|^GENERATE_HTML .*|GENERATE_HTML = YES|" Doxyfile
-          sed -i "s|^RECURSIVE .*|RECURSIVE = YES|" Doxyfile
-          
-          doxygen Doxyfile
-
-      - name: Upload Doxygen docs
+      - name: Upload Doxygen HTML Docs
         uses: actions/upload-artifact@v4
         with:
           name: doxygen-html-docs
-          path: html/html
-          
+          path: docs/html

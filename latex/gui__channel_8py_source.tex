@@ -1,0 +1,185 @@
+\doxysection{gui\+\_\+channel.\+py}
+\hypertarget{gui__channel_8py_source}{}\label{gui__channel_8py_source}\index{gui/gui\_channel.py@{gui/gui\_channel.py}}
+\mbox{\hyperlink{gui__channel_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00001}\mbox{\hyperlink{namespacegui__channel}{00001}}\ \textcolor{keyword}{import}\ sys}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00002}00002\ \textcolor{keyword}{import}\ os}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00003}00003\ \textcolor{keyword}{import}\ numpy\ \textcolor{keyword}{as}\ np}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00004}00004\ \textcolor{keyword}{import}\ tkinter\ \textcolor{keyword}{as}\ tk}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00005}00005\ \textcolor{keyword}{from}\ tkinter\ \textcolor{keyword}{import}\ ttk}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00007}00007\ \textcolor{comment}{\#\ =====\ PATH\ FIX\ =====}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00008}\mbox{\hyperlink{namespacegui__channel_ac8ef35dabb59503452b3ed16bfba95fc}{00008}}\ ROOT\_DIR\ =\ os.path.abspath(os.path.join(os.path.dirname(\_\_file\_\_),\ \textcolor{stringliteral}{"{}.."{}}))}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00009}00009\ sys.path.insert(0,\ ROOT\_DIR)}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00011}00011\ \textcolor{comment}{\#\ =====\ MATPLOTLIB\ (STABILNO\ SA\ TKINTEROM)\ =====}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00012}00012\ \textcolor{keyword}{from}\ matplotlib.figure\ \textcolor{keyword}{import}\ Figure}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00013}00013\ \textcolor{keyword}{from}\ matplotlib.backends.backend\_tkagg\ \textcolor{keyword}{import}\ FigureCanvasTkAgg}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00015}00015\ \textcolor{comment}{\#\ =====\ TX\ =====}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00016}00016\ \textcolor{keyword}{from}\ tx.OFDM\_TX\_802\_11\ \textcolor{keyword}{import}\ Transmitter80211a}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00018}00018\ \textcolor{comment}{\#\ =====\ CHANNEL\ =====}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00019}00019\ \textcolor{keyword}{from}\ channel.Channel\_Model\ \textcolor{keyword}{import}\ Channel\_Model}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00020}00020\ \textcolor{keyword}{from}\ channel.channel\_settings\ \textcolor{keyword}{import}\ ChannelSettings}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00021}00021\ \textcolor{keyword}{from}\ channel.channel\_mode\ \textcolor{keyword}{import}\ ChannelMode}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00024}\mbox{\hyperlink{namespacegui__channel_af6a05898e231ddfa95f7ed7676775f7b}{00024}}\ \textcolor{keyword}{def\ }\mbox{\hyperlink{namespacegui__channel_af6a05898e231ddfa95f7ed7676775f7b}{oznaci\_okvir}}(ax,\ up\_factor,\ num\_ofdm\_symbols,\ fs):}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00025}00025\ \ \ \ \ STS\_len\ =\ 16\ *\ up\_factor\ *\ 10}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00026}00026\ \ \ \ \ LTS\_len\ =\ 160\ *\ up\_factor}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00027}00027\ \ \ \ \ OFDM\_symbol\_len\ =\ 64\ *\ up\_factor}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00028}00028\ \ \ \ \ GI\_len\ =\ 16\ *\ up\_factor}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00030}00030\ \ \ \ \ sts\_end\ =\ STS\_len\ /\ fs}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00031}00031\ \ \ \ \ lts\_end\ =\ (STS\_len\ +\ LTS\_len)\ /\ fs}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00032}00032\ \ \ \ \ payload\_end\ =\ (STS\_len\ +\ LTS\_len\ +}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00033}00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ num\_ofdm\_symbols\ *\ (OFDM\_symbol\_len\ +\ GI\_len))\ /\ fs}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00035}00035\ \ \ \ \ ax.axvline(sts\_end\ *\ 1e6,\ color=\textcolor{stringliteral}{'green'},\ linestyle=\textcolor{stringliteral}{'-\/-\/'},\ label=\textcolor{stringliteral}{'Kraj\ STS'})}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00036}00036\ \ \ \ \ ax.axvline(lts\_end\ *\ 1e6,\ color=\textcolor{stringliteral}{'orange'},\ linestyle=\textcolor{stringliteral}{'-\/-\/'},\ label=\textcolor{stringliteral}{'Kraj\ LTS'})}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00037}00037\ \ \ \ \ ax.axvline(payload\_end\ *\ 1e6,\ color=\textcolor{stringliteral}{'purple'},\ linestyle=\textcolor{stringliteral}{'-\/-\/'},\ label=\textcolor{stringliteral}{'Kraj\ payload'})}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00039}00039\ \ \ \ \ \textcolor{keywordflow}{for}\ i\ \textcolor{keywordflow}{in}\ range(num\_ofdm\_symbols):}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00040}00040\ \ \ \ \ \ \ \ \ gi\_start\ =\ (STS\_len\ +\ LTS\_len\ +}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00041}00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\ *\ (GI\_len\ +\ OFDM\_symbol\_len))\ /\ fs}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00042}00042\ \ \ \ \ \ \ \ \ gi\_end\ =\ gi\_start\ +\ GI\_len\ /\ fs}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00043}00043\ \ \ \ \ \ \ \ \ ax.axvspan(gi\_start\ *\ 1e6,\ gi\_end\ *\ 1e6,}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00044}00044\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ color=\textcolor{stringliteral}{'green'},\ alpha=0.25)}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00047}\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui}{00047}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui}{OFDMGui}}:}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00048}\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_aa922fb36e04098ed50f9b7fca5c35d70}{00048}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_aa922fb36e04098ed50f9b7fca5c35d70}{\_\_init\_\_}}(self,\ root):}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00049}\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_aa39cf47178003b19bceb88fae414ec4c}{00049}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_aa39cf47178003b19bceb88fae414ec4c}{root}}\ =\ root}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00050}00050\ \ \ \ \ \ \ \ \ root.title(\textcolor{stringliteral}{"{}OFDM\ Channel\ Demo"{}})}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00052}00052\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ =====\ KONTROLE\ =====}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00053}00053\ \ \ \ \ \ \ \ \ ctrl\ =\ ttk.Frame(root,\ padding=10)}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00054}00054\ \ \ \ \ \ \ \ \ ctrl.pack(side=tk.LEFT,\ fill=tk.Y)}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00056}\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a1b4bc4b039d35215115e9e40a60738d6}{00056}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a1b4bc4b039d35215115e9e40a60738d6}{snr}}\ =\ tk.IntVar(value=20)}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00057}\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_af027c03d97e449ddb1814361e5359955}{00057}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_af027c03d97e449ddb1814361e5359955}{multipath}}\ =\ tk.BooleanVar(value=\textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00058}\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a3e467aeaecbb7bee57f99493fb3b6096}{00058}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a3e467aeaecbb7bee57f99493fb3b6096}{taps}}\ =\ tk.IntVar(value=2)}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00059}\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a3b55148dfa3862ba839dff436b45f806}{00059}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a3b55148dfa3862ba839dff436b45f806}{delay}}\ =\ tk.IntVar(value=10)}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00061}00061\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ -\/-\/-\/-\/\ SNR\ -\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00062}00062\ \ \ \ \ \ \ \ \ ttk.Label(ctrl,\ text=\textcolor{stringliteral}{"{}SNR\ [dB]"{}}).pack(anchor=\textcolor{stringliteral}{"{}w"{}})}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00064}\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a156bb2a70ca3890fda533fc2df214b7c}{00064}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a156bb2a70ca3890fda533fc2df214b7c}{snr\_scale}}\ =\ ttk.Scale(}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ ctrl,\ from\_=0,\ to=40,}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ variable=self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a1b4bc4b039d35215115e9e40a60738d6}{snr}},}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ orient=\textcolor{stringliteral}{"{}horizontal"{}}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00068}00068\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00069}00069\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a156bb2a70ca3890fda533fc2df214b7c}{snr\_scale}}.pack(fill=tk.X)}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00070}00070\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00071}00071\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ LABEL\ KOJI\ PRIKAZUJE\ SNR\ VRIJEDNOST}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00072}\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a597f0c2bb460805d328ad8926f270976}{00072}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a597f0c2bb460805d328ad8926f270976}{snr\_value\_label}}\ =\ ttk.Label(}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ ctrl,\ text=f\textcolor{stringliteral}{"{}\{self.snr.get()\}\ dB"{}}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00074}00074\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00075}00075\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a597f0c2bb460805d328ad8926f270976}{snr\_value\_label}}.pack(anchor=\textcolor{stringliteral}{"{}e"{}},\ pady=(0,\ 10))}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00077}00077\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ automatsko\ ažuriranje\ labela\ kad\ se\ pomjera\ slider}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00078}00078\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a1b4bc4b039d35215115e9e40a60738d6}{snr}}.trace\_add(}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00079}00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}write"{}},}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{lambda}\ *args:\ self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a597f0c2bb460805d328ad8926f270976}{snr\_value\_label}}.config(}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00081}00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ text=f\textcolor{stringliteral}{"{}\{self.snr.get()\}\ dB"{}}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00083}00083\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00085}00085\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ -\/-\/-\/-\/\ MULTIPATH\ -\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00086}00086\ \ \ \ \ \ \ \ \ ttk.Checkbutton(}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ ctrl,\ text=\textcolor{stringliteral}{"{}Multipath"{}},}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ variable=self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_af027c03d97e449ddb1814361e5359955}{multipath}}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00089}00089\ \ \ \ \ \ \ \ \ ).pack(pady=5)}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00091}00091\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ -\/-\/-\/-\/\ TAPS\ -\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00092}00092\ \ \ \ \ \ \ \ \ ttk.Label(ctrl,\ text=\textcolor{stringliteral}{"{}Broj\ tapova"{}}).pack(anchor=\textcolor{stringliteral}{"{}w"{}})}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00093}00093\ \ \ \ \ \ \ \ \ ttk.Spinbox(}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ ctrl,\ from\_=1,\ to=50,}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ textvariable=self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a3e467aeaecbb7bee57f99493fb3b6096}{taps}}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00096}00096\ \ \ \ \ \ \ \ \ ).pack(fill=tk.X)}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00098}00098\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ -\/-\/-\/-\/\ DELAY\ -\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00099}00099\ \ \ \ \ \ \ \ \ ttk.Label(ctrl,\ text=\textcolor{stringliteral}{"{}Delay\ spread\ [ns]"{}}).pack(anchor=\textcolor{stringliteral}{"{}w"{}})}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00100}00100\ \ \ \ \ \ \ \ \ ttk.Spinbox(}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ ctrl,\ from\_=1,\ to=500,}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ textvariable=self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a3b55148dfa3862ba839dff436b45f806}{delay}}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00103}00103\ \ \ \ \ \ \ \ \ ).pack(fill=tk.X)}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00104}00104\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00105}00105\ \ \ \ \ \ \ \ \ ttk.Button(}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ ctrl,\ text=\textcolor{stringliteral}{"{}Pokreni\ simulaciju"{}},}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ command=self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a6ee44fd255520d4256f7ee6c87a057d4}{run}}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00108}00108\ \ \ \ \ \ \ \ \ ).pack(pady=10)}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00110}00110\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ =====\ FIGURA\ =====}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00111}00111\ \ \ \ \ \ \ \ \ fig\ =\ Figure(figsize=(10,\ 4))}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00112}\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_ae93571d5b6969216e8cc8659aba68017}{00112}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_ae93571d5b6969216e8cc8659aba68017}{ax}}\ =\ fig.add\_subplot(111)}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00113}\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a803ef84f82f137472d24856f93f95c6e}{00113}}\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a803ef84f82f137472d24856f93f95c6e}{canvas}}\ =\ FigureCanvasTkAgg(fig,\ master=root)}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00114}00114\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a803ef84f82f137472d24856f93f95c6e}{canvas}}.get\_tk\_widget().pack(}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ side=tk.RIGHT,\ fill=tk.BOTH,\ expand=\textcolor{keyword}{True}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00116}00116\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00118}\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a6ee44fd255520d4256f7ee6c87a057d4}{00118}}\ \ \ \ \ \textcolor{keyword}{def\ }\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a6ee44fd255520d4256f7ee6c87a057d4}{run}}(self):}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00119}00119\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_ae93571d5b6969216e8cc8659aba68017}{ax}}.clear()}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00120}00120\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00121}00121\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ =====\ ISTO\ KAO\ demo\_channel.py\ =====}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00122}00122\ \ \ \ \ \ \ \ \ num\_ofdm\_symbols\ =\ 2}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00123}00123\ \ \ \ \ \ \ \ \ up\_factor\ =\ 2}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00125}00125\ \ \ \ \ \ \ \ \ tx\ =\ Transmitter80211a(}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ num\_ofdm\_symbols=num\_ofdm\_symbols,}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ bits\_per\_symbol=2,}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ step=1,}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00129}00129\ \ \ \ \ \ \ \ \ \ \ \ \ up\_factor=up\_factor,}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ seed=42,}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ plot=\textcolor{keyword}{False}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00132}00132\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00133}00133\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00134}00134\ \ \ \ \ \ \ \ \ tx\_sig,\ \_\ =\ tx.generate\_frame()}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00135}00135\ \ \ \ \ \ \ \ \ tx\_sig\ =\ np.asarray(tx\_sig).flatten()}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00136}00136\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00137}00137\ \ \ \ \ \ \ \ \ fs\ =\ 20e6\ *\ up\_factor}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00138}00138\ \ \ \ \ \ \ \ \ t\ =\ np.arange(len(tx\_sig))\ /\ fs}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00139}00139\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00140}00140\ \ \ \ \ \ \ \ \ settings\ =\ ChannelSettings(}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ sample\_rate=fs,}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ number\_of\_taps=self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a3e467aeaecbb7bee57f99493fb3b6096}{taps}}.get(),}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ delay\_spread=self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a3b55148dfa3862ba839dff436b45f806}{delay}}.get()\ *\ 1e-\/9,}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ snr\_db=self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a1b4bc4b039d35215115e9e40a60738d6}{snr}}.get()}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00145}00145\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00146}00146\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00147}00147\ \ \ \ \ \ \ \ \ mode\ =\ ChannelMode(}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ multipath=1\ \textcolor{keywordflow}{if}\ self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_af027c03d97e449ddb1814361e5359955}{multipath}}.get()\ \textcolor{keywordflow}{else}\ 0,}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ thermal\_noise=1}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00150}00150\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00151}00151\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00152}00152\ \ \ \ \ \ \ \ \ channel\ =\ Channel\_Model(settings,\ mode)}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00153}00153\ \ \ \ \ \ \ \ \ rx,\ \_\ =\ channel.apply(tx\_sig)}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00154}00154\ \ \ \ \ \ \ \ \ rx\ =\ np.asarray(rx).flatten()}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00155}00155\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00156}00156\ \ \ \ \ \ \ \ \ \textcolor{comment}{\#\ =====\ NORMALIZACIJA\ =====}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00157}00157\ \ \ \ \ \ \ \ \ rx\ *=\ np.sqrt(np.mean(np.abs(tx\_sig)**2))\ /\ np.sqrt(np.mean(np.abs(rx)**2))}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00158}00158\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00159}00159\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_ae93571d5b6969216e8cc8659aba68017}{ax}}.plot(t\ *\ 1e6,\ np.real(tx\_sig),\ label=\textcolor{stringliteral}{"{}Tx\ –\ prije\ kanala"{}})}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00160}00160\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_ae93571d5b6969216e8cc8659aba68017}{ax}}.plot(t\ *\ 1e6,\ np.real(rx),\ label=\textcolor{stringliteral}{"{}Rx\ –\ poslije\ kanala"{}},\ alpha=0.8)}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00161}00161\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00162}00162\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacegui__channel_af6a05898e231ddfa95f7ed7676775f7b}{oznaci\_okvir}}(self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_ae93571d5b6969216e8cc8659aba68017}{ax}},\ up\_factor,\ num\_ofdm\_symbols,\ fs)}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00163}00163\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00164}00164\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_ae93571d5b6969216e8cc8659aba68017}{ax}}.set\_title(}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00165}00165\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}SNR=\{self.snr.get()\}\ dB\ |\ multipath=\{self.multipath.get()\}\ |\ "{}}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ \ f\textcolor{stringliteral}{"{}taps=\{self.taps.get()\}\ |\ delay=\{self.delay.get()\}\ ns"{}}}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00167}00167\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00168}00168\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_ae93571d5b6969216e8cc8659aba68017}{ax}}.set\_xlabel(\textcolor{stringliteral}{"{}Vrijeme\ [µs]"{}})}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00169}00169\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_ae93571d5b6969216e8cc8659aba68017}{ax}}.set\_ylabel(\textcolor{stringliteral}{"{}Amplituda"{}})}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00170}00170\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_ae93571d5b6969216e8cc8659aba68017}{ax}}.grid(\textcolor{keyword}{True})}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00171}00171\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_ae93571d5b6969216e8cc8659aba68017}{ax}}.legend()}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00172}00172\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00173}00173\ \ \ \ \ \ \ \ \ self.\mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui_a803ef84f82f137472d24856f93f95c6e}{canvas}}.draw()}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00174}00174\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00175}00175\ }
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00176}00176\ \textcolor{keywordflow}{if}\ \_\_name\_\_\ ==\ \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00177}\mbox{\hyperlink{namespacegui__channel_a400b0498641effc994d5abbdd0de90f6}{00177}}\ \ \ \ \ root\ =\ tk.Tk()}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00178}\mbox{\hyperlink{namespacegui__channel_aeb519ca2af609c9c3c65ee595d59d3b4}{00178}}\ \ \ \ \ app\ =\ \mbox{\hyperlink{classgui__channel_1_1_o_f_d_m_gui}{OFDMGui}}(root)}
+\DoxyCodeLine{\Hypertarget{gui__channel_8py_source_l00179}00179\ \ \ \ \ root.mainloop()}
+
+\end{DoxyCode}

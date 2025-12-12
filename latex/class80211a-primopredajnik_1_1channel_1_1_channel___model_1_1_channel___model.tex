@@ -1,0 +1,103 @@
+\doxysection{80211a-\/primopredajnik.channel.\+Channel\+\_\+\+Model.\+Channel\+\_\+\+Model Class Reference}
+\hypertarget{class80211a-primopredajnik_1_1channel_1_1_channel___model_1_1_channel___model}{}\label{class80211a-primopredajnik_1_1channel_1_1_channel___model_1_1_channel___model}\index{80211a-\/primopredajnik.channel.Channel\_Model.Channel\_Model@{80211a-\/primopredajnik.channel.Channel\_Model.Channel\_Model}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class80211a-primopredajnik_1_1channel_1_1_channel___model_1_1_channel___model_afe050ff3acba85e939ec33dd81b47a39}{\+\_\+\+\_\+init\+\_\+\+\_\+}} (self, \mbox{\hyperlink{class80211a-primopredajnik_1_1channel_1_1_channel___model_1_1_channel___model_adf05ef82e909269c0cb62af1f5436dd9}{settings}}, \mbox{\hyperlink{class80211a-primopredajnik_1_1channel_1_1_channel___model_1_1_channel___model_a08adceb955dd66fde310857690e1a959}{mode}})
+\item 
+\mbox{\hyperlink{class80211a-primopredajnik_1_1channel_1_1_channel___model_1_1_channel___model_aba35a5a9e8cb77abfa0bc30269d8d65e}{apply}} (self, tx\+\_\+samples)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class80211a-primopredajnik_1_1channel_1_1_channel___model_1_1_channel___model_adf05ef82e909269c0cb62af1f5436dd9}{settings}} = settings
+\item 
+\mbox{\hyperlink{class80211a-primopredajnik_1_1channel_1_1_channel___model_1_1_channel___model_a08adceb955dd66fde310857690e1a959}{mode}} = mode
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}OFDM Transmitter za IEEE 802.11a standard.
+
+Atributi:
+- NumberOfTaps
+- DelaySpread
+- SampleRate
+- SNR_dB
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{_channel___model_8py_source_l00007}{7}} of file \mbox{\hyperlink{_channel___model_8py_source}{Channel\+\_\+\+Model.\+py}}.
+
+
+
+\label{doc-constructors}
+\Hypertarget{class80211a-primopredajnik_1_1channel_1_1_channel___model_1_1_channel___model_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class80211a-primopredajnik_1_1channel_1_1_channel___model_1_1_channel___model_afe050ff3acba85e939ec33dd81b47a39}\index{80211a-\/primopredajnik.channel.Channel\_Model.Channel\_Model@{80211a-\/primopredajnik.channel.Channel\_Model.Channel\_Model}!\_\_init\_\_@{\_\_init\_\_}}
+\index{\_\_init\_\_@{\_\_init\_\_}!80211a-\/primopredajnik.channel.Channel\_Model.Channel\_Model@{80211a-\/primopredajnik.channel.Channel\_Model.Channel\_Model}}
+\doxysubsubsection{\texorpdfstring{\_\_init\_\_()}{\_\_init\_\_()}}
+{\footnotesize\ttfamily \label{class80211a-primopredajnik_1_1channel_1_1_channel___model_1_1_channel___model_afe050ff3acba85e939ec33dd81b47a39} 
+80211a-\/primopredajnik.\+channel.\+Channel\+\_\+\+Model.\+Channel\+\_\+\+Model.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{settings}{, }\item[{}]{mode}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}settings: objekt sa poljima:
+    - NumberOfTaps
+    - DelaySpread
+    - SampleRate
+    - SNR_dB
+
+mode: objekt klase ChannelMode s poljima:
+    - Multipath (0/1)
+    - ThermalNoise (0/1)
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{_channel___model_8py_source_l00018}{18}} of file \mbox{\hyperlink{_channel___model_8py_source}{Channel\+\_\+\+Model.\+py}}.
+
+
+
+\label{doc-func-members}
+\Hypertarget{class80211a-primopredajnik_1_1channel_1_1_channel___model_1_1_channel___model_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class80211a-primopredajnik_1_1channel_1_1_channel___model_1_1_channel___model_aba35a5a9e8cb77abfa0bc30269d8d65e}\index{80211a-\/primopredajnik.channel.Channel\_Model.Channel\_Model@{80211a-\/primopredajnik.channel.Channel\_Model.Channel\_Model}!apply@{apply}}
+\index{apply@{apply}!80211a-\/primopredajnik.channel.Channel\_Model.Channel\_Model@{80211a-\/primopredajnik.channel.Channel\_Model.Channel\_Model}}
+\doxysubsubsection{\texorpdfstring{apply()}{apply()}}
+{\footnotesize\ttfamily \label{class80211a-primopredajnik_1_1channel_1_1_channel___model_1_1_channel___model_aba35a5a9e8cb77abfa0bc30269d8d65e} 
+80211a-\/primopredajnik.\+channel.\+Channel\+\_\+\+Model.\+Channel\+\_\+\+Model.\+apply (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{tx\+\_\+samples}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Primjenjuje model kanala na ulazne uzorke.
+\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{_channel___model_8py_source_l00033}{33}} of file \mbox{\hyperlink{_channel___model_8py_source}{Channel\+\_\+\+Model.\+py}}.
+
+
+
+\label{doc-variable-members}
+\Hypertarget{class80211a-primopredajnik_1_1channel_1_1_channel___model_1_1_channel___model_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class80211a-primopredajnik_1_1channel_1_1_channel___model_1_1_channel___model_a08adceb955dd66fde310857690e1a959}\index{80211a-\/primopredajnik.channel.Channel\_Model.Channel\_Model@{80211a-\/primopredajnik.channel.Channel\_Model.Channel\_Model}!mode@{mode}}
+\index{mode@{mode}!80211a-\/primopredajnik.channel.Channel\_Model.Channel\_Model@{80211a-\/primopredajnik.channel.Channel\_Model.Channel\_Model}}
+\doxysubsubsection{\texorpdfstring{mode}{mode}}
+{\footnotesize\ttfamily \label{class80211a-primopredajnik_1_1channel_1_1_channel___model_1_1_channel___model_a08adceb955dd66fde310857690e1a959} 
+80211a-\/primopredajnik.\+channel.\+Channel\+\_\+\+Model.\+Channel\+\_\+\+Model.\+mode = mode}
+
+
+
+Definition at line \mbox{\hyperlink{_channel___model_8py_source_l00031}{31}} of file \mbox{\hyperlink{_channel___model_8py_source}{Channel\+\_\+\+Model.\+py}}.
+
+\Hypertarget{class80211a-primopredajnik_1_1channel_1_1_channel___model_1_1_channel___model_adf05ef82e909269c0cb62af1f5436dd9}\index{80211a-\/primopredajnik.channel.Channel\_Model.Channel\_Model@{80211a-\/primopredajnik.channel.Channel\_Model.Channel\_Model}!settings@{settings}}
+\index{settings@{settings}!80211a-\/primopredajnik.channel.Channel\_Model.Channel\_Model@{80211a-\/primopredajnik.channel.Channel\_Model.Channel\_Model}}
+\doxysubsubsection{\texorpdfstring{settings}{settings}}
+{\footnotesize\ttfamily \label{class80211a-primopredajnik_1_1channel_1_1_channel___model_1_1_channel___model_adf05ef82e909269c0cb62af1f5436dd9} 
+80211a-\/primopredajnik.\+channel.\+Channel\+\_\+\+Model.\+Channel\+\_\+\+Model.\+settings = settings}
+
+
+
+Definition at line \mbox{\hyperlink{_channel___model_8py_source_l00030}{30}} of file \mbox{\hyperlink{_channel___model_8py_source}{Channel\+\_\+\+Model.\+py}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+channel/\mbox{\hyperlink{_channel___model_8py}{Channel\+\_\+\+Model.\+py}}\end{DoxyCompactItemize}
