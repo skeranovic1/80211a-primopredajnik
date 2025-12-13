@@ -5,11 +5,9 @@ from channel.channel_settings import ChannelSettings
 from channel.Channel_Model import  Channel_Model
 from channel.Multipath import GetMultipathFilter
 from channel.AWGN import Generate_AWGN
-import scipy.signal as sc
 
-# ===========================
-# TESTOVI ZA ChannelMode
-# ===========================
+
+#Testovi za ChannelMode
 
 def test_channelmode_defaults():
     mode = ChannelMode()
@@ -30,9 +28,7 @@ def test_channelmode_set_invalid():
     with pytest.raises(ValueError):
         mode.ThermalNoise = -1
 
-# ===========================
-# TESTOVI ZA ChannelSettings
-# ===========================
+#Testovi ZA ChannelSettings
 
 def test_channelsettings_defaults():
     settings = ChannelSettings()
@@ -61,10 +57,7 @@ def test_channelsettings_set_invalid():
     with pytest.raises(ValueError):
         settings.DelaySpread = -1
 
-# ===========================
-# TESTOVI ZA Channel_Model
-# ===========================
-
+#Testovi ZA Channel_Model
 def test_channel_model_apply_multipath_awgn():
     settings = ChannelSettings(number_of_taps=5, delay_spread=50e-9, snr_db=20)
     mode = ChannelMode(multipath=1, thermal_noise=1)
@@ -73,13 +66,14 @@ def test_channel_model_apply_multipath_awgn():
     tx_samples = np.array([1.0, 0.5, -1.0, 0.2, -0.5])
     out_samples, fir_taps = model.apply(tx_samples)
     out_samples = np.ravel(out_samples)
-    # Provjera da FIR filter ima ispravan broj tapova
+    
+    #Provjera da FIR filter ima ispravan broj tapova
     assert len(fir_taps) == settings.NumberOfTaps
     
-    # Provjera da izlaz nije identičan ulazu (multipath + AWGN mijenja signal)
+    #Provjera da izlaz nije identičan ulazu (multipath + AWGN mijenja signal)
     assert not np.allclose(out_samples, tx_samples)
     
-    # Provjera da izlaz ima istu dužinu kao ulaz
+    #Provjera da izlaz ima istu dužinu kao ulaz
     assert len(out_samples) == len(tx_samples)
 
 def test_channel_model_apply_no_multipath_no_awgn():
@@ -89,8 +83,8 @@ def test_channel_model_apply_no_multipath_no_awgn():
     
     tx_samples = np.array([1.0, 2.0, 3.0])
     out_samples, fir_taps = model.apply(tx_samples)
-    out_samples = np.ravel(out_samples)  # <-- dodaj ovu liniju
+    out_samples = np.ravel(out_samples)
     
-    # Kada je multipath i AWGN isključen, izlaz bi trebao biti samo normalizovan
+    #Kada je multipath i AWGN isključen, izlaz bi trebao biti samo normalizovan
     expected = tx_samples / np.sqrt(np.var(tx_samples))
     np.testing.assert_array_almost_equal(out_samples, expected)
