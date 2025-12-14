@@ -42,9 +42,6 @@ def oznaci_okvir(ax, up_factor, num_ofdm_symbols, fs):
 
 
 def testiranje():
-    # ==================================================
-    # 1. GENERISANJE SIGNALA (IDENTIČNO demo.py)
-    # ==================================================
     num_ofdm_symbols = 2
     up_factor = 2
 
@@ -64,9 +61,6 @@ def testiranje():
     fs = fs_base * up_factor
     t = np.arange(len(signal_tx)) / fs
 
-    # ==================================================
-    # 2. CHANNEL SETTINGS
-    # ==================================================
     settings = ChannelSettings(
         sample_rate=fs,
         number_of_taps=2,
@@ -75,9 +69,6 @@ def testiranje():
 
     )
 
-    # ==================================================
-    # 3. SLUČAJ 1: SAMO AWGN
-    # ==================================================
     mode_awgn = ChannelMode(multipath=0, thermal_noise=1)
     channel_awgn = Channel_Model(settings, mode_awgn)
     rx_awgn, _ = channel_awgn.apply(signal_tx)
@@ -86,9 +77,7 @@ def testiranje():
     # skaliranje radi istog vizuelnog nivoa
     rx_awgn *= np.sqrt(np.mean(np.abs(signal_tx)**2)) / np.sqrt(np.mean(np.abs(rx_awgn)**2))
 
-    # ==================================================
     # 4. SLUČAJ 2: AWGN + MULTIPATH
-    # ==================================================
     mode_mp = ChannelMode(multipath=1, thermal_noise=1)
     channel_mp = Channel_Model(settings, mode_mp)
     rx_mp, _ = channel_mp.apply(signal_tx)
@@ -96,9 +85,7 @@ def testiranje():
 
     rx_mp *= np.sqrt(np.mean(np.abs(signal_tx)**2)) / np.sqrt(np.mean(np.abs(rx_mp)**2))
 
-    # ==================================================
     # 5. PLOT 1 — PRIJE KANALA vs AWGN
-    # ==================================================
     fig1, ax1 = plt.subplots(figsize=(16,6))
     ax1.plot(t * 1e6, np.real(signal_tx), label='Tx – prije kanala')
     ax1.plot(t * 1e6, np.real(rx_awgn), label='Rx – AWGN', alpha=0.8)
@@ -113,9 +100,7 @@ def testiranje():
     plt.tight_layout()
     plt.show()
 
-    # ==================================================
     # 6. PLOT 2 — PRIJE KANALA vs AWGN + MULTIPATH
-    # ==================================================
     fig2, ax2 = plt.subplots(figsize=(16,6))
     ax2.plot(t * 1e6, np.real(signal_tx), label='Tx – prije kanala')
     ax2.plot(t * 1e6, np.real(rx_mp), label='Rx – AWGN + multipath', alpha=0.8)

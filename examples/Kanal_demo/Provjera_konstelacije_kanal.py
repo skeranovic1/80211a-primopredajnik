@@ -1,22 +1,19 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 import numpy as np
 import matplotlib.pyplot as plt
-
 from tx.OFDM_mapper import Mapper_OFDM
-
 from channel.Channel_Model import Channel_Model
 from channel.channel_settings import ChannelSettings
 from channel.channel_mode import ChannelMode
 
-
 def plot_constellation_side_by_side(tx, rx, title_tx, title_rx, max_points=2000, seed=123):
     tx = np.asarray(tx).reshape(-1)
     rx = np.asarray(rx).reshape(-1)
-
     n = len(tx)
     if n == 0:
         return
-
-    # subsample da bude čitljivo
     if n > max_points:
         rng = np.random.default_rng(seed)
         idx = rng.choice(n, size=max_points, replace=False)
@@ -49,7 +46,6 @@ def plot_constellation_side_by_side(tx, rx, title_tx, title_rx, max_points=2000,
     plt.tight_layout()
     plt.show()
 
-
 def channel_out_from_bits(bits, BitsPerSymbol, snr_db, multipath, thermal_noise):
     # Mapper (QPSK)
     tx = Mapper_OFDM(bits, BitsPerSymbol, plot=False)
@@ -58,7 +54,7 @@ def channel_out_from_bits(bits, BitsPerSymbol, snr_db, multipath, thermal_noise)
     settings = ChannelSettings(snr_db=snr_db)
     mode = ChannelMode(multipath=multipath, thermal_noise=thermal_noise)
 
-    # Channel apply
+    # Channel apply metoda
     ch = Channel_Model(settings, mode)
     rx, fir_taps = ch.apply(tx)
 
@@ -76,30 +72,26 @@ if __name__ == "__main__":
 
     bits = np.random.randint(0, 2, n_bits)
 
-    # ========== 1) AWGN only ==========
+    #1) AWGN 
     tx1, rx1, _ = channel_out_from_bits(
         bits, BitsPerSymbol, snr_db,
         multipath=0,
         thermal_noise=1
     )
-
     plot_constellation_side_by_side(
         tx1, rx1,
         title_tx="TX (Channel In) | QPSK",
         title_rx=f"RX (Channel Out) | AWGN | SNR={snr_db} dB "
     )
-
-    # ========== 2) Multipath + AWGN ==========
+    #2) Multipath + AWGN 
     tx2, rx2, _ = channel_out_from_bits(
         bits, BitsPerSymbol, snr_db,
         multipath=1,
         thermal_noise=1
     )
-
     plot_constellation_side_by_side(
     tx1, rx1,
     title_tx="TX (Channel In) | QPSK",
     title_rx=f"RX (Channel Out) | Multipath + AWGN | SNR={snr_db} dB"
-
     )
 

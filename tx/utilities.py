@@ -102,7 +102,13 @@ def spektar(x, fs, label):
     - Magnituda se normalizuje sa faktorom N/2.
     - Za prikazivanje koristiti 'plt.show()' nakon funkcije da bi se graf prikazao.
     """
-    
+    if not isinstance(x, np.ndarray):
+        raise TypeError("Ulaz x mora biti numpy array")
+    if not np.issubdtype(x.dtype, np.number):
+        raise TypeError("Input x must be numeric")
+    if fs <= 0:
+        raise ValueError("Sample rate fs mora biti pozitivan")
+
     # Dužina signala
     N = len(x)
 
@@ -128,6 +134,11 @@ def plot_konstelaciju(symbols,title):
     - title : str, optional
         Naslov grafa (default: "Konstelacioni dijagram")
     """
+    if not isinstance(symbols, np.ndarray):
+        raise TypeError("Input symbols must be a numpy array")
+    if not np.iscomplexobj(symbols):
+        raise ValueError("Input symbols must be complex numbers")
+
     plt.figure(figsize=(6, 6))
     plt.scatter(np.real(symbols), np.imag(symbols), s=10)
 

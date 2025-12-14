@@ -8,8 +8,6 @@ def measure_snr_db(x, y):
     noise_power = np.mean(np.abs(y - x) ** 2)
     return 10 * np.log10(signal_power / noise_power)
 
-# HAPPY PATH TESTS
-
 def test_awgn_output_length():
     """
     Generisani šum mora imati isti broj uzoraka kao ulazni signal
@@ -21,10 +19,8 @@ def test_awgn_output_length():
     assert isinstance(n, np.ndarray)
     assert n.shape in [x.shape, (1, x.size)]
 
-
-
 def test_awgn_snr_close_to_target():
-    """Nakon što se šum doda na signal, izmjereni SNR treba biti blizu zadatog."""
+    """Nakon što se šum doda na signal, izmjereni SNR treba biti blizu zadanog."""
     x = np.random.randn(50_000) + 1j * np.random.randn(50_000)
     target_snr = 15
 
@@ -34,7 +30,6 @@ def test_awgn_snr_close_to_target():
     measured_snr = measure_snr_db(x, y)
     assert measured_snr == pytest.approx(target_snr, rel=0.1, abs=1.0)
 
-
 def test_awgn_high_snr_almost_clean():
     """Za visok SNR (60 dB), greška između ulaza i izlaza mora biti vrlo mala."""
     x = np.random.randn(10_000)
@@ -43,7 +38,6 @@ def test_awgn_high_snr_almost_clean():
 
     error = np.mean(np.abs(y - x))
     assert error < 0.01
-
 
 def test_awgn_noise_zero_mean():
     """AWGN treba imati srednju vrijednost ≈ 0."""
@@ -55,7 +49,6 @@ def test_awgn_noise_zero_mean():
 
     assert np.abs(mean_noise) < 0.1 * np.sqrt(noise_power)
 
-
 def test_awgn_reproducible_with_same_seed():
     """Za isti seed i ulaz, generisani šum mora biti identičan."""
     x = np.random.randn(1000) + 1j * np.random.randn(1000)
@@ -64,7 +57,6 @@ def test_awgn_reproducible_with_same_seed():
     n2 = Generate_AWGN(x, 20, sd=42)
 
     assert np.array_equal(n1, n2)
-
 
 def test_awgn_error_monotonic_with_snr():
     """Greška mora biti veća za manji SNR."""
@@ -77,8 +69,6 @@ def test_awgn_error_monotonic_with_snr():
     err_high = np.mean(np.abs((x + n_high) - x))
 
     assert err_low > err_high
-
-# SAD PATH TESTS (ERROR CASES)
 
 def test_awgn_nan_in_signal():
     """Input koji sadrži NaN treba izazvati grešku."""

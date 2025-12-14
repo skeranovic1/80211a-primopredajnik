@@ -171,18 +171,15 @@ def test_ifft_gi_rejects_non_numeric_numpy_dtype():
     """
     Pokriva granu gdje je ulaz numpy array ali NIJE numeričkog tipa (dtype=object/str),
     pa treba da baci TypeError (ili neki Exception).
-    Ovo ti pokriva onu crvenu liniju: np.issubdtype(..., np.number)
     """
     data = np.array(["a"] * 48, dtype=object)
 
     with pytest.raises(Exception):
         IFFT_GI(data)
 
-
 def test_ifft_gi_plot_true_executes_without_crash(monkeypatch):
     """
     Pokriva plot grane (if plot: ... plt.figure(), plt.subplot(), plt.show()).
-    Bitno: patchamo plt.show da test ne otvara prozore i ne blokira.
     """
     import matplotlib.pyplot as plt
 
@@ -195,7 +192,6 @@ def test_ifft_gi_plot_true_executes_without_crash(monkeypatch):
     assert isinstance(out, np.ndarray)
     assert out.dtype == complex
     assert len(out) == 80
-
 
 def test_ifft_gi_plot_true_multiple_symbols(monkeypatch):
     """
@@ -211,4 +207,3 @@ def test_ifft_gi_plot_true_multiple_symbols(monkeypatch):
     out = IFFT_GI(data, plot=True)
 
     assert len(out) == num_symbols * 80
-

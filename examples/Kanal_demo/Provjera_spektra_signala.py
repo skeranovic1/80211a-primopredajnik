@@ -1,13 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
 import sys
 import os
-
-sys.path.append(
-    os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
-)
-
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 from tx.OFDM_mapper import Mapper_OFDM
 from channel.Channel_Model import Channel_Model
 from channel.channel_settings import ChannelSettings
@@ -31,7 +26,6 @@ def channel_out_from_bits(bits, BitsPerSymbol, snr_db, multipath, thermal_noise)
     tx = np.asarray(tx).reshape(-1)
     rx = np.asarray(rx).reshape(-1)
     return tx, rx, fir_taps
-
 
 def plot_spectrum_before_after(tx, rx, fs, title_tx="TX Spectrum", title_rx="RX Spectrum"):
     """

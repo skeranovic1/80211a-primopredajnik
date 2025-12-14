@@ -7,11 +7,11 @@ Ovaj projekt trenutno implementira osnovne dijelove OFDM TX lanca:
 - Generisanje short i long training sequences
 - IFFT sa guard intervalom (GI)
 - Upsampling i half-band filtriranje
-- Osnovni testovi pokrivenosti OFDM mappera
+- Model kanala (AWGN i multipath)
+- Testovi pokrivenosti trenutno implementiranih funkcija
 
 **Trenutno nije implementirano:**
 
-- Model kanala
 - RX lanac i sinkronizacija
 
 ## Instalacija
@@ -32,34 +32,52 @@ Ovaj projekt trenutno implementira osnovne dijelove OFDM TX lanca:
 
 U Python skripti ili interaktivnom okruženju:  
 
+### Predajnik
 - `from tx.OFDM_TX_802_11 import OFDM_TX_802_11`  
 - Generiše 5 OFDM simbola sa QPSK modulacijom (2 bita po simbolu):  
   `samples, symbols = OFDM_TX_802_11(NumberOf_OFDM_Symbols=5, BitsPerSymbol=2)`  
   `print("Oblik signala:", samples.shape)`  
   `print("Prikaz simbola:", symbols)`
 
+### Kanal
+- `from channel.Channel_Model import Channel_Model`  
+- Inicijalizacija kanala sa željenim parametrima i modom:  
+  `chan = Channel_Model(settings, mode)`  
+- Primjena kanala na OFDM uzorke:  
+  `tx_samples_channel, fir_taps = chan.apply(samples)`  
+  `print("Oblik signala nakon kanala:", tx_samples_channel.shape)`  
+  `print("FIR taps:", fir_taps)`
+
 ## Testiranje
 
 Testovi koriste `pytest` i pokrivaju trenutno:
 
-- OFDM mapper  
-- Half-band upsampling filter  
-- Zero-stuffing funkcije  
+- OFDM mapper (`test_OFDM_mapper.py`)  
+- Half-band upsampling filter (`test_half_band_upsample.py`)  
+- Zero-stuffing i utilities funkcije (`test_utilities.py`)  
+- Generisanje i obrada OFDM simbola (`test_ifft_ofdm_symbol.py`, `test_ifft_gi.py`)  
+- Short i long training sekvence (`test_short_sequence.py`, `test_long_sequence.py`)  
+- Predajnini paket (`test_tx_packet.py`)  
+- Model kanala, uključujući AWGN i multipath kanale (`test_channel.py`, `test_awgn_channel.py`, `test_multipath_channel.py`)  
 
 Pokretanje testiranja:  
 `pytest`
 
 ## Struktura projekta
 
-- `tx/` — Glavni kod  
-- `tests/` — Pytest testovi  
-- `README.md`  
-- `requirements.txt`
+- `tx/` — 802.11a OFDM predajnički lanac  
+- `channel/` — Model kanala (AWGN i multipath)  
+- `gui/` — Grafički korisnički interfejs za podešavanje i vizualizaciju  
+- `examples/` — Primjeri korištenja  
+- `tests/` — Automatski testovi  
+- `README.md` — Projektna dokumentacija  
+- `requirements.txt` — Python zavisnosti  
+- `setup.py` — Setup skripta
 
 ## Dokumentacija
 
 - Automatski generisana Doxygen HTML dokumentacija dostupna je ovdje:  
-
+   [text](https://skeranovic1.github.io/80211a-primopredajnik/)
 
 ## Plan razvoja / TODO
 
