@@ -134,11 +134,9 @@ class ConstellationGuiOnePlot:
         return np.asarray(rx).reshape(-1)
 
     def _update_mp_controls(self):
-        # taps/delay aktivni samo za multipath scenario
-        is_mp = (self.mode.get() == "mp")
-        state = "normal" if is_mp else "disabled"
-        self.taps_spin.configure(state=state)
-        self.delay_spin.configure(state=state)
+        # Dozvoli taps i delay u svim scenarijima (Ideal, AWGN, Multipath+AWGN)
+        self.taps_spin.configure(state="normal")
+        self.delay_spin.configure(state="normal")
 
     def _on_mode_change(self):
         self._update_mp_controls()
