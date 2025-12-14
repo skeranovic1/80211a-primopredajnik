@@ -69,6 +69,8 @@ def IFFT_GI(symbol_stream, plot=False):
             plt.grid(True)
             plt.title("Ulazni stream - imaginarni dio")
             plt.show(block=False)
+            plt.close("all")
+
 
         #Frekvencijski OFDM okvir (64 podnosioca)
         IFFT_input=np.zeros(64, dtype=complex)
@@ -89,6 +91,8 @@ def IFFT_GI(symbol_stream, plot=False):
             plt.title("Podaci na pozicijama - imaginarni dio")
             plt.grid(True)
             plt.show(block=False)
+            plt.close("all")
+
 
         #Ubacivanje pilot-nosioca 
         IFFT_input[pilot_idx]=1+0j
@@ -107,6 +111,8 @@ def IFFT_GI(symbol_stream, plot=False):
             plt.title("Samo piloti na pozicijama - imaginarni dio")
             plt.grid(True)
             plt.show(block=False)
+            plt.close("all")
+
 
         #Prikaz kompletnog OFDM frekvencijskog okvira
         if plot:
@@ -121,6 +127,8 @@ def IFFT_GI(symbol_stream, plot=False):
             plt.title("Cijeli OFDM signal u frekvencijskoj domeni - imaginarni dio")
             plt.grid(True)
             plt.show(block=False)
+            plt.close("all")
+
 
         #IFFT: prelazak u vremensku domenu
         IFFT_output=np.fft.ifft(IFFT_input)
@@ -133,6 +141,8 @@ def IFFT_GI(symbol_stream, plot=False):
             plt.plot(np.imag(IFFT_output))
             plt.title("OFDM simbol u vremenskoj domeni")
             plt.show(block=False)
+            plt.close("all")
+
 
         #Dodavanje cikličkog prefiksa dužine 16
         #GI se uzima iz zadnjeg dijela IFFT izlaza (48–63)
@@ -162,5 +172,7 @@ def IFFT_GI(symbol_stream, plot=False):
             plt.title("Zadnji dio OFDM simbola - realni dio")
             plt.grid(True)
             plt.show(block=False)
+            plt.close("all")
+
 
     return payload
