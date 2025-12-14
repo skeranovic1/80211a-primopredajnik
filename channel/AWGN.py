@@ -1,6 +1,10 @@
 import numpy as np
 
 def Generate_AWGN(Input, SNR, sd=0):
+    x = np.asarray(Input)
+    if np.isnan(x).any():
+        raise ValueError("Input contains NaN")
+    
     np.random.seed(sd) 
     MeanSquare = (1 / len(Input)) * (Input @ Input.conj().T)
     # Total signal power
