@@ -77,7 +77,7 @@ Pokretanje testiranja:
 ## Dokumentacija
 
 - Automatski generisana Doxygen HTML dokumentacija dostupna je ovdje:  
-   [text](https://skeranovic1.github.io/80211a-primopredajnik/)
+   [https://skeranovic1.github.io/80211a-primopredajnik/]
 
 ## Plan razvoja / TODO
 
