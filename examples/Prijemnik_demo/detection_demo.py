@@ -9,8 +9,7 @@ from channel.Channel_Model import Channel_Model
 from channel.channel_settings import ChannelSettings
 from channel.channel_mode import ChannelMode
 from tx.OFDM_TX_802_11 import Transmitter80211a
-from rx.detection import packet_detector   # prilagodi putanju ako treba
-
+from rx.detection import packet_detector   
 
 def test_packet_detector(rx_signal, fs, up_factor, num_ofdm_symbols, title=""):
     """
@@ -18,16 +17,14 @@ def test_packet_detector(rx_signal, fs, up_factor, num_ofdm_symbols, title=""):
     """
 
     comparison_ratio, packet_flag, falling_edge, autocorr = packet_detector(rx_signal)
-
     N = len(rx_signal)
-    t = np.arange(N) / fs * 1e6  # µs
+    t = np.arange(N) / fs * 1e6  #u µs
 
-    # --- PRAVI KRAJ STS-a ---
-    STS_len = 16 * up_factor * 10   # uzorci
+    STS_len = 16 * 10   # uzorci ali ovdje bez upsamplinga jer smo u funkciju vratili normalan fs
     sts_end_time = STS_len / fs * 1e6
     sts_end_sample = STS_len
 
-    print("===== PACKET DETECTOR TEST =====")
+    print("PACKET DETECTOR TEST")
     print(f"Očekivani kraj STS-a (sample): {sts_end_sample}")
     print(f"Detektovani falling edge (sample): {falling_edge}")
 
@@ -35,23 +32,22 @@ def test_packet_detector(rx_signal, fs, up_factor, num_ofdm_symbols, title=""):
         error = falling_edge - sts_end_sample
         print(f"Greška detekcije: {error} uzoraka ({error/fs*1e6:.2f} µs)")
     else:
-        print("⚠️ Paket NIJE detektovan")
+        print("Paket nije detektovan")
 
-    # --- PLOT ---
+    #plot
     fig, axs = plt.subplots(3, 1, figsize=(16, 10), sharex=True)
 
-    # 1️⃣ RX signal
+    #Rx signal
     axs[0].plot(t, np.real(rx_signal), label="Rx (real)")
     axs[0].axvline(sts_end_time, color='green', linestyle='--', label='Pravi kraj STS')
     if falling_edge is not None:
-        axs[0].axvline(falling_edge/fs*1e6, color='red', linestyle='--',
-                       label='Detektovan kraj STS')
+        axs[0].axvline(falling_edge/fs*1e6, color='red', linestyle='--', label='Detektovan kraj STS')
     axs[0].set_title(f"RX signal – {title}")
     axs[0].set_ylabel("Amplituda")
     axs[0].grid(True)
     axs[0].legend()
 
-    # 2️⃣ Comparison ratio
+    #Odnosi za poredenje
     axs[1].plot(t, comparison_ratio, label="|R| / P")
     axs[1].axhline(0.85, color='red', linestyle='--', label='Upper threshold')
     axs[1].axhline(0.65, color='orange', linestyle='--', label='Lower threshold')
@@ -59,7 +55,7 @@ def test_packet_detector(rx_signal, fs, up_factor, num_ofdm_symbols, title=""):
     axs[1].grid(True)
     axs[1].legend()
 
-    # 3️⃣ Packet flag
+    #Packet flag
     axs[2].step(t, packet_flag, where='post', label="packet_det_flag")
     axs[2].set_ylabel("Flag")
     axs[2].set_xlabel("Vrijeme [µs]")
@@ -71,7 +67,7 @@ def test_packet_detector(rx_signal, fs, up_factor, num_ofdm_symbols, title=""):
     plt.show()
 
 def main():
-    num_ofdm_symbols = 2
+    num_ofdm_symbols = 3
     up_factor = 2
     fs_base = 20e6
     fs = fs_base * up_factor
