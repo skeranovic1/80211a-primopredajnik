@@ -10,6 +10,8 @@ from channel.channel_settings import ChannelSettings
 from channel.channel_mode import ChannelMode
 from tx.OFDM_TX_802_11 import Transmitter80211a
 from rx.detection import packet_detector   
+from rx.pretprocessing import iq_preprocessing
+
 
 def test_packet_detector(rx_signal, fs, up_factor, num_ofdm_symbols, title=""):
     """
@@ -96,13 +98,13 @@ def main():
 
     rx_signal, _ = channel.apply(tx_signal)
 
-    """ Ovaj ovdje dio treba Nedzla u funkciju a ja sam ovdej dodala samo da vidim da li ispravno radi detekcija"""
-    rx_signal = np.asarray(rx_signal).flatten()
+    rx_signal, fs = iq_preprocessing(
+    rx_signal=rx_signal,
+    tx_signal=tx_signal,
+    fs=fs
+)
 
-    # normalizacija
-    rx_signal *= np.sqrt(np.mean(np.abs(tx_signal)**2))/np.sqrt(np.mean(np.abs(rx_signal)**2))
-    rx_signal = rx_signal[::2] #jer je bio upsampliran 2 puta pa uzimamo svaki drugi uzorak
-    fs = fs / 2 #i vracamo frekvenciju na normalu
+
 
     test_packet_detector(
         rx_signal,
