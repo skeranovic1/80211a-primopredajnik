@@ -47,14 +47,14 @@ def plot_constellation_side_by_side(tx, rx, title_tx, title_rx, max_points=2000,
     plt.show()
 
 def channel_out_from_bits(bits, BitsPerSymbol, snr_db, multipath, thermal_noise):
-    # Mapper (QPSK)
+    #Mapper (QPSK)
     tx = Mapper_OFDM(bits, BitsPerSymbol, plot=False)
 
-    # Channel settings + mode
+    #Channel settings + mode
     settings = ChannelSettings(snr_db=snr_db)
     mode = ChannelMode(multipath=multipath, thermal_noise=thermal_noise)
 
-    # Channel apply metoda
+    #Channel apply metoda
     ch = Channel_Model(settings, mode)
     rx, fir_taps = ch.apply(tx)
 

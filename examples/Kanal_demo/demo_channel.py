@@ -6,10 +6,10 @@ import os
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 )
-# ===== TX (ISTO KAO demo.py) =====
+#Tx
 from tx.OFDM_TX_802_11 import Transmitter80211a
 
-# ===== CHANNEL =====
+#CHANNEL
 from channel.Channel_Model import Channel_Model
 from channel.channel_settings import ChannelSettings
 from channel.channel_mode import ChannelMode
@@ -66,7 +66,6 @@ def testiranje():
         number_of_taps=2,
         delay_spread=10e-9,
         snr_db=20
-
     )
 
     mode_awgn = ChannelMode(multipath=0, thermal_noise=1)
@@ -100,7 +99,7 @@ def testiranje():
     plt.tight_layout()
     plt.show()
 
-    # 6. PLOT 2 — PRIJE KANALA vs AWGN + MULTIPATH
+    #PLOT 2 — PRIJE KANALA vs AWGN + MULTIPATH
     fig2, ax2 = plt.subplots(figsize=(16,6))
     ax2.plot(t * 1e6, np.real(signal_tx), label='Tx – prije kanala')
     ax2.plot(t * 1e6, np.real(rx_mp), label='Rx – AWGN + multipath', alpha=0.8)

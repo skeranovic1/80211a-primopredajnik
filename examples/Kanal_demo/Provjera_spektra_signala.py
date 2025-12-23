@@ -12,14 +12,14 @@ def channel_out_from_bits(bits, BitsPerSymbol, snr_db, multipath, thermal_noise)
     """
     Mapper + Channel pipeline
     """
-    # Mapper (QPSK)
+    #Mapper (QPSK)
     tx = Mapper_OFDM(bits, BitsPerSymbol, plot=False)
 
-    # Channel settings + mode
+    #Channel settings + mode
     settings = ChannelSettings(snr_db=snr_db)
     mode = ChannelMode(multipath=multipath, thermal_noise=thermal_noise)
 
-    # Channel apply
+    #Channel apply
     ch = Channel_Model(settings, mode)
     rx, fir_taps = ch.apply(tx)
 
@@ -33,7 +33,7 @@ def plot_spectrum_before_after(tx, rx, fs, title_tx="TX Spectrum", title_rx="RX 
     """
     fig, axs = plt.subplots(1, 2, figsize=(12, 5))
 
-    # TX spektar
+    #Tx spektar
     axs[0].magnitude_spectrum(tx, Fs=fs, scale='linear', color='blue', label='TX')
     axs[0].set_title(title_tx)
     axs[0].set_xlabel("Frequency (Hz)")
@@ -41,7 +41,7 @@ def plot_spectrum_before_after(tx, rx, fs, title_tx="TX Spectrum", title_rx="RX 
     axs[0].grid(True)
     axs[0].legend()
 
-    # RX spektar
+    #Rx spektar
     axs[1].magnitude_spectrum(rx, Fs=fs, scale='linear', color='orange', label='RX')
     axs[1].set_title(title_rx)
     axs[1].set_xlabel("Frequency (Hz)")
@@ -56,15 +56,15 @@ def plot_spectrum_before_after(tx, rx, fs, title_tx="TX Spectrum", title_rx="RX 
 if __name__ == "__main__":
     np.random.seed(42)
 
-    # Parametri
+    #Parametri
     BitsPerSymbol = 2
     n_bits = 20000
     snr_db = 8
-    Fs = 20e6  # Sampling frequency
+    Fs = 20e6  
 
     bits = np.random.randint(0, 2, n_bits)
 
-    # ===== 1) AWGN only =====
+    #AWGN
     tx1, rx1, _ = channel_out_from_bits(
         bits, BitsPerSymbol, snr_db,
         multipath=0,
@@ -78,7 +78,7 @@ if __name__ == "__main__":
         title_rx=f"RX Spectrum | AWGN | SNR={snr_db} dB"
     )
 
-    # ===== 2) Multipath + AWGN =====
+    #Multipath + AWGN
     tx2, rx2, _ = channel_out_from_bits(
         bits, BitsPerSymbol, snr_db,
         multipath=1,
