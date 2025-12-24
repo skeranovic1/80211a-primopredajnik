@@ -11,13 +11,14 @@ from tx.OFDM_mapper import Mapper_OFDM
 from channel.Channel_Model import Channel_Model
 from channel.channel_settings import ChannelSettings
 from channel.channel_mode import ChannelMode
+from tx.OFDM_TX_802_11 import Transmitter80211a
 
 class ConstellationGuiOnePlot:
     """GUI za prikaz konstelacije QPSK simbola kroz različite kanale."""
     def __init__(self, root):
         """Inicijalizacija GUI-ja i početnih parametara."""
         self.root = root
-        root.title("Constellation Demo – Ideal / AWGN / Multipath+AWGN")
+        root.title("Constellation Demo - Ideal / AWGN / Multipath+AWGN")
 
         ctrl = ttk.Frame(root, padding=10)
         ctrl.pack(side=tk.LEFT, fill=tk.Y)
@@ -83,14 +84,24 @@ class ConstellationGuiOnePlot:
         self.run()
 
     def _prepare_tx(self):
-        """Generiše inicijalne TX simbole za QPSK i priprema sample rate."""
-        np.random.seed(42)
-        n_bits = 40000
-        bits = np.random.randint(0, 2, n_bits)
-        BitsPerSymbol = 2  # QPSK
-        tx = Mapper_OFDM(bits, BitsPerSymbol, plot=False)
-        self.tx = np.asarray(tx).reshape(-1)
-        self.fs = 20e6  # sample rate za kanal
+        num_ofdm_symbols = 20
+        up_factor = 1
+
+        tx80211 = Transmitter80211a(
+            num_ofdm_symbols=num_ofdm_symbols,
+            bits_per_symbol=2,  # QPSK
+            step=1,
+            up_factor=up_factor,
+            seed=42,
+            plot=False
+        )
+
+        # symbols su direktni izlaz Mapper_OFDM-a
+        _, symbols = tx80211.generate_frame()
+
+        self.tx = np.asarray(symbols).reshape(-1)
+        self.fs = 20e6
+
 
     def _subsample(self, x, nmax, seed=0):
         """Smanjuje broj tačaka za scatter plot radi brzine."""
