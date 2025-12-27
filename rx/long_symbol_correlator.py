@@ -8,8 +8,39 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")
 def long_symbol_correlator(long_training_symbol,
                            rx_waveform,
                            falling_edge_position):
+    
     """
-    Python equivalent of MATLAB LongSymbol_Correlator
+    Detektuje poziciju Long Training Symbol (LTS) u primljenom OFDM signalu koristeći
+    klizni cross-korelator sa sign-normalizovanom verzijom LTS-a.
+
+    Funkcija koristi 64-uzorka pomični prozor (shift register) i kvantizovanu
+    verziju LTS-a (±1 ± j) za procjenu cross-korelacije. Na osnovu maksimalne vrednosti
+    izlaza korelatora unutar definisanog pretražnog prozora ('falling_edge_position')
+    detektuje poziciju LTS-a sa preciznošću od jednog uzorka.
+
+    Parametri
+    
+
+    long_training_symbol : array_like
+            Kompleksni Long Training Symbol (LTS) koji se koristi kao referenca
+            za cross-korelaciju. Može sadržavati samo jedan OFDM LTS simbol bez CP.
+    rx_waveform : array_like
+            Kompleksni primljeni signal u kojem se traži LTS.
+    falling_edge_position : int
+            Indeks približne početne pozicije paketa (crude timing reference) oko koje
+            se traži LTS peak. Omogućava ograničenje pretražnog prozora.
+
+    Povratna vrijednost
+    
+    
+    lt_peak_value : complex
+            Vrednost cross-korelacije na detektovanom LTS peak-u (kompleksna amplitude i faza).
+    lt_peak_position : int
+            Indeks u 'rx_waveform' gde je detektovan peak cross-korelacije, tj. pozicija
+            LTS simbola.
+    output_long : ndarray
+            Niz kompleksnih vrednosti cross-korelacije kroz ceo prijemni signal.
+            Može se koristiti za vizualizaciju i dalju analizu.
     """
 
     # --- Sign-normalized LTS (±1 ± j) ---
