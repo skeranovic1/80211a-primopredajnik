@@ -34,7 +34,7 @@ def test_packet_detector(rx_signal, fs, title=""):
     comparison_ratio, packet_flag, falling_edge, _ = packet_detector(rx_signal)
     N=len(rx_signal)
     t=np.arange(N)/fs*1e6  #u µs
-
+    
     STS_len=16*10   #uzorci ali ovdje bez upsamplinga jer smo u funkciju vratili normalan fs
     sts_end_time=STS_len/fs*1e6
     sts_end_sample=STS_len
