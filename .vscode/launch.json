@@ -5,7 +5,7 @@
             "name": "Pokreni demo_channel",
             "type": "python",
             "request": "launch",
-            "module": "examples.Kanal_demo.demo_channel",
+            "module": "examples.Prijemnik_demo.estimacija_kanala_demo",
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal"
         }

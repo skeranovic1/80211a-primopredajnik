@@ -20,7 +20,7 @@ def main():
     """
     # Generišemo nasumične ulazne bitove
     input_bits = bit_sequence(1, 2, sd=41)
-    symbols = Mapper_OFDM(input_bits, 2)
+    symbols = Mapper_OFDM(input_bits, 2)  # QPSK
     payload = IFFT_GI(symbols, plot=True)  
 
     #Crtanje cijelog payload-a

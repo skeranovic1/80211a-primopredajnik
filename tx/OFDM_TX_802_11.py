@@ -48,3 +48,5 @@ class Transmitter80211a:
         packet_20MHz=np.concatenate((sts, lts, payload))
         sample_output, _ =half_band_upsample(packet_20MHz, up_factor=self.up_factor, N=31, plot=self.plot)
         return sample_output, symbols
+    
+
