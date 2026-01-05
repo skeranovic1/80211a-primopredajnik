@@ -47,16 +47,15 @@ def long_symbol_correlator(long_training_symbol,rx_waveform, falling_edge_positi
 
     cross_correlator = np.zeros(64, dtype=complex)
 
-    for i in range(rx_len - 64):
-
-        #Kros-korelacija
-        output = np.dot(cross_correlator, np.conj(L[::-1]))
-
-        output_long[i] = output
+    for i in range(rx_len):
 
         # Shift registar
         cross_correlator[1:] = cross_correlator[:-1]
         cross_correlator[0] = rx_waveform[i]
+
+        #Kros-korelacija
+        output = np.dot(cross_correlator, np.conj(L[::-1]))
+        output_long[i] = output
 
         # Search window za LTS
         if (i > falling_edge_position + 54) and \
