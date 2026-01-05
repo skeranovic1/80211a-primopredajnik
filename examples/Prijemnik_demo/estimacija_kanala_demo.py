@@ -8,34 +8,35 @@ from channel.channel_settings import ChannelSettings
 from channel.channel_mode import ChannelMode
 from rx.pretprocessing import iq_preprocessing
 from rx.detection import packet_detector
-from rx.cfo import detect_frequency_offsets
+from rx.cfo import detect_frequency_offsets, gruba_vremenska_sinhronizacija
 from tx.long_sequence import get_long_training_sequence
 from rx.long_symbol_correlator import long_symbol_correlator
 from rx.estimacija_kanala import channel_estimate_and_equalizer
 from rx.PhaseCorrection_80211a import phase_correction_80211a
 
-#Tx signal
-num_ofdm_symbols=3
+
+num_ofdm_symbols=10
 up_factor=2
-fs_base=20e6    
+fs_base=20e6
 fs=fs_base*up_factor
 
+#Predajnik
 tx=Transmitter80211a(
         num_ofdm_symbols=num_ofdm_symbols,
         bits_per_symbol=2,   #QPSK
         step=1,
         up_factor=up_factor,
-        seed=17,
+        seed=16,
         plot=False
 )
-tx_signal, _=tx.generate_frame()
+tx_signal, _= tx.generate_frame()
 
 #Kanal
 settings=ChannelSettings(
         sample_rate=fs,
-        number_of_taps=10,
+        number_of_taps=2,
         delay_spread=10,
-        snr_db=20
+        snr_db=10
 )
 mode=ChannelMode(
         multipath=1,
@@ -44,31 +45,71 @@ mode=ChannelMode(
 channel=Channel_Model(settings, mode)
 rx_signal, _=channel.apply(tx_signal)
 
-#Rx
-rx_signal, fs1 =iq_preprocessing(
+#Prijemnik - pretprocesing, detekcija i korekcija
+rx_signal, fs1=iq_preprocessing(
         rx_signal=rx_signal,
         tx_signal=tx_signal,
         fs=fs
 )
+comparison_ratio, packet_flag, falling_edge, _ = packet_detector(rx_signal)
+print("Kraj detektovane short training sekvence:", falling_edge)
+print(f"Očekivani kraj STS-a (sample): {160}")
+print(f"Greska pri detekciji STS-a: {160-falling_edge} uzoraka")
+    
+#Symbol timing
+start_lts = falling_edge
+end_lts = falling_edge + 160  # 32 CP + 2x64 korisna
+rx_lts = rx_signal[start_lts:end_lts]
 
-_, _, packet_start, _ = packet_detector(rx_signal)
+pravi_pocetak_lts, timing_corr, timing_idxs = gruba_vremenska_sinhronizacija(rx_lts, search_win=32)
 
-FreqOffset=detect_frequency_offsets(rx_signal,packet_start)
+# FFT start u globalnim indeksima
+lts_start = start_lts + pravi_pocetak_lts
+ideal_lts_start = 160+32
+
+timing_error = ideal_lts_start  - lts_start
+print("Detektovani pocetak korisnog dijela LTS-a:", lts_start)
+print("Idealni pocetak korisnog dijela LTS-a:", ideal_lts_start)
+print(f"Symbol timing greška: {timing_error} uzoraka ({timing_error/fs1*1e6:.2f} µs)")
+
+#Detekcija frekvencijskih ofseta
+FreqOffset=detect_frequency_offsets(rx_signal,lts_start)
 CoarseOffset=FreqOffset[0]
+print(f"Coarse CFO = {CoarseOffset:.2f} Hz")
+
+#Coarse/gruba korekcija
 n=np.arange(len(rx_signal))
-NCO_coarse=np.exp(-1j*2*np.pi*n*CoarseOffset/fs1)
+NCO_coarse=np.exp(-1j*2*np.pi*n*CoarseOffset/fs_base)
 rx_coarse=rx_signal*NCO_coarse
 
-#Fine/precizna korekcija
-FreqOffset=detect_frequency_offsets(rx_coarse,packet_start)  #ponovo se pokreće detekcija za fine offset
+# Fine/precizna korekcija
+FreqOffset=detect_frequency_offsets(rx_coarse,lts_start, plot=True)  #ponovo se pokreće detekcija za fine offset
 FineOffset=FreqOffset[1]
-NCO_fine=np.exp(-1j*2*np.pi*n*FineOffset/fs1)
+NCO_fine=np.exp(-1j*2*np.pi*n*FineOffset/fs_base)
 rx_fine=rx_coarse*NCO_fine
+print(f"Fine CFO = {FineOffset:.3f} Hz")
 
-lts = get_long_training_sequence()
-lts_td = lts[32+64 : 32+128]  #Drugi LTS simbol, uzimamo bez CP-a za korelaciju
-_, peak_pos, corr = long_symbol_correlator(lts_td,rx_fine,falling_edge_position=packet_start)
-lts_start = peak_pos - 64
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #Estimacija kanala i koeficijenti equalizera
 channel_est, equalizer_coeffs = channel_estimate_and_equalizer(rx_fine, lts_start)
@@ -115,15 +156,6 @@ plt.xlabel('Sample index')
 plt.ylabel('Amplitude')
 plt.grid(True)
 plt.legend()
-plt.show()
-
-#LTS korelacija
-plt.figure(figsize=(12,4))
-plt.plot(np.abs(corr))
-plt.title('LTS Correlation Magnitude')
-plt.xlabel('Sample index')
-plt.ylabel('|Correlation|')
-plt.grid(True)
 plt.show()
 
 #Kanal i equalizer

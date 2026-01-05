@@ -81,7 +81,7 @@ def test_packet_detector(rx_signal, fs, title=""):
     plt.show()
 
 def main():
-    num_ofdm_symbols=3
+    num_ofdm_symbols=1
     up_factor=2
     fs_base=20e6
     fs=fs_base*up_factor
@@ -91,7 +91,7 @@ def main():
         bits_per_symbol=2,   #QPSK
         step=1,
         up_factor=up_factor,
-        seed=17,
+        seed=50,
         plot=False
     )
     tx_signal, _=tx.generate_frame()
