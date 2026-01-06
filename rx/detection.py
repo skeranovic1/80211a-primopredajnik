@@ -75,11 +75,7 @@ def packet_detector(rx_input):
         packet_det_flag[i]=detection_flag
 
         #Falling edge detekcija
-        if (
-            i>0
-            and i<N/2
-            and packet_det_flag[i]-packet_det_flag[i-1]==-1
-        ):
-            falling_edge_position=i
+        if i > 0 and packet_det_flag[i-1] == 1 and packet_det_flag[i] == 0:
+           falling_edge_position = i
 
     return comparison_ratio, packet_det_flag, falling_edge_position, autocorr_est
