@@ -9,9 +9,6 @@ Ovaj projekt trenutno implementira osnovne dijelove OFDM TX lanca:
 - Upsampling i half-band filtriranje
 - Model kanala (AWGN i multipath)
 - Testovi pokrivenosti trenutno implementiranih funkcija
-
-**Trenutno nije implementirano:**
-
 - RX lanac i sinkronizacija
 
 ## Instalacija
@@ -66,7 +63,8 @@ Pokretanje testiranja:
 ## Struktura projekta
 
 - `tx/` — 802.11a OFDM predajnički lanac  
-- `channel/` — Model kanala (AWGN i multipath)  
+- `channel/` — Model kanala (AWGN i multipath)
+- `rx/` —  802.11a OFDM prijemni lanac
 - `gui/` — Grafički korisnički interfejs za podešavanje i vizualizaciju  
 - `examples/` — Primjeri korištenja  
 - `tests/` — Automatski testovi  
