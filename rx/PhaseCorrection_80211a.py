@@ -1,70 +1,78 @@
 import numpy as np
-import matplotlib.pyplot as plt
 
-def phase_correction_80211a(rx_signal, num_symbols,ltpeak,channel_est,equalizer_coeffs,L=8, max_ratio=1):
+def phase_correction(symbols_fd, num_symbols, channel_est, L=8, max_ratio=1):
     """
-    Fazna korekcija za IEEE 802.11a OFDM sistem.
+    Fazna korekcija pilota za IEEE 802.11a OFDM signal.
 
-    Implementira:
+    Funkcija izvršava:
     - Korekciju zajedničke fazne greške (CPE - Common Phase Error)
-    - Praćenje i korekciju faznog nagiba na osnovu pilot-tonova
-    - Izlaz su fazno ispravljeni podatkovni podnosioci (48)
+    - Praćenje i korekciju faznog nagiba po pilot-tonovima
+    - Izlaz su fazno ispravljeni podatkovni podnosioci (48 DATA podnosioca po simbolu)
 
     Parametri
-    rx_signal : np.ndarray
-        Primljeni signal u vremenskom domenu
+    symbols_fd : np.ndarray
+        FFT simboli (bez CP + izvrsena ekvalizacija), shape (num_symbols, 64)
     num_symbols : int
         Broj OFDM simbola za obradu
-    ltpeak : int
-        Indeks početka LTS-a (detektovani vrh dugog trening simbola)
-    channel_est : np.ndarray (64,)
-        Procijenjeni frekvencijski odziv kanala
-    equalizer_coeffs : np.ndarray (64,)
-        Koeficijenti kanalskog ekvilajzera
-    L : int, opcionalno
-        Dužina filetra za usrednjavanje faznog nagiba
-    max_ratio : int, opcionalno
+    channel_est : np.ndarray
+        Procijenjeni frekvencijski odziv kanala, shape (64,)
+    L : int, optional
+        Dužina filtera za prosjek faznog nagiba. Default je 8.
+    max_ratio : int, optional
         Ako je 1 koristi ponderisanje pilota po snazi,
-        ako je 0 svi piloti imaju jednake težine
+        ako je 0 svi piloti imaju jednake težine. Default je 1.
 
-    Povratne vrijednosti
-    corrected_symbols : list[np.ndarray]
-        Lista fazno ispravljenih OFDM simbola (48 podnosioca po simbolu)
+    Povratna vrijednost
+    corrected_symbols : np.ndarray
+        Niz shape (num_symbols, 48) sa fazno ispravljenim data subnosiocima.
+
+    Raises
+    TypeError
+        Ako symbols_fd ili channel_est nisu np.ndarray
+    ValueError
+        Ako symbols_fd nema shape (num_symbols, 64)
+        Ako channel_est nema 64 elemenata
+        Ako num_symbols nije pozitivan integer
+        Ako L nije pozitivan integer
+        Ako max_ratio nije 0 ili 1
     """
-    #Pozicije pilota
-    idx_p1 = 11
-    idx_p2 = 25
-    idx_p3 = 38
-    idx_p4 = 52
-
-    pilot_p1_snaga=abs(channel_est[idx_p1])
-    pilot_p2_snaga=abs(channel_est[idx_p2])
-    pilot_p3_snaga=abs(channel_est[idx_p3])
-    pilot_p4_snaga=abs(channel_est[idx_p4])
-
-    snaga_pilota=pilot_p1_snaga+pilot_p2_snaga+pilot_p3_snaga+pilot_p4_snaga
+    #Provjera ulaza
+    if not isinstance(symbols_fd, np.ndarray):
+        raise TypeError("symbols_fd mora biti numpy.ndarray tipa.")
+    if not isinstance(channel_est, np.ndarray):
+        raise TypeError("channel_est mora biti numpy.ndarray tipa.")
+    if symbols_fd.shape != (num_symbols, 64):
+        raise ValueError(f"symbols_fd mora imati shape ({num_symbols}, 64).")
+    if channel_est.shape != (64,):
+        raise ValueError("channel_est mora imati shape (64,).")
+    if not isinstance(num_symbols, int) or num_symbols <= 0:
+        raise ValueError("num_symbols mora biti pozitivan integer.")
+    if not isinstance(L, int) or L <= 0:
+        raise ValueError("L mora biti pozitivan integer.")
+    if max_ratio not in (0, 1):
+        raise ValueError("max_ratio mora biti 0 ili 1.")
     
-    if(max_ratio==0):
-        C1, C2, C3, C4=1/4, 1/4, 1/4, 1/4
-    else: 
-        C1= pilot_p1_snaga/snaga_pilota
-        C2= pilot_p2_snaga/snaga_pilota
-        C3= pilot_p3_snaga/snaga_pilota
-        C4= pilot_p4_snaga/snaga_pilota
+    #Glavna funkcionalnost
+    idx_pilots = np.array([11, 25, 38, 52])
+    pilot_magnitudes = np.abs(channel_est[idx_pilots])
+    total_mag = np.sum(pilot_magnitudes)
 
-    average_slope_filter = np.zeros(L)
-    corrected_symbols=[]
+    if max_ratio==0:
+        C = np.ones(4)/4
+    else:
+        C = pilot_magnitudes / total_mag
 
-    # FFT bin -> subcarrier index k (za fazni nagib)
-    # k = idx za 0..31, a k = idx-64 za 32..63 (negativni tonovi)
-    k_vec = np.fft.fftfreq(64) * 64  # [0..31, -32..-1]
+    average_slope_filter = np.zeros(L) #Inicijalizacija povratnih varijabli
+    corrected_symbols = []
 
-    # k vrijednosti za vaše pilot binove
-    pilot_bins = np.array([idx_p1, idx_p2, idx_p3, idx_p4], dtype=int)
-    pilot_k = k_vec[pilot_bins]
+    #FFT bin -> indeks subnosioca k, ravnomjerno rasporedeni 
+    k_vec = np.fft.fftfreq(64) * 64
 
-    # Indeksi data podnosioca (vaš TX mapping)
-    data_indices=np.array([
+    #k vrijednosti pilota
+    pilot_k = k_vec[idx_pilots]
+
+    #Indeksi data podnosioca (48)
+    idx_data=np.array([
         6,7,8,9,10,
         12,13,14,15,16,17,18,19,20,21,22,23,24,
         26,27,28,29,30,31,32,33,34,35,36,37,39,
@@ -72,53 +80,33 @@ def phase_correction_80211a(rx_signal, num_symbols,ltpeak,channel_est,equalizer_
         53,54,55,56,57
     ])
 
-    for i in range (num_symbols):
-        CP = 16
-        SYM = 80
-        start=ltpeak+2*64+i*SYM+CP
-        stop=start+64
-        trenutni_simbol=rx_signal[start:stop]
-        trenutni_fft=1/64*np.fft.fft(trenutni_simbol)
-        equalized_symbol=trenutni_fft*equalizer_coeffs
+    for i in range(num_symbols):
+        sym = symbols_fd[i]
 
-        #Ekstrakcija pilota
-        pilot_1 = equalized_symbol[idx_p1]
-        pilot_2 = equalized_symbol[idx_p2]
-        pilot_3 = equalized_symbol[idx_p3]
-        pilot_4 = equalized_symbol[idx_p4]
+        # Ekstrakcija pilota svakog simbola
+        pilots = sym[idx_pilots]
 
-        #CPE korekcija
-        averaged_pilot=(C1*pilot_1+C2*pilot_2+C3*pilot_3+C4*pilot_4)
+        #CPE detekcija i korekcija
+        averaged_pilot = np.sum(C * pilots)
         theta = np.angle(averaged_pilot)
-        corr_symbol1 = equalized_symbol * np.exp(-1j * theta)
+        sym_cpe = sym * np.exp(-1j*theta)
 
-        #Phase slope 
-        # (nakon skidanja CPE, faze pilota fitamo na liniju: phase ≈ slope*k + const)
-        pilots_cpe_removed = np.array([
-            pilot_1*np.conj(averaged_pilot),
-            pilot_2*np.conj(averaged_pilot),
-            pilot_3*np.conj(averaged_pilot),
-            pilot_4*np.conj(averaged_pilot)
-        ], dtype=complex)
-
+        #Phase slope
+        pilots_cpe_removed = pilots * np.conj(averaged_pilot)
         pilot_phase = np.unwrap(np.angle(pilots_cpe_removed))
-
-        # Least-squares fit: pilot_phase = a*pilot_k + b  -> slope=a
         A = np.vstack([pilot_k, np.ones_like(pilot_k)]).T
         slope, _ = np.linalg.lstsq(A, pilot_phase, rcond=None)[0]
 
-        #Average slope filter 
+        #Prosjek nagiba
         average_slope_filter[1:] = average_slope_filter[:-1]
         average_slope_filter[0] = slope
         avg_slope = np.sum(average_slope_filter)/L
 
-        #Korekcija
-        applied_correction = avg_slope * k_vec
-        corr_symbol2=corr_symbol1*np.exp(-1j*applied_correction)
-        equalizer_coeffs=equalizer_coeffs*np.exp(-1j*applied_correction/L)
+        #Primjena korekcije po binovima
+        applied_correction = np.exp(-1j*avg_slope*k_vec)
+        sym_corrected = sym_cpe * applied_correction
 
-        #Ekstrakcija data podnosioca
-        corrected_sym = corr_symbol2[data_indices]
-        corrected_symbols.append(corrected_sym)
+        #Ekstrakcija podataka na podnosioca
+        corrected_symbols.append(sym_corrected[idx_data])
 
-    return corrected_symbols
+    return np.array(corrected_symbols)

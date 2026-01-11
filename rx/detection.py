@@ -23,7 +23,21 @@ def packet_detector(rx_input):
         Ako paket nije detektovan, vraća None.
     autocorr_est : ndarray
         Procijenjena autokorelacija signala po uzorcima.
+
+    Raises
+    TypeError
+        Ako 'rx_input' nije np.ndarray ili nije kompleksnog tipa.
+    ValueError
+        Ako 'rx_input' sadrži manje od 400 uzorka (minimalni broj uzoraka za validan paket).
     """
+    #Provjere ulaznih podataka
+    if rx_input.size < 400: #STS+LTS+ 1 simbol podataka minimalno
+        raise ValueError(f"'rx_input' mora sadržavati barem 400 uzorka za ispravan paket, a dobiveno je {rx_input.size}")
+
+    if not np.iscomplexobj(rx_input):
+        raise TypeError("'rx_input' mora biti kompleksnog tipa")
+    
+    #Glavna funkcionalnost
     rx_input=np.asarray(rx_input, dtype=np.complex128)
     N=len(rx_input)
 

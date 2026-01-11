@@ -1,7 +1,6 @@
 import numpy as np
 import pytest
 from tx.filters import half_band_upsample
-import warnings 
 
 def test_output_length():
     """Testira da izlaz ima ispravnu dužinu nakon upsamplovanja i filtriranja."""

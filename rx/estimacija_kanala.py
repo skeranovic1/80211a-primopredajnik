@@ -3,52 +3,69 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 from tx.long_sequence import get_long_training_sequence
+import matplotlib.pyplot as plt
 
-def channel_estimate_and_equalizer(signal,lts_start):
+def channel_estimate_and_equalizer(lts_signal, lts_start=0, plot=False):
     """
-    Procjena kanala i računanje koeficijenata ekvalajzera na osnovu dugih trening simbola (LTS).
+    Procjenjuje kanal i kreira ZF (Zero-Forcing) equalizer koristeći Long Training Sequence (LTS).
 
-    Parametri
-    signal : np.ndarray
-        Primljeni (RX) signal, oblika (1, N) ili (N,)
-    lts_start : int
-        Indeks početka LTS-a 
+    Funkcija koristi dva uzastopna LTS simbola iz primljenog signala za procjenu kanala u frekvencijskom domenu i kreira equalizer 
+    koji se koristi za korekciju efekata kanala u OFDM sistemima (802.11).
 
-    Povratne vrijednosti
-    channel_estimate : np.ndarray
-        Procijenjeni frekvencijski odziv kanala
-    equalizer_coefficients : np.ndarray
-        Koeficijenti ekvilajzera (1 / procjena kanala)
+    Parameters
+    lts_signal : np.ndarray
+        Primljeni signal koji sadrži barem 128 uzoraka LTS (2 LTS simbola po 64 uzorka).
+    lts_start : int, optional
+        Početni indeks prvog LTS simbola unutar 'lts_signal'. Default je 0.
+   
+    Returns
+    H : np.ndarray, shape (64,)
+        Procjena kanala u frekventnom domenu za 64 subnosioca.
+    equalizer : np.ndarray, shape (64,)
+        ZF equalizer kreiran iz procijenjenog kanala.
+
+    Raises
+    TypeError
+        Ako 'lts_signal' nije numpy array ili nije kompleksnog tipa.
+        Ako 'lts_start' nije integer.
+    ValueError
+        Ako 'lts_signal' sadrži manje od 128 uzoraka (dva LTS simbola).
+        Ako 'lts_start' nije validan indeks (previše blizu kraja signala da se formiraju 2 LTS simbola).
     """
-    #1D signal
-    signal = np.squeeze(signal)
+    #Provjere ulaza
+    if not isinstance(lts_signal, np.ndarray):
+        raise TypeError("lts_signal mora biti np.ndarray")
+    if not np.iscomplexobj(lts_signal):
+        raise TypeError("lts_signal mora sadržavati kompleksne vrijednosti")
+    if not isinstance(lts_start, int):
+        raise TypeError("lts_start mora biti int")
+    if len(lts_signal) < 128:
+        raise ValueError("lts_signal mora sadržavati barem 128 uzoraka (2 LTS simbola)")
+    if lts_start < 0 or lts_start > len(lts_signal) - 128:
+        raise ValueError("lts_start nije validan: preblizu kraja signala za 2 LTS simbola")
 
-    #Izdvajanje dugih trening simbola i njihovo usrednjavanje
-    first_long_symbol = signal[lts_start : lts_start+64]
-    second_long_symbol = signal[lts_start+64 : lts_start+128]
-    averaged_long_training_symbol = (0.5 * first_long_symbol + 0.5 * second_long_symbol)
+    #Glavna funkcionalnost
+    NFFT = 64
 
-    #FFT i izdvajanje podnosača (tonova)
-    fft_of_long_training_symbol = 1/64 * np.fft.fft(averaged_long_training_symbol)
+    #Primljeni LTS, dijeli se na dva simbola 
+    lts1_td = lts_signal[lts_start : lts_start + NFFT]
+    lts2_td = lts_signal[lts_start + NFFT : lts_start + 2*NFFT]
+    lts_avg_td = 0.5 * (lts1_td + lts2_td) #srednja vrijednost
+    lts_fd = (np.fft.fft(lts_avg_td))
 
-    rx_positive_tones = fft_of_long_training_symbol[1:27]
-    rx_negative_tones = fft_of_long_training_symbol[38:64]
+    #Referentni LTS, uzima se samo jedan simbol za racunanje korelacije
+    lts_ref_td = 1/64*get_long_training_sequence()[32:32+64]
+    lts_ref_fd = (np.fft.fft(lts_ref_td))
 
-    #Idealni tonovi
-    all_tones = get_long_training_sequence()
-    ideal_lts_td = all_tones[32 + 64 : 32 + 128]  # 64 uzorka bez CP (LTS)
-    ideal_lts_fd = 1/64 * np.fft.fft(ideal_lts_td)
+    #Aktivni podnosioci (802.11a)
+    active = np.r_[1:27, 38:64]
 
-    ideal_positive_tones = ideal_lts_fd[1:27]
-    ideal_negative_tones = ideal_lts_fd[38:64]
+    #Racunanje procjene kanala
+    H = np.zeros(NFFT, dtype=complex)
+    H[active] = lts_fd[active] / lts_ref_fd[active]
 
-    channel_est_pos = rx_positive_tones / ideal_positive_tones
-    channel_est_neg = rx_negative_tones / ideal_negative_tones
-    channel_estimate = np.concatenate((np.zeros(1), channel_est_pos, np.zeros(11), channel_est_neg))
+    #ZF equalizer
+    eps = 1e-8
+    equalizer = np.conj(H) / (np.abs(H)**2 + eps)
 
-    #Estimacija kanala i koeficijenti ekvalajzera
-    equalizer_coeff_pos = 1.0 / channel_est_pos
-    equalizer_coeff_neg = 1.0 / channel_est_neg
-    equalizer_coefficients = np.concatenate((np.zeros(1), equalizer_coeff_pos, np.zeros(11), equalizer_coeff_neg))
-    
-    return channel_estimate, equalizer_coefficients
+    return H, equalizer

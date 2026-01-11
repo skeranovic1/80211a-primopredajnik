@@ -12,7 +12,7 @@ from tx.OFDM_TX_802_11 import Transmitter80211a
 from rx.detection import packet_detector   
 from rx.pretprocessing import iq_preprocessing
 from scipy.signal import find_peaks
-from rx.cfo import detect_frequency_offsets
+from rx.cfo import detect_frequency_offsets, gruba_vremenska_sinhronizacija
 
 num_ofdm_symbols=3
 up_factor=2
@@ -43,25 +43,44 @@ mode=ChannelMode(
 channel=Channel_Model(settings, mode)
 rx_signal, _=channel.apply(tx_signal)
 
-rx_signal, fs =iq_preprocessing(
+rx_signal, fs1 =iq_preprocessing(
         rx_signal=rx_signal,
         tx_signal=tx_signal,
         fs=fs
 )
+_, _, start_lts, _ = packet_detector(rx_signal)
+print("Kraj detektovane short training sekvence:", start_lts)
+print(f"Očekivani kraj STS-a (sample): {160}")
+print(f"Greska pri detekciji STS-a: {160-start_lts} uzoraka")
+    
+#Symbol timing
+end_lts = start_lts + 160  #32 CP + 2x64 korisna
+rx_lts = rx_signal[start_lts:end_lts]
+pravi_pocetak_lts, _, _ = gruba_vremenska_sinhronizacija(rx_lts, search_win=32)
+#ovdje pravi pocetak LTS-a znaci precizno odredivanje pozicije (ima male vrijednosti, ~10 uzoraka), 
+# jer se posmatra samo LTS dio primljenog signala. Slijedi postavljanje na globalne pozicije
 
-_, _, packet_start, _ = packet_detector(rx_signal)
+#FFT start u globalnim indeksima
+lts_start = start_lts + pravi_pocetak_lts 
+ideal_lts_start = 160+32 #pozicioniranje na pocetak korisnog dijela LTS-a, poslije CP 
+timing_error = ideal_lts_start  - lts_start
+print("Detektovani pocetak korisnog dijela LTS-a:", lts_start)
+print("Idealni pocetak korisnog dijela LTS-a:", ideal_lts_start)
+print(f"Symbol timing greška: {timing_error} uzoraka ({timing_error/fs1*1e6:.2f} µs)")
 
-FreqOffset=detect_frequency_offsets(rx_signal,packet_start)
+#Detekcija frekvencijskih ofseta
+#Coarse/gruba korekcija
+FreqOffset=detect_frequency_offsets(rx_signal,lts_start,fs1) #LTS start je pocetak korisnog dijela, bez CP
 CoarseOffset=FreqOffset[0]
 print(f"Coarse CFO = {CoarseOffset:.2f} Hz")
 n=np.arange(len(rx_signal))
-NCO_coarse=np.exp(-1j*2*np.pi*n*CoarseOffset/fs)
+NCO_coarse=np.exp(-1j*2*np.pi*n*CoarseOffset/fs1) #korekcija
 rx_coarse=rx_signal*NCO_coarse
 
 lts = get_long_training_sequence()
 lts_td = lts[32+64 : 32+128]  #Drugi LTS simbol, uzimamo bez CP-a za korelaciju
 
-peak_val, peak_pos, corr = long_symbol_correlator(lts_td,rx_coarse,falling_edge_position=packet_start)
+peak_val, peak_pos, corr = long_symbol_correlator(lts_td,rx_coarse,lts_start+2*64)
 lts_start = peak_pos - 64
 print("LTS peak position:", peak_pos)
 print("LTS start index:", lts_start)

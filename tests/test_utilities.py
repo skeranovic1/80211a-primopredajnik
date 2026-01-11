@@ -13,6 +13,12 @@ def test_zero_stuffing_basic():
     expected = np.array([1, 0, 2, 0, 3, 0])
     assert np.array_equal(result, expected)
 
+def test_zero_stuffing_output_is_complex():
+    """Provjerava da je izlazni signal uvijek kompleksnog tipa."""
+    signal = np.array([1, 2, 3])
+    result = zero_stuffing(signal, up_factor=2)
+    assert np.iscomplexobj(result)
+
 def test_zero_stuffing_with_upfactor_3():
     """Provjerava zero-stuffing sa faktorom upsampliranja 3."""
     signal = np.array([5, 10])
@@ -90,6 +96,13 @@ def test_spektar_runs_without_error():
     x = np.cos(2 * np.pi * 100e3 * t)  # jednostavan sinusni signal
     spektar(x, fs, label="test")
 
+def test_spektar_non_numeric_numpy_array():
+    """Provjerava da se baca TypeError za numpy niz koji nije numerički."""
+    x = np.array(["a", "b", "c"], dtype=object)
+    fs = 1e6
+    with pytest.raises(TypeError):
+        spektar(x, fs, label="bad")
+
 def test_spektar_calls_plot():
     """Provjerava da plt.plot bude pozvan unutar funkcije spektar."""
     fs = 1e6
@@ -148,10 +161,13 @@ def test_plot_konstelaciju_invalid_input_type():
     with pytest.raises(TypeError):
         plot_konstelaciju(symbols, "Test")
 
-def test_plot_konstelaciju_real_input_raises():
-    """Provjerava da funkcija baca grešku za realne simbole umjesto kompleksnih."""
+def test_plot_konstelaciju_real_input_raises_value_error():
+    """Provjerava da funkcija baca ValueError ako simboli nisu kompleksni."""
     symbols = np.array([1.0, 2.0, 3.0])
-    # Funkcija crtanja neće automatski baciti grešku,
-    # ali možemo assert provjeriti da su simboli kompleksni
-    with pytest.raises(AssertionError):
-        assert np.iscomplexobj(symbols), "Input must be complex"
+    with pytest.raises(ValueError):
+        plot_konstelaciju(symbols, "Test")
+        
+def test_plot_konstelaciju_none_input():
+    """Provjerava da None ulaz baca TypeError."""
+    with pytest.raises(TypeError):
+        plot_konstelaciju(None, "Test")

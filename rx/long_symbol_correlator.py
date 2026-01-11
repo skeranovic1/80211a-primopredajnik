@@ -34,21 +34,40 @@ def long_symbol_correlator(long_training_symbol,rx_waveform, falling_edge_positi
     output_long : ndarray
             Niz kompleksnih vrednosti cross-korelacije kroz ceo prijemni signal.
             Može se koristiti za vizualizaciju i dalju analizu.
+     
+    Raises
+    TypeError
+        Ako 'long_training_symbol' ili 'rx_waveform' nisu array-like tipa.
+    ValueError
+        Ako dužina 'long_training_symbol' nije barem 64 uzorka.
+        Ako 'rx_waveform' ima manje od 64 uzorka (nedovoljno za korelaciju).
+        Ako 'falling_edge_position' nije integer ili je negativan ili veći od dužine 'rx_waveform'.
     """
+    #Provjere ulaza
+    if not isinstance(long_training_symbol, (np.ndarray, list, tuple)):
+        raise TypeError("long_training_symbol mora biti array-like tipa (np.ndarray, list ili tuple).")
+    if not isinstance(rx_waveform, (np.ndarray, list, tuple)):
+        raise TypeError("rx_waveform mora biti array-like tipa (np.ndarray, list ili tuple).")
+    if len(long_training_symbol) < 64:
+        raise ValueError("long_training_symbol mora imati najmanje 64 uzorka.")
+    if len(rx_waveform) < 64:
+        raise ValueError("rx_waveform mora imati najmanje 64 uzorka za korelaciju.")
+    if not isinstance(falling_edge_position, (int, np.integer)) or falling_edge_position < 0 or falling_edge_position >= len(rx_waveform):
+        raise ValueError("falling_edge_position mora biti integer između 0 i dužine rx_waveform-1.")
+    
+    #Glavna funkcionalnost
     #Normalizovani LTS 
     L = np.sign(np.real(long_training_symbol)) + \
         1j * np.sign(np.imag(long_training_symbol))
 
     rx_len = len(rx_waveform)
 
-    output_long = np.zeros(rx_len, dtype=complex)
+    output_long = np.zeros(rx_len, dtype=complex) #inicijalizacija izlaznih vrijednosti na 0
     lt_peak_value = 0 + 0j
     lt_peak_position = 0
-
     cross_correlator = np.zeros(64, dtype=complex)
 
     for i in range(rx_len):
-
         # Shift registar
         cross_correlator[1:] = cross_correlator[:-1]
         cross_correlator[0] = rx_waveform[i]
@@ -62,7 +81,7 @@ def long_symbol_correlator(long_training_symbol,rx_waveform, falling_edge_positi
            (i < falling_edge_position + 54 + 64):
 
             if abs(output) > abs(lt_peak_value):
-                lt_peak_value = output
+                lt_peak_value = output #postavljanje pozicija
                 lt_peak_position = i
 
     return lt_peak_value, lt_peak_position, output_long

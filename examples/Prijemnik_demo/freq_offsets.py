@@ -51,7 +51,7 @@ def main():
        - Realni dio primljenog signala sa STS oznakom.
        - Faza RX signala prije korekcije, nakon grube i nakon fine CFO korekcije.
     """
-    num_ofdm_symbols=3
+    num_ofdm_symbols=300
     up_factor=2
     fs_base=20e6
     fs=fs_base*up_factor
@@ -71,11 +71,11 @@ def main():
     settings=ChannelSettings(
         sample_rate=fs,
         number_of_taps=2,
-        delay_spread=10,
+        delay_spread=10e-9,
         snr_db=10
     )
     mode=ChannelMode(
-        multipath=0,
+        multipath=1,
         thermal_noise=1
     )
     channel=Channel_Model(settings, mode)
@@ -87,22 +87,21 @@ def main():
         tx_signal=tx_signal,
         fs=fs
     )
-    comparison_ratio, packet_flag, falling_edge, _ = packet_detector(rx_signal)
-    print("Kraj detektovane short training sekvence:", falling_edge)
+    comparison_ratio, packet_flag, start_lts, _ = packet_detector(rx_signal)
+    print("Kraj detektovane short training sekvence:", start_lts)
     print(f"Očekivani kraj STS-a (sample): {160}")
-    print(f"Greska pri detekciji STS-a: {160-falling_edge} uzoraka")
-    
+    print(f"Greska pri detekciji STS-a: {160-start_lts} uzoraka")
+        
     #Symbol timing
-    start_lts = falling_edge
-    end_lts = falling_edge + 160  # 32 CP + 2x64 korisna
+    end_lts = start_lts + 160  #32 CP + 2x64 korisna
     rx_lts = rx_signal[start_lts:end_lts]
-
     pravi_pocetak_lts, timing_corr, timing_idxs = gruba_vremenska_sinhronizacija(rx_lts, search_win=32)
+    #ovdje pravi pocetak LTS-a znaci precizno odredivanje pozicije (ima male vrijednosti, ~10 uzoraka), 
+    # jer se posmatra samo LTS dio primljenog signala. Slijedi postavljanje na globalne pozicije
 
-    # FFT start u globalnim indeksima
-    lts_start = start_lts + pravi_pocetak_lts
-    ideal_lts_start = 160+32
-
+    #FFT start u globalnim indeksima
+    lts_start = start_lts + pravi_pocetak_lts 
+    ideal_lts_start = 160+32 #pozicioniranje na pocetak korisnog dijela LTS-a, poslije CP 
     timing_error = ideal_lts_start  - lts_start
     print("Detektovani pocetak korisnog dijela LTS-a:", lts_start)
     print("Idealni pocetak korisnog dijela LTS-a:", ideal_lts_start)
@@ -135,20 +134,19 @@ def main():
     plt.grid(True)
     plt.subplot(3,1,3)
     plt.plot(t,np.real(rx_signal))
-    plt.axvline(falling_edge/fs_base*1e6,color='r',linestyle='--',label="Kraj STS-a")
+    plt.axvline(start_lts/fs_base*1e6,color='r',linestyle='--',label="Kraj STS-a")
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
     plt.show()
 
     #Detekcija frekvencijskih ofseta
-    FreqOffset=detect_frequency_offsets(rx_signal,lts_start)
+    #Coarse/gruba korekcija
+    FreqOffset=detect_frequency_offsets(rx_signal,lts_start,fs1) #LTS start je pocetak korisnog dijela, bez CP
     CoarseOffset=FreqOffset[0]
     print(f"Coarse CFO = {CoarseOffset:.2f} Hz")
-
-    #Coarse/gruba korekcija
     n=np.arange(len(rx_signal))
-    NCO_coarse=np.exp(-1j*2*np.pi*n*CoarseOffset/fs_base)
+    NCO_coarse=np.exp(-1j*2*np.pi*n*CoarseOffset/fs1) #korekcija
     rx_coarse=rx_signal*NCO_coarse
 
     phase_before = np.unwrap(np.angle(rx_signal))
@@ -168,9 +166,9 @@ def main():
     #plot_constellations(rx_signal, rx_coarse)
 
     # Fine/precizna korekcija
-    FreqOffset=detect_frequency_offsets(rx_coarse,lts_start, plot=True)  #ponovo se pokreće detekcija za fine offset
+    FreqOffset=detect_frequency_offsets(rx_coarse,lts_start,fs1)  #ponovo se pokreće detekcija za fine offset
     FineOffset=FreqOffset[1]
-    NCO_fine=np.exp(-1j*2*np.pi*n*FineOffset/fs_base)
+    NCO_fine=np.exp(-1j*2*np.pi*n*FineOffset/fs1) #korekcija 
     rx_fine=rx_coarse*NCO_fine
     print(f"Fine CFO = {FineOffset:.3f} Hz")
 
@@ -207,30 +205,6 @@ def main():
     plt.grid(True)
     plt.tight_layout()
     plt.show()  
-
-    # --- Konstelacije ---
-    plt.figure(figsize=(12,4))
-
-    plt.subplot(1, 3, 1)
-    plt.plot(rx_signal.real, rx_signal.imag, 'o', markersize=2, alpha=0.6)
-    plt.title("Konstelacija prije korekcije")
-    plt.xlabel("Realni dio"); plt.ylabel("Imaginari dio")
-    plt.grid(True); plt.axis('equal')
-
-    plt.subplot(1, 3, 2)
-    plt.plot(rx_coarse.real, rx_coarse.imag, 'o', markersize=2, alpha=0.6)
-    plt.title("Nakon coarse CFO")
-    plt.xlabel("Realni dio"); plt.ylabel("Imaginari dio")
-    plt.grid(True); plt.axis('equal')
-
-    plt.subplot(1, 3, 3)
-    plt.plot(rx_fine.real, rx_fine.imag, 'o', markersize=2, alpha=0.6)
-    plt.title("Nakon fine CFO")
-    plt.xlabel("Realni dio"); plt.ylabel("Imaginari dio")
-    plt.grid(True); plt.axis('equal')
-
-    plt.tight_layout()
-    plt.show()
 
 
 if __name__ == "__main__":

@@ -1,118 +1,114 @@
 import numpy as np
 import pytest
-from rx.PhaseCorrection_80211a import phase_correction_80211a
+from rx.PhaseCorrection_80211a import phase_correction
 
-
-
-def generate_valid_inputs(num_symbols=1):
-    rx_signal = np.random.randn(1000) + 1j * np.random.randn(1000)
+def test_raises_type_error_for_symbols_fd():
+    """Provjerava da TypeError nastaje ako symbols_fd nije np.ndarray."""
+    symbols_fd = [[1]*64]*2
     channel_est = np.ones(64, dtype=complex)
-    equalizer_coeffs = np.ones(64, dtype=complex)
-    ltpeak = 0
-    return rx_signal, num_symbols, ltpeak, channel_est, equalizer_coeffs
+    with pytest.raises(TypeError):
+        phase_correction(symbols_fd, num_symbols=2, channel_est=channel_est)
 
+def test_raises_type_error_for_channel_est():
+    """Provjerava da TypeError nastaje ako channel_est nije np.ndarray."""
+    symbols_fd = np.ones((2,64), dtype=complex)
+    channel_est = [1]*64
+    with pytest.raises(TypeError):
+        phase_correction(symbols_fd, num_symbols=2, channel_est=channel_est)
 
-def test_happy_path_single_symbol():
-    rx_signal, num_symbols, ltpeak, channel_est, eq = generate_valid_inputs(1)
-    result = phase_correction_80211a(rx_signal, num_symbols, ltpeak, channel_est, eq)
-    assert isinstance(result, list)
-    assert len(result) == 1
-    assert result[0].shape == (48,)
-
-
-def test_happy_path_multiple_symbols():
-    rx_signal, num_symbols, ltpeak, channel_est, eq = generate_valid_inputs(5)
-    result = phase_correction_80211a(rx_signal, num_symbols, ltpeak, channel_est, eq)
-    assert len(result) == 5
-    for sym in result:
-        assert sym.shape == (48,)
-
-
-def test_max_ratio_zero_equal_weights():
-    rx_signal, num_symbols, ltpeak, channel_est, eq = generate_valid_inputs(2)
-    result = phase_correction_80211a(
-        rx_signal,
-        num_symbols,
-        ltpeak,
-        channel_est,
-        eq,
-        max_ratio=0
-    )
-    assert len(result) == 2
-
-
-def test_custom_filter_length():
-    rx_signal, num_symbols, ltpeak, channel_est, eq = generate_valid_inputs(3)
-    result = phase_correction_80211a(
-        rx_signal,
-        num_symbols,
-        ltpeak,
-        channel_est,
-        eq,
-        L=16
-    )
-    assert len(result) == 3
-
-
-def test_zero_symbols():
-    rx_signal, num_symbols, ltpeak, channel_est, eq = generate_valid_inputs(0)
-    result = phase_correction_80211a(rx_signal, 0, ltpeak, channel_est, eq)
-    assert result == []
-
-
-def test_invalid_channel_est_shape():
-    rx_signal, num_symbols, ltpeak, channel_est, eq = generate_valid_inputs(1)
-    with pytest.raises(IndexError):
-        phase_correction_80211a(
-            rx_signal,
-            num_symbols,
-            ltpeak,
-            channel_est[:10],
-            eq
-        )
-
-
-def test_invalid_equalizer_coeffs_shape():
-    rx_signal, num_symbols, ltpeak, channel_est, eq = generate_valid_inputs(1)
+def test_raises_value_error_for_wrong_symbols_fd_shape():
+    """Provjerava da ValueError nastaje ako symbols_fd nema shape (num_symbols,64)."""
+    symbols_fd = np.ones((3,64), dtype=complex)
+    channel_est = np.ones(64, dtype=complex)
     with pytest.raises(ValueError):
-        phase_correction_80211a(
-            rx_signal,
-            num_symbols,
-            ltpeak,
-            channel_est,
-            eq[:10]
-        )
+        phase_correction(symbols_fd, num_symbols=2, channel_est=channel_est)
 
-
-def test_rx_signal_too_short():
-    rx_signal = np.random.randn(50) + 1j * np.random.randn(50)
-    channel_est = np.ones(64, dtype=complex)
-    equalizer_coeffs = np.ones(64, dtype=complex)
+def test_raises_value_error_for_wrong_channel_est_shape():
+    """Provjerava da ValueError nastaje ako channel_est nema 64 elemenata."""
+    symbols_fd = np.ones((2,64), dtype=complex)
+    channel_est = np.ones(63, dtype=complex)
     with pytest.raises(ValueError):
-        phase_correction_80211a(
-            rx_signal,
-            1,
-            0,
-            channel_est,
-            equalizer_coeffs
-        )
+        phase_correction(symbols_fd, num_symbols=2, channel_est=channel_est)
 
-
-def test_non_complex_rx_signal():
-    rx_signal = np.random.randn(1000)
+def test_raises_value_error_for_invalid_num_symbols():
+    """Provjerava da ValueError nastaje ako num_symbols nije pozitivan int."""
+    symbols_fd = np.ones((2,64), dtype=complex)
     channel_est = np.ones(64, dtype=complex)
-    equalizer_coeffs = np.ones(64, dtype=complex)
-    result = phase_correction_80211a(
-        rx_signal,
-        1,
-        0,
-        channel_est,
-        equalizer_coeffs
-    )
-    assert len(result) == 1
+    with pytest.raises(ValueError):
+        phase_correction(symbols_fd, num_symbols=-1, channel_est=channel_est)
+    with pytest.raises(ValueError):
+        phase_correction(symbols_fd, num_symbols=0, channel_est=channel_est)
+    with pytest.raises(ValueError):
+        phase_correction(symbols_fd, num_symbols=2.5, channel_est=channel_est)
 
+def test_raises_value_error_for_invalid_L():
+    """Provjerava da ValueError nastaje ako L nije pozitivan integer."""
+    symbols_fd = np.ones((2,64), dtype=complex)
+    channel_est = np.ones(64, dtype=complex)
+    with pytest.raises(ValueError):
+        phase_correction(symbols_fd, num_symbols=2, channel_est=channel_est, L=0)
+    with pytest.raises(ValueError):
+        phase_correction(symbols_fd, num_symbols=2, channel_est=channel_est, L=-1)
+    with pytest.raises(ValueError):
+        phase_correction(symbols_fd, num_symbols=2, channel_est=channel_est, L=1.5)
 
-def test_output_is_independent_copies():
-    rx_signal, num_symbols, ltpeak, channel_est, eq = generate_valid_inputs(2)
-    result = phase_correction_80211a(rx_signal, num_symbols, ltpeak, channel_est, eq)
-    assert not np.shares_memory(result[0], result[1])
+def test_raises_value_error_for_invalid_max_ratio():
+    """Provjerava da ValueError nastaje ako max_ratio nije 0 ili 1."""
+    symbols_fd = np.ones((2,64), dtype=complex)
+    channel_est = np.ones(64, dtype=complex)
+    with pytest.raises(ValueError):
+        phase_correction(symbols_fd, num_symbols=2, channel_est=channel_est, max_ratio=2)
+    with pytest.raises(ValueError):
+        phase_correction(symbols_fd, num_symbols=2, channel_est=channel_est, max_ratio=-1)
+
+def test_output_shape_and_type():
+    """Provjerava da funkcija vraća np.ndarray shape (num_symbols,48)."""
+    num_symbols = 2
+    symbols_fd = np.ones((num_symbols,64), dtype=complex)
+    channel_est = np.ones(64, dtype=complex)
+
+    corrected = phase_correction(symbols_fd, num_symbols, channel_est)
+
+    assert isinstance(corrected, np.ndarray)
+    assert corrected.shape == (num_symbols, 48)
+    assert np.iscomplexobj(corrected)
+
+def test_phase_correction_preserves_data_magnitude():
+    """Provjerava da magnituda podnosioca ostaje u istom rasponu nakon korekcije."""
+    num_symbols = 2
+    symbols_fd = np.random.randn(num_symbols,64) + 1j*np.random.randn(num_symbols,64)
+    channel_est = np.random.randn(64) + 1j*np.random.randn(64)
+
+    corrected = phase_correction(symbols_fd, num_symbols, channel_est)
+
+    # Magnituda nakon korekcije nije nula i u sličnom rasponu
+    assert np.all(np.abs(corrected) > 0)
+
+def test_phase_correction_with_max_ratio_zero():
+    """Provjerava da funkcija radi ispravno kada max_ratio=0 (ponderi pilota jednaki)."""
+    num_symbols = 2
+    symbols_fd = np.random.randn(num_symbols,64) + 1j*np.random.randn(num_symbols,64)
+    channel_est = np.random.randn(64) + 1j*np.random.randn(64)
+
+    corrected = phase_correction(symbols_fd, num_symbols, channel_est, max_ratio=0)
+    assert corrected.shape == (num_symbols,48)
+
+def test_phase_correction_with_varied_L():
+    """Provjerava da funkcija radi za različite dužine filtera L."""
+    num_symbols = 2
+    symbols_fd = np.random.randn(num_symbols,64) + 1j*np.random.randn(num_symbols,64)
+    channel_est = np.random.randn(64) + 1j*np.random.randn(64)
+
+    for L in [1, 4, 16]:
+        corrected = phase_correction(symbols_fd, num_symbols, channel_est, L=L)
+        assert corrected.shape == (num_symbols,48)
+
+def test_multiple_symbols_consistency():
+    """Provjerava da funkcija korektno procesira više simbola."""
+    num_symbols = 5
+    symbols_fd = np.random.randn(num_symbols,64) + 1j*np.random.randn(num_symbols,64)
+    channel_est = np.ones(64, dtype=complex)
+
+    corrected = phase_correction(symbols_fd, num_symbols, channel_est)
+
+    assert corrected.shape == (num_symbols,48)

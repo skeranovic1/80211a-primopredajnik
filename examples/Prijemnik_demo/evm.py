@@ -1,243 +1,182 @@
-import os
-import sys
 import numpy as np
 import matplotlib.pyplot as plt
-
+import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
-from rx.pretprocessing import iq_preprocessing
-from rx.detection import packet_detector
-from rx.cfo import detect_frequency_offsets
-from rx.long_symbol_correlator import long_symbol_correlator
-from rx.estimacija_kanala import channel_estimate_and_equalizer
-from rx.PhaseCorrection_80211a import phase_correction_80211a
-
-from tx.long_sequence import get_long_training_sequence
-from rx.prijemnik import run_rx
 from tx.OFDM_TX_802_11 import Transmitter80211a
-
 from channel.Channel_Model import Channel_Model
 from channel.channel_settings import ChannelSettings
 from channel.channel_mode import ChannelMode
+from rx.pretprocessing import iq_preprocessing
+from rx.detection import packet_detector
+from rx.cfo import detect_frequency_offsets, gruba_vremenska_sinhronizacija
+from rx.estimacija_kanala import channel_estimate_and_equalizer
+from rx.PhaseCorrection_80211a import phase_correction_80211a
+from rx.rastavljanje import remove_cp
+from scipy.signal import freqz
 
-# ---------------- helperi ----------------
-def apply_cfo(x, cfo_hz, fs):
-    n = np.arange(len(x))
-    return x * np.exp(1j * 2 * np.pi * cfo_hz * n / fs)
+num_ofdm_symbols=120
+up_factor=2
+fs_base=20e6
+fs=fs_base*up_factor
 
-def apply_cfo_correction(x, cfo_hz, fs):
-    n = np.arange(len(x))
-    return x * np.exp(-1j * 2 * np.pi * cfo_hz * n / fs)
-
-def add_awgn(x, snr_db, seed=0):
-    rng = np.random.default_rng(seed)
-    sig_pow = np.mean(np.abs(x) ** 2)
-    snr_lin = 10 ** (snr_db / 10)
-    noise_pow = sig_pow / snr_lin
-    w = (rng.normal(0, np.sqrt(noise_pow / 2), size=x.shape) +
-         1j * rng.normal(0, np.sqrt(noise_pow / 2), size=x.shape))
-    return x + w
-
-def extract_equalized_data_symbols(rx_td, lts_start, eq_coeffs, num_symbols):
-    """
-    Iz rx signala u TD izvuče data simbole (48) nakon FFT+EQ,
-    bez phase correction (CPE/slope) -> idealno da CFO vidiš kao rotaciju.
-    """
-    CP = 16
-    SYM = 80
-
-    data_indices = np.array([
-        6,7,8,9,10,
-        12,13,14,15,16,17,18,19,20,21,22,23,24,
-        26,27,28,29,30,31,32,33,34,35,36,37,39,
-        40,41,42,43,44,45,46,47,48,49,50,51,
-        53,54,55,56,57
-    ], dtype=int)
-
-    payload_start = lts_start + 2 * 64
-
-    out = []
-    for i in range(num_symbols):
-        start = payload_start + i * SYM + CP
-        stop = start + 64
-        if stop > len(rx_td):
-            break
-
-        sym_td = rx_td[start:stop]
-        sym_fd = (1/64) * np.fft.fft(sym_td)
-        sym_eq = sym_fd * eq_coeffs
-        out.append(sym_eq[data_indices])
-
-    if len(out) == 0:
-        return np.zeros(0, dtype=complex)
-
-    return np.concatenate(out)
-
-# ============================================================
-# 1. Overall Simulation Setup
-# ============================================================
-
- # ------------------------------------------------------------
-    # A) TX
-    # ------------------------------------------------------------
-num_payload_symbols = 30
-bits_per_symbol = 2  # QPSK
-
-tx_obj = Transmitter80211a(
-        num_ofdm_symbols=num_payload_symbols,
-        bits_per_symbol=bits_per_symbol,
-        up_factor=2,
-        seed=13,
+#Predajnik
+tx=Transmitter80211a(
+        num_ofdm_symbols=num_ofdm_symbols,
+        bits_per_symbol=2,   #QPSK
         step=1,
+        up_factor=up_factor,
+        seed=3,
         plot=False
-    )
+)
+tx_signal,_, pocetni_simboli= tx.generate_frame()
 
-tx_40mhz, tx_symbols = tx_obj.generate_frame()
-fs40 = 40e6
-
-    # ------------------------------------------------------------
-    # B) Kanal + CFO + šum
-    # ------------------------------------------------------------
-settings = ChannelSettings(
-        sample_rate=fs40,
-        number_of_taps=2,
+#Kanal
+settings=ChannelSettings(
+        sample_rate=fs,
+        number_of_taps=40,
         delay_spread=10e-9,
         snr_db=10
-    )
+)
+mode=ChannelMode(
+        multipath=1,
+        thermal_noise=1
+)
+channel=Channel_Model(settings, mode)
+rx_signal, fir_taps=channel.apply(tx_signal)
 
-mode_awgn = ChannelMode(multipath=0, thermal_noise=1)
-channel_awgn = Channel_Model(settings, mode_awgn)
-rx_40mhz,FIR_Taps = channel_awgn.apply(tx_40mhz)
-rx_40mhz = np.asarray(rx_40mhz).flatten()
+#Prijemnik - pretprocesing, detekcija i korekcija
+rx_signal, fs1=iq_preprocessing(
+        rx_signal=rx_signal,
+        tx_signal=tx_signal,
+        fs=fs
+)
 
-true_cfo_hz = 2500.0
-rx_40mhz = apply_cfo(rx_40mhz, true_cfo_hz, fs40)
+_, _, start_lts, _ = packet_detector(rx_signal)
+print("Kraj detektovane short training sekvence:", start_lts)
+print(f"Očekivani kraj STS-a (sample): {160}")
+print(f"Greska pri detekciji STS-a: {160-start_lts} uzoraka")
+    
+#Symbol timing
+end_lts = start_lts + 160  #32 CP + 2x64 korisna
+rx_lts = rx_signal[start_lts:end_lts]
+pravi_pocetak_lts, _, _ = gruba_vremenska_sinhronizacija(rx_lts, search_win=32)
+#ovdje pravi pocetak LTS-a znaci precizno odredivanje pozicije (ima male vrijednosti, ~10 uzoraka), 
+# jer se posmatra samo LTS dio primljenog signala. Slijedi postavljanje na globalne pozicije
 
-    # ------------------------------------------------------------
-    # C) RUN RX chain
-    # ------------------------------------------------------------
-res = run_rx(
-        rx_40mhz=rx_40mhz,
-        tx_40mhz=tx_40mhz,
-        num_symbols_req=num_payload_symbols,
-        fs_in=fs40,
-        plot=False
-    )
+#FFT start u globalnim indeksima
+lts_start = start_lts + pravi_pocetak_lts 
+ideal_lts_start = 160+32 #pozicioniranje na pocetak korisnog dijela LTS-a, poslije CP 
+timing_error = ideal_lts_start  - lts_start
+print("Detektovani pocetak korisnog dijela LTS-a:", lts_start)
+print("Idealni pocetak korisnog dijela LTS-a:", ideal_lts_start)
+print(f"Symbol timing greška: {timing_error} uzoraka ({timing_error/fs1*1e6:.2f} µs)")
 
-fs = float(res["fs"])  # 20 MHz nakon decimacije
-lts_start = int(res["lts_start"])
-eq_coeffs = res["equalizer_coeffs"]
+#Detekcija frekvencijskih ofseta
+#Coarse/gruba korekcija
+FreqOffset=detect_frequency_offsets(rx_signal,lts_start,fs1) #LTS start je pocetak korisnog dijela, bez CP
+CoarseOffset=FreqOffset[0]
+print(f"Coarse CFO = {CoarseOffset:.2f} Hz")
+n=np.arange(len(rx_signal))
+NCO_coarse=np.exp(-1j*2*np.pi*n*CoarseOffset/fs1) #korekcija
+rx_coarse=rx_signal*NCO_coarse
 
-cfo_coarse = float(res.get("cfo_coarse_hz", 0.0))
-cfo_fine = float(res.get("cfo_fine_hz", 0.0))
-    # BITNO: ako ti fine u funkciji nije residual nego opet TOTAL,
-    # onda ovdje uzmi samo residual nakon coarse:
-cfo_fine_res = float(res.get("cfo_fine_res_hz", cfo_fine - cfo_coarse))
+# Fine/precizna korekcija
+FreqOffset=detect_frequency_offsets(rx_coarse,lts_start,fs1)  #ponovo se pokreće detekcija za fine offset
+FineOffset=FreqOffset[1]
+NCO_fine=np.exp(-1j*2*np.pi*n*FineOffset/fs1) #korekcija 
+rx_fine=rx_coarse*NCO_fine
+print(f"Fine CFO = {FineOffset:.3f} Hz")
 
-cfo_total_est = cfo_coarse + cfo_fine_res
+#Skidanje CP-a 
+NFFT = 64          
+NCP = 16          
+NSYM = NFFT + NCP  #80 uzoraka po OFDM simbolu
+data_start = lts_start + 2 * 64 #pocetak podataka nakon LTS-a, lts_start + duzina dva LTS simbola
+print("Pocetak podataka (sample):", data_start)
+symbols_fd = remove_cp(rx_fine,data_start,num_ofdm_symbols, NSYM, NFFT, NCP)
 
+#Estimacija kanala i koeficijenti equalizera
+samo_lts=rx_fine[lts_start : data_start] #koristi se samo korisni dio LTS-a, ovaj put poslije korekcije
+channel_est, eq_coefficient = channel_estimate_and_equalizer(samo_lts)
+ekvalizirani_simboli= symbols_fd * eq_coefficient #korekcija
+H = np.fft.fft(fir_taps, NFFT) #za impulsni odziv 
 
+#Fazna korekcija
+corrected_symbols = phase_correction_80211a(ekvalizirani_simboli,num_ofdm_symbols,channel_est)
+phase_before = np.unwrap(np.angle(ekvalizirani_simboli)) #Faza prije fazne korekcije za poredenje
+phase_after = np.unwrap(np.angle(corrected_symbols))  #Faza poslije fazne korekcije za poredenje
 
-    # ------------------------------------------------------------
-    # D) CFO KONSTELACIJE (FFT+EQ, bez phase correction)
-    # ------------------------------------------------------------
-rx_20, _ = iq_preprocessing(rx_40mhz, tx_40mhz, fs=fs40)
-
-    # 1) bez CFO korekcije
-rx_td_0 = rx_20
-
-    # 2) nakon coarse CFO korekcije
-rx_td_1 = apply_cfo_correction(rx_20, cfo_coarse, fs)
-
-    # 3) nakon coarse + fine residual CFO korekcije
-rx_td_2 = apply_cfo_correction(rx_td_1, cfo_fine_res, fs)
-
-K = 10  # broj OFDM simbola za plot CFO-konstelacije
-s0 = extract_equalized_data_symbols(rx_td_0, lts_start, eq_coeffs, K)
-s1 = extract_equalized_data_symbols(rx_td_1, lts_start, eq_coeffs, K)
-s2 = extract_equalized_data_symbols(rx_td_2, lts_start, eq_coeffs, K)
-
-    # ------------------------------------------------------------
-    # E) Standardno: RX nakon eq + phase correction (tvoje corrected_symbols)
-    # ------------------------------------------------------------
-corrected = res["corrected_symbols"]
-Corrected_Symbols = np.concatenate(corrected)
-TX_Symbol_Stream = tx_symbols[:len(Corrected_Symbols)]
-
-mask = np.abs(Corrected_Symbols) > 1e-6
-Corrected_Symbols = Corrected_Symbols[mask]
-TX_Symbol_Stream = TX_Symbol_Stream[mask]
-
-# ============================================================
-# 5. Performance Evaluation (EVM)
-# ============================================================
-
-ErrorVectors = TX_Symbol_Stream[:len(Corrected_Symbols)] - Corrected_Symbols
+#Performance Evaluation (EVM)
+corrected_symbols=corrected_symbols.flatten() #jer je corrected_symbols kao matrica, ovo ga postavlja kao array
+ErrorVectors = pocetni_simboli-corrected_symbols
 Average_ErrorVectorPower = np.mean(np.abs(ErrorVectors) ** 2)
 
 EVM_dB = 10 * np.log10(Average_ErrorVectorPower)
 print(f"EVM = {EVM_dB:.2f} dB")
 
-# -------------------------------
 # EVM vs Time
-# -------------------------------
-NumberOf_OFDMSymbols=num_payload_symbols
-Error_Time = np.zeros(num_payload_symbols)
+Error_Time = np.zeros(num_ofdm_symbols)
 
-for i in range(num_payload_symbols):
+for i in range(num_ofdm_symbols):
     s = i * 48
     e = s + 48
-    ev = TX_Symbol_Stream[s:e] - Corrected_Symbols[s:e]
+    ev = tx_signal[s:e] - corrected_symbols[s:e]
     Error_Time[i] = np.mean(np.abs(ev) ** 2)
 
 EVM_Time_dB = 10 * np.log10(Error_Time)
 
-# -------------------------------
 # EVM vs Frequency
-# -------------------------------
-Error_Frequency = np.zeros(17)
+Error_Frequency = np.zeros(48)
 
-for i in range(num_payload_symbols):
-    s = i * 17
-    e = s + 17
-    ev = TX_Symbol_Stream[s:e] - Corrected_Symbols[s:e]
-    Error_Frequency += np.abs(ev) ** 2 / num_payload_symbols
+for i in range(num_ofdm_symbols):
+    s = i * 48
+    e = s + 48
+    ev = tx_signal[s:e] - corrected_symbols[s:e]
+    Error_Frequency += np.abs(ev) ** 2 / num_ofdm_symbols
 
 EVM_Frequency_dB = 10 * np.log10(Error_Frequency)
 
-# ============================================================
-# Plots
-# ============================================================
+f = np.arange(-0.5, 0.501, 0.001) 
+Response = np.zeros(len(f), dtype=complex)
+n = np.arange(len(fir_taps))
 
-plt.figure(figsize=(10, 8))
+for d in range(len(f)):
+    E = np.exp(1j * 2 * np.pi * n * f[d])
+    Response[d] = np.dot(fir_taps, np.conj(E))
+
+MagResponse = 20 * np.log10(np.abs(Response) + 1e-12)
+MagResponse_norm = MagResponse - np.max(MagResponse)
+
+#Plot rjesenja
+plt.figure(figsize=(12, 10))
 
 plt.subplot(2, 2, 1)
 plt.plot(EVM_Frequency_dB, 'k.')
-plt.title("EVM vs Frequency")
+plt.title("EVM Versus Frequency")
+plt.xlabel("Tones")
 plt.ylabel("dB")
-plt.grid()
+plt.grid(True)
 
 plt.subplot(2, 2, 2)
-plt.plot(EVM_Time_dB, 'k')
-plt.title("EVM vs Time")
-plt.xlabel("OFDM Symbols")
+plt.plot(range(1, num_ofdm_symbols + 1), EVM_Time_dB, 'k')
+plt.title("EVM Versus Time")
+plt.xlabel("Symbols")
 plt.ylabel("dB")
-plt.grid()
+plt.grid(True)
 
 plt.subplot(2, 2, 3)
-plt.stem(np.abs(FIR_Taps))
-plt.title("FIR Taps")
-plt.grid()
+plt.plot(f, MagResponse_norm, 'k')
+plt.title("Magnitude Response of Multipath Filter")
+plt.xlabel("Frequency")
+plt.ylabel("dB")
+plt.grid(True)
 
 plt.subplot(2, 2, 4)
-plt.plot(
-    np.real(Corrected_Symbols),
-    np.imag(Corrected_Symbols),
-    'k.',
-    markersize=3
-)
-plt.title("Constellation")
-plt.axis("equal")
-plt.grid()
+plt.stem(np.abs(fir_taps), linefmt='k-', markerfmt='ko', basefmt='k-')
+plt.title("FIR Taps")
+plt.xlabel("Symbols")
+plt.grid(True)
 
 plt.tight_layout()
 plt.show()
+

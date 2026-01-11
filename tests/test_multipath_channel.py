@@ -2,29 +2,25 @@ import numpy as np
 from channel.Multipath import GetMultipathFilter
 import pytest
 
-# Basic parameter set used across tests
-FS = 20e6       # 20 MHz sampling rate
-TRMS = 50e-9    # 50 ns RMS delay spread
-N = 16          # number of taps
-
+# Basic parameter koristeni u testu
+FS = 20e6       # 20 MHz 
+TRMS = 50e-9    # 50 ns 
+N = 16          # broj tapova
 
 def test_multipath_length():
     """Filter must have exactly N taps."""
     h = GetMultipathFilter(FS, TRMS, N)
     assert len(h) == N
 
-
 def test_multipath_complex_dtype():
     """Filter taps must be complex-valued."""
     h = GetMultipathFilter(FS, TRMS, N)
     assert np.iscomplexobj(h)
 
-
 def test_multipath_not_all_zero():
     """Generated filter must not be all zeros."""
     h = GetMultipathFilter(FS, TRMS, N)
     assert np.any(np.abs(h) > 0)
-
 
 def test_multipath_power_decay_on_average():
     """
@@ -39,7 +35,6 @@ def test_multipath_power_decay_on_average():
 
     assert first_half_mean > last_half_mean
 
-
 def test_multipath_zero_mean_statistics():
     """
     Real and imaginary parts should be approximately zero-mean
@@ -52,7 +47,6 @@ def test_multipath_zero_mean_statistics():
 
     assert abs(mean_real) < 0.5
     assert abs(mean_imag) < 0.5
-
 
 def test_multipath_delay_spread_effect():
     """

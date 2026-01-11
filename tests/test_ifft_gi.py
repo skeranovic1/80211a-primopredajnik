@@ -1,8 +1,6 @@
 import numpy as np
 from tx.ifft_ofdm_symbol import IFFT_GI
 import pytest
-from tx.OFDM_mapper import Mapper_OFDM 
-from tx.utilities import bit_sequence
 
 def test_ifft_gi_output_length_single_symbol():
     """

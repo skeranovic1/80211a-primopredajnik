@@ -66,9 +66,9 @@ if __name__ == "__main__":
     np.random.seed(42)
 
     # QPSK
-    BitsPerSymbol = 1
-    n_bits = 200
-    snr_db = 10
+    BitsPerSymbol = 2
+    n_bits = 2000
+    snr_db = 5
 
     bits = np.random.randint(0, 2, n_bits)
 

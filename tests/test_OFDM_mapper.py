@@ -3,8 +3,6 @@ import pytest
 from tx.OFDM_mapper import Mapper_OFDM  
 import matplotlib
 matplotlib.use('Agg')  
-import matplotlib.pyplot as plt
-
 
 def test_invalid_bits():
     """Provjerava bacanje ValueError za bitove van dozvoljenog opsega {0,1}."""
@@ -23,13 +21,11 @@ def test_invalid_bits():
     with pytest.raises(ValueError):
         Mapper_OFDM(bits, 2)
 
-
 def test_non_divisible_length():
     """Provjerava da se nepotpuni bitovi na kraju ulaza ignorišu."""
     bits = np.array([0, 1, 1])  # dužina 3, BitsPerSymbol = 2
     output = Mapper_OFDM(bits, 2)
     assert len(output) == 1
-
 
 def test_empty_input():
     """Provjerava da prazan ulazni niz daje prazan izlaz."""
@@ -37,20 +33,17 @@ def test_empty_input():
     output = Mapper_OFDM(bits, 1)
     assert len(output) == 0
 
-
 def test_large_input():
     """Provjerava ispravno mapiranje velikog broja ulaznih bitova."""
     bits = np.random.randint(0, 2, size=10**6)
     output = Mapper_OFDM(bits, 2)
     assert len(output) == 10**6 // 2
 
-
 def test_invalid_type_input():
     """Provjerava bacanje IndexError ako bitovi nisu integer tipa."""
     bits = np.array([0.5, 1.0, 0])
     with pytest.raises(IndexError):
         Mapper_OFDM(bits, 1)
-
 
 def test_qpsk_partial_bits():
     """Provjerava QPSK mapiranje uz ignorisanje zadnjeg nepotpunog bita."""
@@ -60,14 +53,12 @@ def test_qpsk_partial_bits():
     output = Mapper_OFDM(bits, 2)
     np.testing.assert_array_almost_equal(output, expected)
 
-
 def test_bpsk_mapping():
     """Provjerava ispravnost BPSK mapiranja."""
     bits = np.array([0, 1, 1, 0])
     expected = np.array([-1, 1, 1, -1], dtype=complex)
     output = Mapper_OFDM(bits, 1)
     np.testing.assert_array_almost_equal(output, expected)
-
 
 def test_qpsk_mapping():
     """Provjerava ispravnost QPSK mapiranja."""
@@ -82,7 +73,6 @@ def test_qpsk_mapping():
     output = Mapper_OFDM(bits, 2)
     np.testing.assert_array_almost_equal(output, expected)
 
-
 def test_16qam_mapping():
     """Provjerava ispravnost 16-QAM mapiranja."""
     bits = np.array([0,0,0,0, 0,1,1,0, 1,0,1,1, 1,1,1,1])
@@ -95,7 +85,6 @@ def test_16qam_mapping():
     ], dtype=complex)
     output = Mapper_OFDM(bits, 4)
     np.testing.assert_array_almost_equal(output, expected)
-
 
 def test_64qam_mapping():
     """Provjerava ispravnost 64-QAM mapiranja."""
@@ -112,7 +101,6 @@ def test_64qam_mapping():
     output = Mapper_OFDM(bits, 6)
     np.testing.assert_array_almost_equal(output, expected)
 
-
 def test_output_length():
     """Provjerava dužinu izlaznog niza za različite modulacije."""
     bits = np.random.randint(0, 2, 24)
@@ -121,13 +109,11 @@ def test_output_length():
     assert len(Mapper_OFDM(bits, 4)) == 6
     assert len(Mapper_OFDM(bits, 6)) == 4
 
-
 def test_plot_branch_executes():
     """Provjerava da se plot=True grana izvršava bez greške."""
     bits = np.array([0, 1, 1, 0])
     output = Mapper_OFDM(bits, BitsPerSymbol=2, plot=True)
     assert isinstance(output, np.ndarray)
-
 
 def test_invalid_bits_small_array():
     """Provjerava validaciju bitova na malim ulaznim nizovima."""
@@ -139,13 +125,11 @@ def test_invalid_bits_small_array():
     with pytest.raises(ValueError):
         Mapper_OFDM(bits, 1)
 
-
 def test_invalid_bits_large_array_wrap():
     """Provjerava validaciju bitova na većim ulaznim nizovima."""
     bits = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
     with pytest.raises(ValueError):
         Mapper_OFDM(bits, 1)
-
 
 def test_bitsper_symbol_invalid():
     """Provjerava bacanje ValueError za nelegalan BitsPerSymbol."""
@@ -153,13 +137,11 @@ def test_bitsper_symbol_invalid():
     with pytest.raises(ValueError):
         Mapper_OFDM(bits, 3)
 
-
 def test_number_of_symbols_zero():
     """Provjerava slučaj kada nema dovoljno bitova za jedan simbol."""
     bits = np.array([0, 1])
     output = Mapper_OFDM(bits, 4)
     assert len(output) == 0
-
 
 def test_non_integer_input_type():
     """Provjerava bacanje greške za ne-integer tip ulaznih bitova."""
@@ -167,13 +149,11 @@ def test_non_integer_input_type():
     with pytest.raises(IndexError):
         Mapper_OFDM(bits, 1)
 
-
 def test_partial_symbols_16qam():
     """Provjerava ignorisanje nepotpunog 16-QAM simbola."""
     bits = np.array([0,0,0,0, 1,1,1])
     output = Mapper_OFDM(bits, 4)
     assert len(output) == 1
-
 
 def test_partial_symbols_64qam():
     """Provjerava ignorisanje nepotpunog 64-QAM simbola."""

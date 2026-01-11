@@ -37,16 +37,16 @@ class Transmitter80211a:
         bits=bit_sequence(self.num_ofdm_symbols, self.bits_per_symbol, self.seed)
         symbols=Mapper_OFDM(bits, self.bits_per_symbol, plot=self.plot)
         payload=IFFT_GI(symbols, plot=self.plot)
-        return payload, symbols
+        return payload, bits, symbols
     
     def generate_frame(self):
         """Generiše kompletan OFDM paket sa training sekvencama i upsamplingom"""
         sts, lts=self.generate_training_sequences()
         sts=sts/64
         lts=lts/64
-        payload, symbols=self.generate_payload()
+        payload, bits, symbols =self.generate_payload()
         packet_20MHz=np.concatenate((sts, lts, payload))
         sample_output, _ =half_band_upsample(packet_20MHz, up_factor=self.up_factor, N=31, plot=self.plot)
-        return sample_output, symbols
+        return sample_output, bits, symbols
     
 

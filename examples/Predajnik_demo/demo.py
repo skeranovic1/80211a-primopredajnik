@@ -26,7 +26,7 @@ def demo():
         plot=False
     )
 
-    signal, _ = tx.generate_frame()
+    signal, _ , _= tx.generate_frame()
     fs_base=20e6 
     fs=fs_base*2   # upsamplirani rate
     t=np.arange(len(signal))/fs   #vremenska osa u sekundama za plot

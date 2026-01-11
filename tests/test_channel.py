@@ -3,8 +3,6 @@ import numpy as np
 from channel.channel_mode import ChannelMode
 from channel.channel_settings import ChannelSettings
 from channel.Channel_Model import Channel_Model
-from channel.Multipath import GetMultipathFilter
-from channel.AWGN import Generate_AWGN
 
 # Testovi za ChannelMode
 
