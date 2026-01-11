@@ -37,6 +37,12 @@ def phase_correction(symbols_fd, num_symbols, channel_est, L=8, max_ratio=1):
         Ako max_ratio nije 0 ili 1
     """
     #Provjera ulaza
+    if not isinstance(num_symbols, int) or num_symbols <= 0:
+        raise ValueError("num_symbols mora biti pozitivan integer.")
+    if not isinstance(L, int) or L <= 0:
+        raise ValueError("L mora biti pozitivan integer.")
+    if max_ratio not in (0, 1):
+        raise ValueError("max_ratio mora biti 0 ili 1.")
     if not isinstance(symbols_fd, np.ndarray):
         raise TypeError("symbols_fd mora biti numpy.ndarray tipa.")
     if not isinstance(channel_est, np.ndarray):
@@ -45,13 +51,7 @@ def phase_correction(symbols_fd, num_symbols, channel_est, L=8, max_ratio=1):
         raise ValueError(f"symbols_fd mora imati shape ({num_symbols}, 64).")
     if channel_est.shape != (64,):
         raise ValueError("channel_est mora imati shape (64,).")
-    if not isinstance(num_symbols, int) or num_symbols <= 0:
-        raise ValueError("num_symbols mora biti pozitivan integer.")
-    if not isinstance(L, int) or L <= 0:
-        raise ValueError("L mora biti pozitivan integer.")
-    if max_ratio not in (0, 1):
-        raise ValueError("max_ratio mora biti 0 ili 1.")
-    
+        
     #Glavna funkcionalnost
     idx_pilots = np.array([11, 25, 38, 52])
     pilot_magnitudes = np.abs(channel_est[idx_pilots])

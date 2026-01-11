@@ -112,3 +112,15 @@ def test_multiple_symbols_consistency():
     corrected = phase_correction(symbols_fd, num_symbols, channel_est)
 
     assert corrected.shape == (num_symbols,48)
+
+def test_phase_correction_invalid_num_symbols_raises():
+    """Provjerava da funkcija baca ValueError kada je parametar 'num_symbols' nevažeći."""
+    symbols_fd = np.zeros((1, 64), dtype=complex)
+    channel_est = np.ones(64, dtype=complex)
+
+    with pytest.raises(ValueError):
+        phase_correction(symbols_fd, 0, channel_est)
+    with pytest.raises(ValueError):
+        phase_correction(symbols_fd, -5, channel_est)
+    with pytest.raises(ValueError):
+        phase_correction(symbols_fd, 1.5, channel_est)

@@ -32,13 +32,15 @@ def remove_cp(rx, start, num_symbols, NSYM, NFFT, NCP):
     if not isinstance(rx, (np.ndarray, list, tuple)):
         raise TypeError("rx mora biti array-like (np.ndarray, list ili tuple).")
     rx = np.asarray(rx)
-    
+        
     for name, val in zip(["num_symbols", "NSYM", "NCP", "NFFT"],[num_symbols, NSYM, NCP, NFFT]):
         if not isinstance(val, int):
             raise TypeError(f"{name} mora biti int tipa.")
         if val < 0:
             raise ValueError(f"{name} ne smije biti negativan.")
     
+    if NCP + NFFT > NSYM:
+        raise ValueError("NCP + NFFT ne smije biti veće od NSYM")
     #Provjera da li ima dovoljno uzoraka
     required_len = start + num_symbols * NSYM
     if required_len > len(rx):
@@ -53,7 +55,7 @@ def remove_cp(rx, start, num_symbols, NSYM, NFFT, NCP):
         sym_cp_removed_end = sym_cp_removed_start + NFFT
         
         sym_td = rx[sym_cp_removed_start : sym_cp_removed_end]  #skidanje CP-a
-        sym_fd = np.fft.fft(sym_td)  #FFT
+        sym_fd = np.fft.fft(sym_td, NFFT)  #FFT
         symbols_fd.append(sym_fd) #Dodavanje na izlaznu varijablu 
 
     return np.array(symbols_fd)

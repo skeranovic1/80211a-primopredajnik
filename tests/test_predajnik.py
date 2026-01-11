@@ -143,13 +143,8 @@ def test_generate_frame(mock_seq, mock_payload, mock_upsample):
         np.array([1+1j, -1-1j], dtype=complex)
     )
 
-    # Mock upsampling
     mock_upsample.return_value = (np.array([0.1,0.2,0.3], dtype=float), None)
-
-    # Pokretanje funkcije
     sample_output, bits, symbols = tx.generate_frame()
-
-    # Provjera izlaza
     np.testing.assert_array_equal(sample_output, np.array([0.1,0.2,0.3]))
     np.testing.assert_array_equal(bits, np.array([0,1]))
     np.testing.assert_array_equal(symbols, np.array([1+1j, -1-1j]))
@@ -159,13 +154,10 @@ def test_generate_frame(mock_seq, mock_payload, mock_upsample):
     mock_payload.assert_called_once()
     mock_upsample.assert_called_once()  # samo provjerava da je pozvan jednom
 
-    # Dodatna provjera argumenata sa tolerancijom
-    # Dobivanje stvarnog arguma iz poziva mocka
     actual_call_args = mock_upsample.call_args[0][0]  # prvi argument
     expected_input = np.array([1/64, 2/64, 3/64, 4/64, 5, 6], dtype=float)
     np.testing.assert_allclose(actual_call_args, expected_input, rtol=1e-12, atol=1e-12)
 
-    # Provjera ostalih keyword argumenata
     actual_kwargs = mock_upsample.call_args[1]
     assert actual_kwargs["up_factor"] == 2
     assert actual_kwargs["N"] == 31

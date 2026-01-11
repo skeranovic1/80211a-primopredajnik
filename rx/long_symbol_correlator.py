@@ -4,7 +4,6 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
-
 def long_symbol_correlator(long_training_symbol,rx_waveform, falling_edge_position):
     """
     Detektuje poziciju Long Training Symbol (LTS) u primljenom OFDM signalu koristeći

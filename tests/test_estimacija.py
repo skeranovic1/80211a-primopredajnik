@@ -53,3 +53,10 @@ def test_negative_lts_start_raises_value_error():
     lts_signal = np.ones(200, dtype=complex)
     with pytest.raises(ValueError):
         channel_estimate_and_equalizer(lts_signal, lts_start=-1)
+
+def test_channel_estimate_and_equalizer_raises_type_error_for_non_ndarray():
+    """Provjerava da funkcija baca TypeError ako lts_signal nije np.ndarray."""
+    lts_signal = [1+1j] * 128
+
+    with pytest.raises(TypeError, match="lts_signal mora biti np.ndarray"):
+        channel_estimate_and_equalizer(lts_signal)

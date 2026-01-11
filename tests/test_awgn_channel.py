@@ -95,7 +95,6 @@ def test_awgn_empty_input():
     [1, 2, 3],      # lista umjesto numpy arraya
     {"a": 1},       # dict
 ])
-
 def test_awgn_invalid_input_type(bad_input):
     """
     Pogrešan tip ulaza (nije numpy array) treba izazvati grešku.

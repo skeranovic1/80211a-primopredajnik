@@ -1,9 +1,4 @@
 import numpy as np
-from rx.detection import packet_detector
-import matplotlib.pyplot as plt
-
-import numpy as np
-from rx.detection import packet_detector
 import matplotlib.pyplot as plt
 
 def gruba_vremenska_sinhronizacija(rx_lts, search_win=32):
@@ -107,7 +102,6 @@ def detect_frequency_offsets(RX_Input, lts_start, fs, plot=False):
 
     if not np.iscomplexobj(RX_Input):
         raise TypeError("'RX_Input' mora sadržavati kompleksne uzorke")
-
 
     if not isinstance(fs, (int, float)) or fs <= 0:
         raise ValueError(f"'fs' mora biti pozitivan broj, a dobiveno je {fs}")
