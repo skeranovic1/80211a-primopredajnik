@@ -54,7 +54,7 @@ def testiranje():
         plot=False
     )
 
-    signal_tx, _ = tx.generate_frame()
+    signal_tx, _, _ = tx.generate_frame()
     signal_tx = np.asarray(signal_tx).flatten()
 
     fs_base = 20e6
@@ -113,7 +113,6 @@ def testiranje():
     ax2.legend()
     plt.tight_layout()
     plt.show()
-
 
 if __name__ == "__main__":
     testiranje()
