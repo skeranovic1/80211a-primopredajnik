@@ -44,7 +44,7 @@ def Mapper_OFDM(InputBits, BitsPerSymbol, plot=False):
     if InputBits.size == 0:
         return np.zeros(0, dtype=complex)
 
-    #Float → uvijek error (test_invalid_type_input)
+    #Float - uvijek error (test_invalid_type_input)
     if not np.issubdtype(InputBits.dtype, np.integer):
         raise IndexError("Biti  moraju biti integeri.")
  

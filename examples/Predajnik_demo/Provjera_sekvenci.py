@@ -35,6 +35,5 @@ def plot_sequences(step=1):
     plt.tight_layout()
     plt.show()
 
-
 if __name__ == "__main__":
     plot_sequences(step=1)

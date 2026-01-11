@@ -105,8 +105,8 @@ class OFDMGUI:
         sts, lts = tx.generate_training_sequences()
         sts /= 64
         lts /= 64
-        payload, _ = tx.generate_payload()
-        final_frame, _ = tx.generate_frame()
+        payload, _, _ = tx.generate_payload()
+        final_frame, _, _ = tx.generate_frame()
 
         option = self.plot_option.get()
 

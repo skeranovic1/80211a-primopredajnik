@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from .utilities import zero_stuffing
 
-
 def half_band_upsample(signal, up_factor=2, N=31, plot=False):
     """
     Vrši upsampliranje diskretnog signala korištenjem half-band FIR filtra.
@@ -90,6 +89,5 @@ def half_band_upsample(signal, up_factor=2, N=31, plot=False):
         plt.ylim([-60, 5])
         plt.tight_layout()
         plt.show()
-
-  
+ 
     return filtrirano, h

@@ -99,6 +99,10 @@ class Transmitter80211a:
         payload=IFFT_GI(symbols, plot=self.plot)
         return payload, bits, symbols
     
+    def apply_filter(self, signal):
+        filtered_output, h = half_band_upsample(signal, up_factor=self.up_factor, N=31, plot=False)
+        return filtered_output, h
+    
     def generate_frame(self):
         """Generiše kompletan OFDM paket sa training sekvencama i upsamplingom"""
         sts, lts=self.generate_training_sequences()
@@ -108,3 +112,23 @@ class Transmitter80211a:
         packet_20MHz=np.concatenate((sts, lts, payload))
         sample_output, _ =half_band_upsample(packet_20MHz, up_factor=self.up_factor, N=31, plot=self.plot)
         return sample_output, bits, symbols
+
+    def get_all_debug_data(self):
+        """Vraća sve međukorake za vizualizaciju"""
+        sts, lts = self.generate_training_sequences()
+        bits = bit_sequence(self.num_ofdm_symbols, self.bits_per_symbol, self.seed)
+        symbols = Mapper_OFDM(bits, self.bits_per_symbol)
+        
+        IFFT_index = np.array([6,7,8,9,10,12,13,14,15,16,17,18,19,20,21,22,23,24,26,27,28,29,30,31,32,33,34,35,36,37,39,40,41,42,43,44,45,46,47,48,49,50,51,53,54,55,56,57])
+        pilot_idx = np.array([11, 25, 38, 52])
+        first_symbol_freq = np.zeros(64, dtype=complex)
+        first_symbol_freq[IFFT_index] = symbols[:48]
+        first_symbol_freq[pilot_idx] = 1+0j
+        
+        final_signal, _, _ = self.generate_frame()
+        
+        return {
+            "sts": sts, "lts": lts, "bits": bits, 
+            "symbols": symbols, "freq_grid": first_symbol_freq,
+            "final_signal": final_signal, "pilot_idx": pilot_idx, "data_idx": IFFT_index
+        }
