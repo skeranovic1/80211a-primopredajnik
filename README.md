@@ -1,4 +1,4 @@
-# 802.11a OFDM Transmitter (Work in Progress)
+# 802.11a OFDM Transmitter
 
 ## Status
 Ovaj projekt trenutno implementira osnovne dijelove OFDM TX lanca:
@@ -8,8 +8,11 @@ Ovaj projekt trenutno implementira osnovne dijelove OFDM TX lanca:
 - IFFT sa guard intervalom (GI)
 - Upsampling i half-band filtriranje
 - Model kanala (AWGN i multipath)
+- Sinhronizacija prema short i long training sekvencama
+- Vremenska i frekventna sinhronizacija
+- Skidanje cikličnog prefiksa
+- Kanalna kompenzacija i fazna korekcija
 - Testovi pokrivenosti trenutno implementiranih funkcija
-- RX lanac i sinkronizacija
 
 ## Instalacija
 
@@ -42,9 +45,16 @@ U Python skripti ili interaktivnom okruženju:
   `chan = Channel_Model(settings, mode)`  
 - Primjena kanala na OFDM uzorke:  
   `tx_samples_channel, fir_taps = chan.apply(samples)`  
-  `print("Oblik signala nakon kanala:", tx_samples_channel.shape)`  
+  `print("Oblik signala nakon kanala:", tx_samples_channel.shape`  
   `print("FIR taps:", fir_taps)`
 
+### Prijemnik
+- `from rx.RX_802_11_a import receiver80211a`  
+- Procesira primljeni signal nakon prolaska kroz kanal i generiše obrađene simbole uz pomoć metode `process_signal()`: 
+  `corrected_symbols = rx.process_signal(rx_signal, tx_signal)`
+  `print("Oblik obrađenih simbola:", corrected_symbols.shape)`
+  `print("Prikaz obrađenih simbola:", corrected_symbols)`  
+  
 ## Testiranje
 
 Testovi koriste `pytest` i pokrivaju trenutno:
@@ -54,20 +64,27 @@ Testovi koriste `pytest` i pokrivaju trenutno:
 - Zero-stuffing i utilities funkcije (`test_utilities.py`)  
 - Generisanje i obrada OFDM simbola (`test_ifft_ofdm_symbol.py`, `test_ifft_gi.py`)  
 - Short i long training sekvence (`test_short_sequence.py`, `test_long_sequence.py`)  
-- Predajnini paket (`test_tx_packet.py`)  
+- Predajnini paket (`test_predajnikt.py`)  
 - Model kanala, uključujući AWGN i multipath kanale (`test_channel.py`, `test_awgn_channel.py`, `test_multipath_channel.py`)  
+- Pretprocesiranje i detekcija paketa (`test_pretprocessing.py`, `test_detection.py`)
+- LTS korelator (`test_long_symbol_correlator.py`)
+- Vremenska i frekventna sinhronizacija (`test_offsets.py`)
+- Izvlačenje data podnosioca (`test_removecp.py`)
+- Estimacija kanala (`test_estimacija.py`)
+- Fazna korekcija (`test_phasecorrection.py`)
+- Prijemnik (`test_prijemnik.py`)
 
 Pokretanje testiranja:  
 `pytest`
 
 ## Struktura projekta
 
-- `tx/` — 802.11a OFDM predajnički lanac  
+- `tx/` — 802.11a OFDM predajni lanac  
 - `channel/` — Model kanala (AWGN i multipath)
 - `rx/` —  802.11a OFDM prijemni lanac
 - `gui/` — Grafički korisnički interfejs za podešavanje i vizualizaciju  
 - `examples/` — Primjeri korištenja  
-- `tests/` — Automatski testovi  
+- `tests/` — Testovi  
 - `README.md` — Projektna dokumentacija  
 - `requirements.txt` — Python zavisnosti  
 - `setup.py` — Setup skripta
@@ -75,10 +92,8 @@ Pokretanje testiranja:
 ## Dokumentacija
 
 - Automatski generisana Doxygen HTML dokumentacija dostupna je ovdje:  
-   [https://skeranovic1.github.io/80211a-primopredajnik/]
+   https://skeranovic1.github.io/80211a-primopredajnik/
 
-## Plan razvoja / TODO
-
-- Dodati RX lanac i sinhronizaciju  
-- Poboljšati testove za integraciju cijelog sistema  
-- Dodati dokumentaciju i primjere korištenja
+## Proširenje sistema
+- Kanalno kodiranje: Moguće je dodati kanalno kodiranje (npr. Reed-Solomon ili Turbo kodovi) prije Tx lanca kako bi se povećala robusnost sistema.
+- Dekoder: Na prijemniku, može se implementirati dekoder za vraćanje originalnih podataka iz obrađenih simbola koristeći tehnike dekodiranja kao što su Viterbi ili Turbo dekodiranje.
