@@ -25,6 +25,66 @@ class Transmitter80211a:
         self.seed = seed
         self.step = step
         self.plot = plot  
+    
+    @property
+    def num_ofdm_symbols(self):
+        return self._num_ofdm_symbols
+
+    @num_ofdm_symbols.setter
+    def num_ofdm_symbols(self, value):
+        if not isinstance(value, int) or value <= 0:
+            raise ValueError("num_ofdm_symbols mora biti pozitivan cijeli broj")
+        self._num_ofdm_symbols = value
+
+    @property
+    def bits_per_symbol(self):
+        return self._bits_per_symbol
+
+    @bits_per_symbol.setter
+    def bits_per_symbol(self, value):
+        if not isinstance(value, int) or value <= 0:
+            raise ValueError("bits_per_symbol mora biti pozitivan cijeli broj")
+        self._bits_per_symbol = value
+
+    @property
+    def up_factor(self):
+        return self._up_factor
+
+    @up_factor.setter
+    def up_factor(self, value):
+        if not isinstance(value, int) or value <= 0:
+            raise ValueError("up_factor mora biti pozitivan cijeli broj")
+        self._up_factor = value
+
+    @property
+    def seed(self):
+        return self._seed
+
+    @seed.setter
+    def seed(self, value):
+        if not isinstance(value, int) or value < 0:
+            raise ValueError("seed mora biti cijeli broj >= 0")
+        self._seed = value
+
+    @property
+    def step(self):
+        return self._step
+
+    @step.setter
+    def step(self, value):
+        if not isinstance(value, int) or value <= 0:
+            raise ValueError("step mora biti pozitivan cijeli broj")
+        self._step = value
+
+    @property
+    def plot(self):
+        return self._plot
+
+    @plot.setter
+    def plot(self, value):
+        if not isinstance(value, bool):
+            raise TypeError("plot mora biti bool")
+        self._plot = value
 
     def generate_training_sequences(self):
         """Generiše Short i Long Training Sequence"""
