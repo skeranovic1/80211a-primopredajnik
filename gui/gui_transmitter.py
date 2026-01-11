@@ -1,6 +1,9 @@
 import sys
+import os
 import numpy as np
 import matplotlib.pyplot as plt
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, ROOT_DIR)
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
                              QHBoxLayout, QPushButton, QLabel, QRadioButton, QLineEdit, QGroupBox)
 from PyQt5.QtCore import Qt

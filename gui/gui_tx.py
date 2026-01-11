@@ -1,6 +1,9 @@
 import tkinter as tk
+import os
 from tkinter import ttk
 from tx.OFDM_TX_802_11 import Transmitter80211a
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, ROOT_DIR)
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np

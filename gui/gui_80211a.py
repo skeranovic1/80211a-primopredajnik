@@ -1,6 +1,8 @@
 import os
 import sys
 import numpy as np
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, ROOT_DIR)
 from PyQt5.QtCore import Qt, QRectF, QPointF
 from PyQt5.QtGui import QBrush, QPen, QFont, QPainterPath, QPainter, QColor
 from PyQt5.QtWidgets import (QApplication,QMainWindow,QWidget, QVBoxLayout,
