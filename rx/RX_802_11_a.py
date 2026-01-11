@@ -7,6 +7,29 @@ from rx.PhaseCorrection_80211a import phase_correction
 from rx.rastavljanje import remove_cp
 
 class Receiver80211a:
+    """
+    Implementacija prijemnika za IEEE 802.11a OFDM sistem.
+
+    Klasa realizuje kompletan prijemni lanac uključujući:
+    - IQ predobradu,
+    - detekciju paketa i vremensku sinhronizaciju,
+    - grubu i finu korekciju frekvencijskog ofseta (CFO),
+    - uklanjanje cikličkog prefiksa (CP),
+    - estimaciju kanala i frekvencijsku ekvalizaciju,
+    - korekciju zajedničke fazne greške (CPE).
+
+    Omogućava sekvencijalnu obradu signala ili poziv kompletnog lanca obrade putem metode 'process_signal'.
+
+    Parametri
+    fs : float
+        Frekvencija uzorkovanja prijemnog signala.
+    num_symbols : int
+        Broj OFDM simbola u korisničkim podacima.
+    nfft : int, optional
+        Veličina FFT-a (default: 64).
+    ncp : int, optional
+        Dužina cikličkog prefiksa (default: 16).
+    """
     def __init__(self, fs, num_symbols, nfft=64, ncp=16):
         self.fs = fs
         self.num_symbols = num_symbols

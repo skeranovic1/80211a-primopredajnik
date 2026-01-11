@@ -27,14 +27,10 @@ from PyQt5.QtWidgets import (
     QSplitter,
     QMessageBox,
 )
-
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
-
-
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(PROJECT_ROOT)
-
 
 def _safe_import():
     try:

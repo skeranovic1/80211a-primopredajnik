@@ -82,6 +82,34 @@ def phase_correction(symbols_fd, num_symbols, channel_est, L=8, max_ratio=1):
 
     for i in range(num_symbols):
         sym = symbols_fd[i]
+        pilots = sym[idx_pilots]
+
+        # 1. Odmotavanje faze pilota
+        pilot_phases = np.unwrap(np.angle(pilots))
+
+        # 2. Linearna regresija: phase = slope * k + intercept
+        # A matrix: [pilot_k, 1]
+        A = np.vstack([pilot_k, np.ones_like(pilot_k)]).T
+        sol, _, _, _ = np.linalg.lstsq(A, pilot_phases, rcond=None)
+        current_slope, current_intercept = sol
+
+        # 3. Opciono: Filtriranje nagiba kroz simbole (L=1 znači bez filtera)
+        average_slope_filter[1:] = average_slope_filter[:-1]
+        average_slope_filter[0] = current_slope
+        avg_slope = np.mean(average_slope_filter[:min(i+1, L)])
+
+        # 4. Generisanje vektora korekcije (uključuje i CPE i Slope)
+        # Koristimo originalni intercept (CPE) i usrednjeni nagib (Slope)
+        correction_vector = np.exp(-1j * (avg_slope * k_vec + current_intercept))
+        
+        # 5. Primjena korekcije i ekstrakcija podataka
+        sym_corrected = sym * correction_vector
+        corrected_symbols.append(sym_corrected[idx_data])
+
+    return np.array(corrected_symbols)
+
+    """for i in range(num_symbols):
+        sym = symbols_fd[i]
 
         # Ekstrakcija pilota svakog simbola
         pilots = sym[idx_pilots]
@@ -110,3 +138,4 @@ def phase_correction(symbols_fd, num_symbols, channel_est, L=8, max_ratio=1):
         corrected_symbols.append(sym_corrected[idx_data])
 
     return np.array(corrected_symbols)
+"""

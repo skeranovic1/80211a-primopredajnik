@@ -13,7 +13,7 @@ from rx.estimacija_kanala import channel_estimate_and_equalizer
 from rx.PhaseCorrection_80211a import phase_correction
 from rx.rastavljanje import remove_cp
 
-num_ofdm_symbols=15
+num_ofdm_symbols=500
 up_factor=2
 fs_base=20e6
 fs=fs_base*up_factor
@@ -24,7 +24,7 @@ tx=Transmitter80211a(
         bits_per_symbol=2,   #QPSK
         step=1,
         up_factor=up_factor,
-        seed=3,
+        seed=4,
         plot=False
 )
 tx_signal, _, _= tx.generate_frame()
@@ -34,7 +34,7 @@ settings=ChannelSettings(
         sample_rate=fs,
         number_of_taps=2,
         delay_spread=10e-9,
-        snr_db=10
+        snr_db=25
 )
 mode=ChannelMode(
         multipath=1,
@@ -117,8 +117,8 @@ phase_after = np.unwrap(np.angle(corrected_symbols))  #Faza poslije fazne korekc
 
 #Konstelacija svih OFDM simbola prije i poslije korekcije
 plt.figure(figsize=(6,6))
-plt.scatter(ekvalizirani_simboli.real.flatten(), ekvalizirani_simboli.imag.flatten(), s=5, label='Prije korekcije', alpha=0.5)
-plt.scatter(corrected_symbols.real.flatten(), corrected_symbols.imag.flatten(), s=5, label='Poslije korekcije', alpha=0.5)
+plt.scatter(ekvalizirani_simboli.real.flatten(), ekvalizirani_simboli.imag.flatten(), s=3, label='Prije korekcije', alpha=0.5)
+plt.scatter(corrected_symbols.real.flatten(), corrected_symbols.imag.flatten(), s=3, label='Poslije korekcije', alpha=0.5)
 plt.axis('equal')
 plt.title(f'Konstelacija svih OFDM simbola ({num_ofdm_symbols} simbola)')
 plt.grid(True)
