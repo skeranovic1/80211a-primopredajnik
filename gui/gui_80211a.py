@@ -1,32 +1,12 @@
 import os
 import sys
 import numpy as np
-
 from PyQt5.QtCore import Qt, QRectF, QPointF
 from PyQt5.QtGui import QBrush, QPen, QFont, QPainterPath, QPainter, QColor
-from PyQt5.QtWidgets import (
-    QApplication,
-    QMainWindow,
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QGraphicsView,
-    QGraphicsScene,
-    QGraphicsPathItem,
-    QGraphicsTextItem,
-    QDialog,
-    QFormLayout,
-    QComboBox,
-    QSpinBox,
-    QDoubleSpinBox,
-    QCheckBox,
-    QPushButton,
-    QLabel,
-    QTabWidget,
-    QSizePolicy,
-    QSplitter,
-    QMessageBox,
-)
+from PyQt5.QtWidgets import (QApplication,QMainWindow,QWidget, QVBoxLayout,
+    QHBoxLayout,QGraphicsView,QGraphicsScene,QGraphicsPathItem,QGraphicsTextItem,
+    QDialog,QFormLayout,QComboBox,QSpinBox,QDoubleSpinBox,QCheckBox,QPushButton,
+    QLabel,QTabWidget,QSizePolicy,QSplitter,QMessageBox)
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -49,16 +29,13 @@ def _safe_import():
     except Exception as e:
         return {"error": str(e)}
 
-
 def _bps_from_mod(name: str) -> int:
-    if name == "BPSK":
-        return 1
-    if name == "QPSK":
-        return 2
-    if name == "16-QAM":
-        return 4
+    name = str(name).upper().strip()
+    if "BPSK" in name: return 1
+    if "QPSK" in name: return 2
+    if "16-QAM" in name: return 4
+    if "64-QAM" in name: return 6
     return 2
-
 
 def _fft_spectrum_db(x, fs):
     x = np.asarray(x).flatten()
@@ -72,7 +49,6 @@ def _fft_spectrum_db(x, fs):
     mag -= np.max(mag)
     return f, mag
 
-
 def _plot_td(ax, sig, fs, title):
     sig = np.asarray(sig).flatten()
     nshow = min(len(sig), 5000)
@@ -83,7 +59,6 @@ def _plot_td(ax, sig, fs, title):
     ax.set_xlabel("Vrijeme [µs]")
     ax.set_ylabel("Amplituda")
 
-
 def _plot_spec(ax, sig, fs, title):
     f, mag = _fft_spectrum_db(sig, fs)
     ax.plot(f / 1e6, mag)
@@ -91,7 +66,6 @@ def _plot_spec(ax, sig, fs, title):
     ax.set_title(title)
     ax.set_xlabel("Frekvencija [MHz]")
     ax.set_ylabel("dB")
-
 
 def _plot_const(ax, syms, title):
     syms = None if syms is None else np.asarray(syms).flatten()
@@ -105,7 +79,6 @@ def _plot_const(ax, syms, title):
     ax.set_title(title)
     ax.set_xlabel("I")
     ax.set_ylabel("Q")
-
 
 def _extract_constellation_from_td(rx_td, up, num_syms):
     rx_td = np.asarray(rx_td).flatten()
@@ -136,7 +109,6 @@ def _extract_constellation_from_td(rx_td, up, num_syms):
         return None
     return np.concatenate(out)
 
-
 class MplWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -155,7 +127,6 @@ class MplWidget(QWidget):
     def draw(self):
         self.fig.tight_layout()
         self.canvas.draw()
-
 
 class RoundedBlockItem(QGraphicsPathItem):
     def __init__(self, title, key, rect: QRectF, fill: QColor, on_open):
@@ -198,7 +169,6 @@ class RoundedBlockItem(QGraphicsPathItem):
             self.on_open(self.key)
         super().mouseDoubleClickEvent(event)
 
-
 class WireItem(QGraphicsPathItem):
     def __init__(self, p1: QPointF, p2: QPointF):
         super().__init__()
@@ -211,28 +181,28 @@ class WireItem(QGraphicsPathItem):
         path.cubicTo(c1, c2, p2)
         self.setPath(path)
 
-
 class SetupDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Podešavanje simulacije")
 
         self.mod = QComboBox()
-        self.mod.addItems(["BPSK", "QPSK", "16-QAM"])
+        self.mod.addItems(["BPSK", "QPSK", "16-QAM", "64-QAM"]) # Dodat 64-QAM
         self.mod.setCurrentText("QPSK")
 
         self.up_factor = QComboBox()
-        self.up_factor.addItems(["1", "2", "4"])
+        self.up_factor.addItems(["1", "2", "4", "6"])
         self.up_factor.setCurrentText("2")
 
-        self.payload_samples = QSpinBox()
-        self.payload_samples.setRange(80, 10_000_000)
-        self.payload_samples.setValue(200_000)
+        self.num_symbols = QSpinBox() 
+        self.num_symbols.setRange(1, 5000)
+        self.num_symbols.setValue(50)
+        self.num_symbols.setSuffix(" simbola")
 
         self.snr_db = QDoubleSpinBox()
-        self.snr_db.setRange(-5.0, 60.0)
-        self.snr_db.setDecimals(1)
+        self.snr_db.setRange(-10.0, 50.0)
         self.snr_db.setValue(20.0)
+        self.snr_db.setSuffix(" dB")
 
         self.multipath = QCheckBox("Multipath")
         self.multipath.setChecked(True)
@@ -255,7 +225,7 @@ class SetupDialog(QDialog):
         form = QFormLayout()
         form.addRow("Modulacija", self.mod)
         form.addRow("Upsampling faktor", self.up_factor)
-        form.addRow("Broj uzoraka (payload)", self.payload_samples)
+        form.addRow("Broj OFDM simbola", self.num_symbols)
         form.addRow("SNR [dB]", self.snr_db)
         form.addRow(self.multipath)
         form.addRow("Broj tapova", self.num_taps)
@@ -271,19 +241,17 @@ class SetupDialog(QDialog):
         lay.addLayout(row)
         self.setLayout(lay)
         self.resize(420, 320)
-
     def get_config(self):
         return {
             "mod": self.mod.currentText(),
             "bps": _bps_from_mod(self.mod.currentText()),
             "up": int(self.up_factor.currentText()),
-            "payload_samples": int(self.payload_samples.value()),
+            "num_symbols": int(self.num_symbols.value()),
             "snr_db": float(self.snr_db.value()),
             "multipath": bool(self.multipath.isChecked()),
             "num_taps": int(self.num_taps.value()),
             "delay_spread": float(self.delay_spread.value()),
         }
-
 
 class CompareDialog(QDialog):
     def __init__(self, parent=None, title="Uporedni prikaz"):
@@ -366,7 +334,6 @@ class CompareDialog(QDialog):
         self.fig.tight_layout()
         self.canvas.draw()
 
-
 class TxDialog(QDialog):
     def __init__(self, parent, modules, sim):
         super().__init__(parent)
@@ -423,70 +390,67 @@ class TxDialog(QDialog):
         self.lbl_up.setText(f"Upsampling: {self.sim['up']}")
         self.lbl_snr.setText(f"SNR: {self.sim['snr_db']:.1f} dB")
 
+    def _update_plots(self, out, fs, tx_const):
+        ax_td = self.plot_td.ax()
+        _plot_td(ax_td, out, fs, "TX Signal u vremenu")
+        self.plot_td.draw()
+
+        ax_sp = self.plot_spec.ax()
+        _plot_spec(ax_sp, out, fs, "TX Spektar")
+        self.plot_spec.draw()
+
+        ax_co = self.plot_const.ax()
+        _plot_const(ax_co, tx_const, "TX Konstelacija (Payload)")
+        self.plot_const.draw()
+        
+        self.info.setText(f"Generisano: {len(out)} odbiraka\nFs: {fs/1e6:.1f} MHz")
+
     def run(self):
         self._refresh_labels()
-
         if "error" in self.modules:
             QMessageBox.critical(self, "Import error", self.modules["error"])
             return
 
         Transmitter80211a = self.modules["Transmitter80211a"]
-
         fs_base = 20e6
         up = int(self.sim["up"])
         fs = fs_base * up
         bps = int(self.sim["bps"])
         seed = int(np.random.randint(0, 10_000_000))
 
-        payload_samples = int(self.sim["payload_samples"])
-        sym_len = 80 * up
-        num_syms = max(1, int(round(payload_samples / sym_len)))
+        num_syms = int(self.sim["num_symbols"])
 
         try:
             tx = Transmitter80211a(
                 num_ofdm_symbols=num_syms,
                 bits_per_symbol=bps,
-                step=1,
                 up_factor=up,
                 seed=seed,
                 plot=False,
             )
-            out = tx.generate_frame()
-            tx_sig = np.asarray(out[0]).flatten()
+            out, _, tx_symbols = tx.generate_frame()
+            
+            num_training_bins = 12 * 64 
+            tx_symbols_flat = np.asarray(tx_symbols).flatten()
+            
+            if len(tx_symbols_flat) > num_training_bins:
+                payload_only = tx_symbols_flat[num_training_bins:]
+                # Uklanjanje nula (DC i Guard) radi čistije konstelacije
+                payload_only = payload_only[np.abs(payload_only) > 1e-6]
+                self.sim["tx_const"] = payload_only
+            else:
+                self.sim["tx_const"] = tx_symbols_flat
 
-            tx_symbols = None
-            if len(out) >= 3 and out[1] is not None:
-                tx_symbols = out[1]
-            elif len(out) >= 3 and out[2] is not None:
-                tx_symbols = out[2]
-            elif len(out) >= 2 and out[1] is not None:
-                tx_symbols = out[1]
+            # Spremanje rezultata
+            self.sim["tx_sig"] = out
+            self.sim["fs_last"] = fs
+            self.sim["num_syms_last"] = num_syms
+            
+            # Ponovo iscrtaj sve grafike...
+            self._update_plots(out, fs, self.sim["tx_const"])
 
-            if tx_symbols is not None:
-                tx_symbols = np.asarray(tx_symbols).flatten()
         except Exception as e:
-            QMessageBox.critical(self, "TX error", str(e))
-            return
-
-        ax = self.plot_td.ax()
-        _plot_td(ax, tx_sig, fs, "TX signal u vremenu")
-        self.plot_td.draw()
-
-        ax2 = self.plot_spec.ax()
-        _plot_spec(ax2, tx_sig, fs, "TX spektar (normirano)")
-        self.plot_spec.draw()
-
-        ax3 = self.plot_const.ax()
-        _plot_const(ax3, tx_symbols, "TX konstelacija (payload)")
-        self.plot_const.draw()
-
-        self.sim["seed_last"] = seed
-        self.sim["num_syms_last"] = num_syms
-        self.sim["fs_last"] = fs
-        self.sim["tx_sig"] = tx_sig
-        self.sim["tx_const"] = tx_symbols
-
-        self.info.setText(f"Seed: {seed}\nOFDM simboli (interno): {num_syms}")
+            QMessageBox.critical(self, "TX error", f"Greška pri generisanju: {str(e)}")
 
     def compare(self):
         if "tx_sig" not in self.sim or self.sim["tx_sig"] is None:
@@ -510,7 +474,6 @@ class TxDialog(QDialog):
             rx_const=self.sim.get("rx_const", None),
         )
         dlg.exec_()
-
 
 class ChannelDialog(QDialog):
     def __init__(self, parent, modules, sim):
@@ -666,7 +629,6 @@ class ChannelDialog(QDialog):
         )
         dlg.exec_()
 
-
 class RxDialog(QDialog):
     def __init__(self, parent, modules, sim):
         super().__init__(parent)
@@ -817,7 +779,6 @@ class RxDialog(QDialog):
         )
         dlg.exec_()
 
-
 class SystemCanvas(QGraphicsView):
     def __init__(self, on_open, parent=None):
         super().__init__(parent)
@@ -859,7 +820,6 @@ class SystemCanvas(QGraphicsView):
         self._wire(tx, ch)
         self._wire(ch, rx)
 
-
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -870,7 +830,7 @@ class MainWindow(QMainWindow):
             "mod": "QPSK",
             "bps": 2,
             "up": 2,
-            "payload_samples": 200_000,
+            "num_symbols": 50,       
             "snr_db": 20.0,
             "multipath": True,
             "num_taps": 2,
@@ -882,7 +842,7 @@ class MainWindow(QMainWindow):
             "ch_const": None,
             "rx_const": None,
             "fs_last": 40e6,
-            "num_syms_last": 1,
+            "num_syms_last": 50,
             "seed_last": None,
         }
 
@@ -942,16 +902,30 @@ class MainWindow(QMainWindow):
             }
             QPushButton:hover { background: #0b1220; }
             QPushButton:pressed { background: #060a12; }
-            QTabWidget::pane { border: 1px solid #e5e7eb; border-radius: 12px; }
+            
+            /* STIL ZA TABOVE KOJI RJEŠAVA TVOJ PROBLEM */
+            QTabWidget::pane { 
+                border: 1px solid #e5e7eb; 
+                border-radius: 12px; 
+                top: -1px; /* Spaja border sa tabom */
+            }
             QTabBar::tab {
                 background: #f3f4f6;
-                padding: 10px 14px;
+                padding: 8px 10px;    /* Smanjen vertikalni i horizontalni padding */
+                min-width: 80px;      /* Osigurava minimalnu širinu da tekst ne bude zbijen */
                 border-top-left-radius: 10px;
                 border-top-right-radius: 10px;
-                margin-right: 6px;
+                margin-right: 4px;
+                font-size: 11px;      /* Malo manji font da sigurno stane */
                 font-weight: 600;
+                color: #374151;
             }
-            QTabBar::tab:selected { background: #ffffff; }
+            QTabBar::tab:selected { 
+                background: #ffffff; 
+                border: 1px solid #e5e7eb;
+                border-bottom-color: #ffffff; /* Briše donju liniju kod selektovanog taba */
+            }
+            
             QSplitter::handle { background: #e5e7eb; }
             QDialog { background: #ffffff; }
             QComboBox, QSpinBox, QDoubleSpinBox {
@@ -966,7 +940,7 @@ class MainWindow(QMainWindow):
 
     def _refresh_status(self):
         self.status.setText(
-            f"Mod: {self.sim['mod']} | up: {self.sim['up']} | payload: {self.sim['payload_samples']} uzoraka | SNR: {self.sim['snr_db']:.1f} dB"
+            f"Mod: {self.sim['mod']} | OFDM Simbola: {self.sim['num_symbols']} | SNR: {self.sim['snr_db']:.1f} dB"
         )
 
     def open_setup(self):
@@ -1013,7 +987,6 @@ class MainWindow(QMainWindow):
             rx_const=self.sim.get("rx_const", None),
         )
         dlg.exec_()
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
