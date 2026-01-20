@@ -27,7 +27,7 @@ tx=Transmitter80211a(
         seed=4,
         plot=False
 )
-tx_signal, _, _= tx.generate_frame()
+tx_signal, tx_bits, _= tx.generate_frame()
 
 #Kanal
 settings=ChannelSettings(
@@ -156,3 +156,81 @@ plt.ylabel('Magnitude')
 plt.grid(True)
 plt.legend()
 plt.show()
+
+"""def Demapper_OFDM(symbols, bits_per_symbol):
+
+    # LUT tabele (identične tvojim iz mappera)
+    BPSK_LUT  = np.array([-1, 1])
+    QPSK_LUT  = np.array([-1, 1]) / np.sqrt(2)
+    QAM16_LUT = np.array([-3, -1, 1, 3]) / np.sqrt(10)
+    QAM64_LUT = np.array([-7, -5, -3, -1, 1, 3, 5, 7]) / np.sqrt(42)
+
+    all_bits = []
+    
+    for s in symbols:
+        if bits_per_symbol == 1:  # BPSK
+            # Tražimo najbliži indeks (0 ili 1) u BPSK_LUT
+            idx = np.argmin(np.abs(BPSK_LUT - np.real(s)))
+            all_bits.append(idx)
+            
+        elif bits_per_symbol == 2:  # QPSK
+            idx_i = np.argmin(np.abs(QPSK_LUT - np.real(s)))
+            idx_q = np.argmin(np.abs(QPSK_LUT - np.imag(s)))
+            all_bits.extend([idx_i, idx_q])
+            
+        elif bits_per_symbol == 4:  # 16-QAM
+            idx_i = np.argmin(np.abs(QAM16_LUT - np.real(s)))
+            idx_q = np.argmin(np.abs(QAM16_LUT - np.imag(s)))
+            # Binarna dekompozicija indeksa (obrnuto od: bg[0]*2 + bg[1])
+            all_bits.extend([(idx_i >> 1) & 1, idx_i & 1, 
+                             (idx_q >> 1) & 1, idx_q & 1])
+            
+        elif bits_per_symbol == 6:  # 64-QAM
+            idx_i = np.argmin(np.abs(QAM64_LUT - np.real(s)))
+            idx_q = np.argmin(np.abs(QAM64_LUT - np.imag(s)))
+            # Binarna dekompozicija (obrnuto od: bg[0]*4 + bg[1]*2 + bg[2])
+            all_bits.extend([(idx_i >> 2) & 1, (idx_i >> 1) & 1, idx_i & 1,
+                             (idx_q >> 2) & 1, (idx_q >> 1) & 1, idx_q & 1])
+    
+    return np.array(all_bits)
+
+#Demapiramo bite iz flatten niza corrected_symbols 
+rx_bits = Demapper_OFDM(corrected_symbols.flatten(), tx.bits_per_symbol)
+tx_bits_compare = tx_bits[:len(rx_bits)]
+
+plt.figure(figsize=(10, 5))
+error_distribution = (rx_bits != tx_bits_compare).astype(int)
+
+plt.stem(error_distribution, markerfmt='o', basefmt="r-") 
+plt.title("Distribucija grešaka (1 = pogrešno, 0 = ispravno)")
+plt.xlabel("Bit index")
+plt.ylabel("Vrijednost greške")
+plt.grid(True, linestyle='--', alpha=0.6)
+plt.show()
+
+plt.figure(figsize=(10, 5))
+ber_per_symbol = []
+bits_in_one_sym = 48 * tx.bits_per_symbol 
+
+for i in range(num_ofdm_symbols):
+    start = i * bits_in_one_sym
+    end = (i + 1) * bits_in_one_sym
+    sym_tx = tx_bits_compare[start:end]
+    sym_rx = rx_bits[start:end]
+    
+    if len(sym_tx) > 0:
+        errs = np.sum(sym_tx != sym_rx)
+        ber_per_symbol.append(errs / len(sym_tx))
+
+plt.bar(range(len(ber_per_symbol)), ber_per_symbol, width=1.0)
+plt.title(f"Stabilnost prenošenja: BER po simbolu")
+plt.xlabel("OFDM simbol index")
+plt.ylabel("Bit Error Rate (BER)")
+plt.grid(True, axis='y', linestyle='--', alpha=0.7)
+plt.show()
+
+final_err_count = np.sum(rx_bits != tx_bits_compare)
+print("-" * 35)
+print(f"Ukupno obrađenih bita: {len(rx_bits)}")
+print(f"Broj pogrešnih bita:   {final_err_count}")
+print(f"Konačni BER sistema:   {final_err_count / len(rx_bits):.6f}")"""
