@@ -110,3 +110,6 @@ Pokretanje testiranja:
 - Analiza performansi:
   - Poređenje performansi sistema sa i bez dodatnih blokova.
   - Evaluacija uticaja kodiranja i interleaving-a na grešku bita (BER).
+
+## Literatura
+- Schwarzinger, A. - Digital Signal Processing in Modern Communication Systems, 2nd edition
