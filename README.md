@@ -98,15 +98,15 @@ Pokretanje testiranja:
 - Implementacija dodatnih blokova u predajnom i prijemnom lancu radi povećanja robusnosti i realističnije simulacije sistema.
 
 - Predajnik (Tx lanac):
-  - Scrambler: Uklanja duge nizove istih bita i poboljšava spektralne karakteristike signala
-  - Kanalno kodiranje: Dodavanje redundantnih bita radi povećanja otpornosti na greške
-  - Interleaver: Raspoređuje bite kako bi se smanjio uticaj burst grešaka prije modulacije
+  - Scrambler: Uklanja duge nizove istih bita i poboljšava spektralne karakteristike signala.
+  - Kanalno kodiranje: Dodavanje redundantnih bita radi povećanja otpornosti na greške.
+  - Interleaver: Raspoređuje bite kako bi se smanjio uticaj burst grešaka prije modulacije.
 
 - Prijemnik (Rx lanac):
-  - Deinterleaver: Vraća bite u originalni redoslijed nakon prijema
-  - Dekoder: Rekonstruiše originalni niz podataka iz primljenih simbola koristeći Viterbi ili Turbo dekodiranje
-  - Descrambler: Vraća originalne podatke uklanjanjem efekta scrambler-a
+  - Deinterleaver: Vraća bite u originalni redoslijed nakon prijema.
+  - Dekoder: Rekonstruiše originalni niz podataka iz primljenih simbola koristeći Viterbi ili Turbo dekodiranje.
+  - Descrambler: Vraća originalne podatke uklanjanjem efekta scrambler-a.
 
 - Analiza performansi:
-  - Poređenje performansi sistema sa i bez dodatnih blokova
-  - Evaluacija uticaja kodiranja i interleaving-a na grešku bita (BER)
+  - Poređenje performansi sistema sa i bez dodatnih blokova.
+  - Evaluacija uticaja kodiranja i interleaving-a na grešku bita (BER).
